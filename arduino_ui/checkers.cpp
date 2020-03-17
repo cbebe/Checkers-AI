@@ -10,51 +10,14 @@
 
 // display init
 MCUFRIEND_kbv tft;
+Piece gamePieces[24];
 
 #define BOARD_DARK 19458 // colours for game board
 #define BOARD_LIGHT 57113 // please change i don't like
-#define B_SQ 35 // board square side length
 
-// struct that stores piece information
-struct Piece {
-  uint8_t colour;
-  bool king;
-  uint8_t pos; // position of the piece from 0 to 31
-};
 
-Piece gamePieces[24];
-
-// cursor position on the screen
-struct drawPos {
-  uint16_t x;
-  uint16_t y;
-};
-
-// determines cursor position on the screen
-// given a piece's position on the board
-drawPos piecePosition(uint8_t pos) {
-  int8_t group = pos / 8; // position from 0 to 3
-  int8_t ForS = (pos % 8) / 4; // first or second row of group
-  int8_t col = pos % 4; // the column of the piece
-  drawPos dp;
-  dp.x = ((1 - ForS) * B_SQ) + (2 * col * B_SQ) + 117;
-  dp.y = (2 * group * B_SQ) + (ForS * B_SQ) + 37;
-  return dp;
-}
-
-// draw
-void drawPiece(Piece piece) {
-  drawPos dp = piecePosition(piece.pos);
-  int colour = TFT_BLACK;
-  if (piece.colour == 0 ) {
-    colour = TFT_WHITE;
-  }
-  tft.fillCircle(dp.x, dp.y, 15, colour);
-
-  // marks king piece
-  if (piece.king) {
-    tft.fillCircle(dp.x, dp.y, 4, TFT_RED);
-  }
+bool menuScreen() {
+  
 }
 
 void gameStart(bool start) {
@@ -73,7 +36,6 @@ void gameStart(bool start) {
     drawPiece(gamePieces[i]); 
     drawPiece(gamePieces[i + 12]);
   }
-  
 }
 
 // draw checkers board
