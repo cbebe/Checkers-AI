@@ -17,11 +17,14 @@ screenPos piecePosition(uint8_t pos) {
 // draw piece on board
 void drawPiece(Piece piece) {
   screenPos dp = piecePosition(piece.pos);
-  int colour = TFT_BLACK;
+  uint16_t colour[] = {TFT_BLACK, TFT_WHITE}; 
   if (piece.colour == 0 ) {
-    colour = TFT_WHITE;
+    colour[0] = TFT_WHITE;
+    colour[1] = TFT_BLACK;
   }
-  shared.tft->fillCircle(dp.x, dp.y, 15, colour);
+  shared.tft->fillCircle(dp.x, dp.y, 15, colour[0]);
+  shared.tft->drawCircle(dp.x, dp.y, 12, colour[1]);
+
 
   // marks king piece
   if (piece.king) {

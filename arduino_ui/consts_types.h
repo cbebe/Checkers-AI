@@ -28,12 +28,15 @@ struct screenPos {
   int16_t y;
 };
 
+typedef enum {EMPTY, PLAYER, BOT} tile;
+
 struct shared_vars {
   // the tft display
   MCUFRIEND_kbv* tft;
   // array to store all pieces
   Piece gamePieces[NUM_PIECES * 2];
-
+  // array to store all board positions
+  tile board[32];
 };
 
 #endif
