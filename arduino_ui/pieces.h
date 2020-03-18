@@ -5,6 +5,8 @@
 #include <MCUFRIEND_kbv.h>
 #include "consts_types.h"
 
+Piece findPiece(int8_t piecePos);
+
 void drawPiece(Piece piece);
 
 #endif

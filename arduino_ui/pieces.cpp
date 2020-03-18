@@ -2,6 +2,19 @@
 
 extern sharedVars shared; 
 
+// finds the piece from the board position
+Piece findPiece(int8_t piecePos) {
+  Piece piece = {0, false, -1};
+  for (int i = 0; i < 2 * NUM_PIECES; i++) {
+    if (shared.gamePieces[i].pos == piecePos) {
+      piece = shared.gamePieces[i];
+      break;
+    }
+  }
+  return piece;
+}
+
+
 // determines cursor position on the screen
 // given a piece's position on the board
 screenPos piecePosition(uint8_t pos) {
