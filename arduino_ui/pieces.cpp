@@ -1,6 +1,6 @@
 #include "pieces.h"
 
-extern shared_vars shared; 
+extern sharedVars shared; 
 
 // determines cursor position on the screen
 // given a piece's position on the board
