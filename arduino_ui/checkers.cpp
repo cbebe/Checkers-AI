@@ -9,13 +9,9 @@
 #include "touchs.h"
 
 // shared variables
-shared_vars shared;
+sharedVars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
-
-
-#define BOARD_DARK 19458 // colours for game board
-#define BOARD_LIGHT 57113 // please change i don't like
 
 /* int8_t touchPiece():
 Determines which position of board that was touched
@@ -28,7 +24,8 @@ int8_t touchPiece() {
   // if touch screen was untouched or out of bounds
   if (tp.x == UNTOUCHED){
     return -1;
-  } else if ((tp.y > 300 && tp.y < 20) || (tp.x > 380 && tp.x < 100)) {
+  } 
+  if ((tp.y > 300 && tp.y < 20) || (tp.x > 380 && tp.x < 100)) {
     return -2;
   }
 
@@ -67,15 +64,12 @@ int8_t touchPiece() {
   return regX + (8 * regY) + (4 * fsRow);
 }
 
+// not really important rn
 bool menuScreen() {
   tft.fillRect(100,100, 100, 100, TFT_WHITE);
-  bool touch = true;
-  screenPos t;
-  while (touch) {
+  screenPos t = processTouchScreen();
+  while (t.x > UNTOUCHED) {
     t = processTouchScreen();
-    if (t.x > UNTOUCHED) {
-      touch = false;
-    }
   }
   return true;
 }
@@ -139,11 +133,18 @@ void setup() {
   }
 }
 
+void makeMove(int8_t piecePos) {
+
+}
+
 void choosePiece() {
   int8_t piecePos;
   while (piecePos != -2) {
     piecePos = touchPiece();
     if (piecePos >= 0) {
+      if (shared.board[piecePos] == PLAYER) {
+        makeMove(piecePos);
+      }
       shared.tft->println(piecePos);
 
     }

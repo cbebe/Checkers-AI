@@ -7,11 +7,15 @@
 #include <SPI.h>
 #include <SD.h>
 
+#include "screenpos.h"
+
 #define SD_CS 10
-#define TFT_HEIGHT 320
-#define TFT_WIDTH 480
+
 #define NUM_PIECES 12 // number of pieces per player
 #define B_SQ 35 // board square side length
+
+#define BOARD_DARK 19458 // colours for game board
+#define BOARD_LIGHT 57113 // please change i don't like
 
 // struct that stores piece information
 struct Piece {
@@ -22,21 +26,17 @@ struct Piece {
   int8_t pos; 
 };
 
-// cursor position on the screen
-struct screenPos {
-  int16_t x;
-  int16_t y;
-};
-
 typedef enum {EMPTY, PLAYER, BOT} tile;
 
-struct shared_vars {
-  // the tft display
-  MCUFRIEND_kbv* tft;
+struct sharedVars {
+  
+  MCUFRIEND_kbv* tft; // the tft display
   // array to store all pieces
   Piece gamePieces[NUM_PIECES * 2];
   // array to store all board positions
   tile board[32];
+  
+  int8_t selectedTile; // current selected tile
 };
 
 #endif

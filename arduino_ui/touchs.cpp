@@ -3,6 +3,7 @@
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Processes touch screen input
+// Returns the coordinates of the touched point
 screenPos processTouchScreen() {
 	TSPoint touch = ts.getPoint();
 	pinMode(YP, OUTPUT); 

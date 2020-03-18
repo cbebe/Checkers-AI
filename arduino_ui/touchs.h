@@ -1,7 +1,10 @@
 #ifndef _TOUCHS_H
 #define _TOUCHS_H
 
-#include "consts_types.h"
+#include <Arduino.h>
+#include <MCUFRIEND_kbv.h>
+#include <Adafruit_GFX.h>
+#include <TouchScreen.h>
 
 // touch screen pins, obtained from the documentation
 #define YP A3 // must be an analog pin, use "An" notation!
@@ -15,11 +18,17 @@
 #define TS_MINY 120
 #define TS_MAXX 940
 #define TS_MAXY 920
+
+// touch screen dimensions
+#define TFT_HEIGHT 320
+#define TFT_WIDTH 480
+
 // thresholds to determine if there was a touch
 #define MINPRESSURE   10
 #define MAXPRESSURE 1000
 
 #define UNTOUCHED -100
+#include "screenpos.h"
 
 screenPos processTouchScreen();
 
