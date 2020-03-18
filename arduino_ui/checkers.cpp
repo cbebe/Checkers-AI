@@ -17,6 +17,15 @@ MCUFRIEND_kbv tft;
 #define BOARD_DARK 19458 // colours for game board
 #define BOARD_LIGHT 57113 // please change i don't like
 
+// determine position of piece that was touched
+int8_t touchPiece() {
+  tPoint tp = processTouchScreen();
+  if (tp.x > UNTOUCHED && tp.y > UNTOUCHED) {
+    // remove board offset
+    tp.x -= 100; tp.y -= 20;
+    int8_t group = 
+  }
+}
 
 bool menuScreen() {
   tft.fillRect(100,100, 100, 100, TFT_WHITE);
@@ -24,7 +33,7 @@ bool menuScreen() {
   tPoint t;
   while (touch) {
     t = processTouchScreen();
-    if (t.x > 0) {
+    if (t.x > UNTOUCHED) {
       touch = false;
     }
   }

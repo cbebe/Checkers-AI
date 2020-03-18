@@ -19,6 +19,8 @@
 #define MINPRESSURE   10
 #define MAXPRESSURE 1000
 
+#define UNTOUCHED -100
+
 // touch screen point
 struct tPoint {
   int16_t x;
