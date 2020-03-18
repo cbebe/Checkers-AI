@@ -4,44 +4,36 @@
 #include <SPI.h>
 #include <SD.h>
 
+#include "consts_types.h"
 #include "pieces.h"
+#include "touchs.h"
 
-#define SD_CS 10
-
-// display init
+// shared variables
+shared_vars shared;
+// display and touch screen init
 MCUFRIEND_kbv tft;
-Piece gamePieces[24];
+
 
 #define BOARD_DARK 19458 // colours for game board
 #define BOARD_LIGHT 57113 // please change i don't like
 
 
 bool menuScreen() {
-  
-}
-
-void gameStart(bool start) {
-
-  // places pieces on board
-  for (uint8_t i = 0; i < 12; i++) {
-    // bot pieces
-    gamePieces[i] = {1, false, i};
-    // player pieces
-    gamePieces[i + 12] = {0, false, i + 20};
-    // change colour if player chose black
-    if (start) {
-      gamePieces[i].colour = 0;
-      gamePieces[i+1].colour = 1;
+  tft.fillRect(100,100, 100, 100, TFT_WHITE);
+  bool touch = true;
+  tPoint t;
+  while (touch) {
+    t = processTouchScreen();
+    if (t.x > 0) {
+      touch = false;
     }
-    drawPiece(gamePieces[i]); 
-    drawPiece(gamePieces[i + 12]);
   }
 }
 
-// draw checkers board
-void drawBoard() {
+// initialize game
+void gameInit(bool start) {
+  // draw checkers board
   tft.fillRect(100,20,280,280, BOARD_DARK);
-
   // print the light tiles
   for (int i = 0; i < 8; i += 2) {
     for (int j = 0; j < 8; j += 2) {
@@ -50,18 +42,35 @@ void drawBoard() {
 
     }
   }
-  tft.println(BOARD_LIGHT);
+
+  // places pieces on board
+  for (int8_t i = 0; i < NUM_PIECES; i++) {
+    // bot pieces
+    shared.gamePieces[i] = {1, false, i};
+    // player pieces
+    shared.gamePieces[i + NUM_PIECES] = {0, false, i + 20};
+    // change colour if player chose black
+    if (start) {
+      shared.gamePieces[i].colour = 0;
+      shared.gamePieces[i+1].colour = 1;
+    }
+    drawPiece(shared.gamePieces[i]); 
+    drawPiece(shared.gamePieces[i + NUM_PIECES]);
+  }
 }
 
-
 void setup() {
+  // initialize Arduino
   init();
 
+  // initialize display
+  shared.tft = &tft;
 	uint16_t ID = tft.readID();
 	tft.begin(ID);
 	tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
   
+
   Serial.begin(9600);
   Serial.flush();
 
@@ -69,20 +78,16 @@ void setup() {
   if (!SD.begin(SD_CS)) {
     while (1) {};    // Just wait, stuff exploded.
   }
-
 }
 
 
 int main() {
+  // set up Arduino
   setup();
   
-
-
-
   while (true) {
     bool start = menuScreen();
-    drawBoard();
-    gameStart(start);
+    gameInit(start);
   }
   return 0;
 }

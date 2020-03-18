@@ -1,7 +1,7 @@
 #ifndef _TOUCHS_H
 #define _TOUCHS_H
 
-#include "consts.h"
+#include "consts_types.h"
 
 // touch screen pins, obtained from the documentation
 #define YP A3 // must be an analog pin, use "An" notation!
@@ -19,6 +19,12 @@
 #define MINPRESSURE   10
 #define MAXPRESSURE 1000
 
-void processTouchScreen();
+// touch screen point
+struct tPoint {
+  int16_t x;
+  int16_t y;
+};
+
+tPoint processTouchScreen();
 
 #endif

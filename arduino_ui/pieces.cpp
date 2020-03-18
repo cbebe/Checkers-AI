@@ -1,7 +1,6 @@
 #include "pieces.h"
 
-extern MCUFRIEND_kbv tft;
-extern Piece gamePieces[];
+extern shared_vars shared; 
 
 // determines cursor position on the screen
 // given a piece's position on the board
@@ -15,18 +14,18 @@ drawPos piecePosition(uint8_t pos) {
   return dp;
 }
 
-// draw
+// draw piece on board
 void drawPiece(Piece piece) {
   drawPos dp = piecePosition(piece.pos);
   int colour = TFT_BLACK;
   if (piece.colour == 0 ) {
     colour = TFT_WHITE;
   }
-  tft.fillCircle(dp.x, dp.y, 15, colour);
+  shared.tft->fillCircle(dp.x, dp.y, 15, colour);
 
   // marks king piece
   if (piece.king) {
-    tft.fillCircle(dp.x, dp.y, 4, TFT_RED);
+    shared.tft->fillCircle(dp.x, dp.y, 4, TFT_RED);
   }
 }
 
