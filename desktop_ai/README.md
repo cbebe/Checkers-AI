@@ -6,5 +6,5 @@
 
 ## AI decision making
 
-- We kinda need to find a better way for our AI to decide 
+- We kinda need to find a better way for our AI to decide
 on which moves to make
