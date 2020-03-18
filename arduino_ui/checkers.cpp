@@ -19,24 +19,26 @@ MCUFRIEND_kbv tft;
 
 // determine position of piece that was touched
 int8_t touchPiece() {
-  tPoint tp = processTouchScreen();
+  screenPos tp = processTouchScreen();
   if (tp.x > UNTOUCHED && tp.y > UNTOUCHED) {
     // remove board offset
     tp.x -= 100; tp.y -= 20;
-    int8_t group = 
+    int8_t group = tp.y / 70; 
+    int8_t ForS;
   }
 }
 
 bool menuScreen() {
   tft.fillRect(100,100, 100, 100, TFT_WHITE);
   bool touch = true;
-  tPoint t;
+  screenPos t;
   while (touch) {
     t = processTouchScreen();
     if (t.x > UNTOUCHED) {
       touch = false;
     }
   }
+  return false;
 }
 
 // initialize game

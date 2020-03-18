@@ -21,12 +21,6 @@
 
 #define UNTOUCHED -100
 
-// touch screen point
-struct tPoint {
-  int16_t x;
-  int16_t y;
-};
-
-tPoint processTouchScreen();
+screenPos processTouchScreen();
 
 #endif

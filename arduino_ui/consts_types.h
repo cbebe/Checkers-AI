@@ -22,6 +22,12 @@ struct Piece {
   int8_t pos; 
 };
 
+// cursor position on the screen
+struct screenPos {
+  int16_t x;
+  int16_t y;
+};
+
 struct shared_vars {
   // the tft display
   MCUFRIEND_kbv* tft;

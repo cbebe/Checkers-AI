@@ -3,11 +3,11 @@
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Processes touch screen input
-tPoint processTouchScreen() {
+screenPos processTouchScreen() {
 	TSPoint touch = ts.getPoint();
 	pinMode(YP, OUTPUT); 
 	pinMode(XM, OUTPUT); 
-  tPoint tp;
+  screenPos tp;
   // checks if screen was not touched
 	if (touch.z < MINPRESSURE || touch.z > MAXPRESSURE) {
     // return an arbitrarily large negative number
