@@ -4,6 +4,7 @@
 #include "consts_types.h"
 #include "touchs.h"
 #include "pieces.h"
+#include "move.h"
 
 void choosePiece();
 
