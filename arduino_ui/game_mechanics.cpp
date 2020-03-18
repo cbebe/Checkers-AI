@@ -6,17 +6,15 @@ extern sharedVars shared;
 /* int8_t touchPiece():
 Determines which position of board that was touched
 Returns -1 if the board is untouched
-or a light tile was touched in the board
-Returns -2 if out of bounds */
-
+Returns -2 if a light tile was touched in the board
+or touch was out of bounds of the board */ 
 int8_t touchPiece() {
   screenPos tp = processTouchScreen();
-  // if touch screen was untouched or out of bounds
+  // if touch screen was untouched
   if (tp.x == UNTOUCHED){
     return -1;
   } 
-  shared.tft->println(tp.x);
-  shared.tft->println(tp.y);
+  // if touch screen was out of bounds
   if ((tp.y > 300 || tp.y < 20) || (tp.x > 380 || tp.x < 100)) {
     return -2;
   }
@@ -50,14 +48,25 @@ int8_t touchPiece() {
   if ((fsRow * fsCol) == 1 || 
       (fsRow + fsCol) == 0) {
     // a light tile was touched
-    return -1;
+    return -2;
   }
   
   return regX + (8 * regY) + (4 * fsRow);
 }
 
-void makeMove(int8_t piecePos) {
+void findMove(Piece piece) {
 
+}
+
+// lets player choose where to move the piece
+// returns true if the piece is moved
+bool makeMove(int8_t piecePos) {
+  Piece piece = findPiece(piecePos);
+  shared.tft->println(piece.side);
+  highlightPiece(piece);
+  
+  // find tiles where a move can be made
+  findMove(piece);
 }
 
 // lets player choose a piece to move
@@ -65,11 +74,11 @@ void choosePiece() {
   int8_t piecePos = touchPiece();
   while (piecePos != -2) {
     if (piecePos >= 0) {
+      Piece piece = findPiece(piecePos);
+      shared.tft->println(piece.side);
       if (shared.board[piecePos] == PLAYER) {
         makeMove(piecePos);
       }
-      shared.tft->println(piecePos);
-
     }
     delay(500);
     piecePos = touchPiece();

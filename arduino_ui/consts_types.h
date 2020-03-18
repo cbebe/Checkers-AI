@@ -17,16 +17,18 @@
 #define BOARD_DARK 19458 // colours for game board
 #define BOARD_LIGHT 57113 // please change i don't like
 
+typedef enum {EMPTY, PLAYER, BOT} tile;
+
 // struct that stores piece information
 struct Piece {
-  uint8_t colour; // colour of the piece
+  int8_t colour; // colour of the piece
+  tile side; // 1 for player 2 for bot
   bool king;
   // position of the piece from 0 to 31
   // -1 means captured
   int8_t pos; 
 };
 
-typedef enum {EMPTY, PLAYER, BOT} tile;
 
 struct sharedVars {
   

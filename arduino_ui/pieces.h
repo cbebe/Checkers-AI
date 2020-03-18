@@ -7,6 +7,7 @@
 
 Piece findPiece(int8_t piecePos);
 
+void highlightPiece(Piece piece);
 void drawPiece(Piece piece);
 
 #endif

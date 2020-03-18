@@ -43,9 +43,9 @@ void gameInit(bool start) {
   // places pieces on board
   for (int8_t i = 0; i < NUM_PIECES; i++) {
     // bot pieces
-    shared.gamePieces[i] = {1, false, i};
+    shared.gamePieces[i] = {1, BOT, false, i};
     // player pieces
-    shared.gamePieces[i + NUM_PIECES] = {0, false, i + 20};
+    shared.gamePieces[i + NUM_PIECES] = {0, PLAYER, false, i + 20};
     
     // change colour if player chose black
     if (start) {

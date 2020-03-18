@@ -4,7 +4,8 @@ extern sharedVars shared;
 
 // finds the piece from the board position
 Piece findPiece(int8_t piecePos) {
-  Piece piece = {0, false, -1};
+  // return a dummy piece if not found (unlikely)
+  Piece piece = {0, false, EMPTY, -1}; 
   for (int i = 0; i < 2 * NUM_PIECES; i++) {
     if (shared.gamePieces[i].pos == piecePos) {
       piece = shared.gamePieces[i];
@@ -14,10 +15,9 @@ Piece findPiece(int8_t piecePos) {
   return piece;
 }
 
-
 // determines cursor position on the screen
 // given a piece's position on the board
-screenPos piecePosition(uint8_t pos) {
+screenPos piecePosition(int8_t pos) {
   int8_t group = pos / 8; // position from 0 to 3
   int8_t ForS = (pos % 8) / 4; // first or second row of group
   int8_t col = pos % 4; // the column of the piece
@@ -45,3 +45,9 @@ void drawPiece(Piece piece) {
   }
 }
 
+// highlight piece for moving
+void highlightPiece(Piece piece) {
+  screenPos dp = piecePosition(piece.pos);
+  shared.tft->drawCircle(dp.x, dp.y, 15, TFT_YELLOW);
+  shared.tft->drawCircle(dp.x, dp.y, 14, TFT_YELLOW);
+}
