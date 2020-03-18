@@ -17,8 +17,10 @@ MCUFRIEND_kbv tft;
 // not really important rn
 bool menuScreen() {
   tft.fillRect(100,100, 100, 100, TFT_WHITE);
+  tft.setCursor(100, 100);
+  tft.println("RESETTING");
   screenPos t = processTouchScreen();
-  while (t.x > UNTOUCHED) {
+  while (t.x == UNTOUCHED) {
     t = processTouchScreen();
   }
   return true;
