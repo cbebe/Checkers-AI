@@ -1,8 +1,11 @@
-# cmput275project
+# Simple Arduino Checkers with Desktop AI
 
 Final Project for CMPUT 275
+by Charles and Poulomi
 
-https://gamedev.stackexchange.com/questions/16135/how-to-implement-a-i-for-checkers-draughts
+## Some AI ideas
+
+[Game Dev Stack exchange](https://gamedev.stackexchange.com/questions/16135/how-to-implement-a-i-for-checkers-draughts)
 
 ## Feedback on Proposal
 
@@ -19,6 +22,5 @@ https://gamedev.stackexchange.com/questions/16135/how-to-implement-a-i-for-check
 > your project (the TAs will likely not be able to help much if you go this direction). Also, whatever you do must run on the
 > VM: you can provide instructions for installing other packages if necessary but make sure it runs on the VM.
 >
-> But the overall idea is nice. Go for it, just make sure you have a manageable task when it comes to displaying and 
+> But the overall idea is nice. Go for it, just make sure you have a manageable task when it comes to displaying and
 > manipulating the board.
-
