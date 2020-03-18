@@ -48,21 +48,52 @@ int8_t touchPiece() {
   if ((fsRow * fsCol) == 1 || 
       (fsRow + fsCol) == 0) {
     // a light tile was touched
-    return -2;
+    return -1;
   }
   
   return regX + (8 * regY) + (4 * fsRow);
 }
 
-void findMove(Piece piece) {
+// function to see if there are legal moves
+// returns true if there are legal moves
+bool findMove(Piece piece) {
+  // cast piece.pos to 16-bit int for operations
+  int16_t p = piece.pos; 
+  
+  // valid moves on the board
+  bool moveUR = shared.board[p - 4] == EMPTY;
+  bool moveUL = shared.board[p - 3] == EMPTY;
+  bool moveDL = shared.board[p + 4] == EMPTY;
+  bool moveDR = shared.board[p + 3] == EMPTY;
 
+  if (!piece.king) {
+    // checks if piece is on either side 
+    bool leftCheck = (p - 4) % 8 == 0;
+    bool rightCheck = (p - 3) % 8 == 0;
+
+    // player non-king can only move up
+    if (piece.side == PLAYER) {
+      if (leftCheck) return moveUR;
+      if (rightCheck) return moveUL;
+      return moveUL + moveUR;
+    }
+    // bot non-king can only move down
+    if (piece.side == BOT) {
+      if (leftCheck) return moveDR;
+      if (rightCheck) return moveDL;
+      
+      return moveDL + moveDR;
+    }
+  }
+
+  // king can move anywhere
+  return moveDL + moveDR + moveUL + moveUR;
 }
 
 // lets player choose where to move the piece
 // returns true if the piece is moved
 bool makeMove(int8_t piecePos) {
   Piece piece = findPiece(piecePos);
-  shared.tft->println(piece.side);
   highlightPiece(piece);
   
   // find tiles where a move can be made
@@ -73,14 +104,16 @@ bool makeMove(int8_t piecePos) {
 void choosePiece() {
   int8_t piecePos = touchPiece();
   while (piecePos != -2) {
-    if (piecePos >= 0) {
-      Piece piece = findPiece(piecePos);
-      shared.tft->println(piece.side);
+    if (piecePos >= 0) {      
       if (shared.board[piecePos] == PLAYER) {
-        makeMove(piecePos);
+        Piece piece = findPiece(piecePos);
+        if (findMove(piece)) {
+          shared.selected = shared.board[piecePos];
+          highlightPiece(piece);
+        }
       }
     }
-    delay(500);
+    delay(400);
     piecePos = touchPiece();
   }
   

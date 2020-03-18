@@ -26,6 +26,8 @@ bool menuScreen() {
 
 // initialize game
 void gameInit(bool start) {
+
+  tft.fillScreen(TFT_BLACK);
   // draw checkers board
   tft.fillRect(100,20,280,280, BOARD_DARK);
   // print the light tiles
@@ -57,7 +59,7 @@ void gameInit(bool start) {
     drawPiece(shared.gamePieces[i + NUM_PIECES]);
     // place pieces in board array
     shared.board[i] = BOT;
-    shared.board[i + NUM_PIECES] = PLAYER;
+    shared.board[i + 20] = PLAYER;
   }
   
 }
@@ -71,7 +73,7 @@ void setup() {
 	uint16_t ID = tft.readID();
 	tft.begin(ID);
 	tft.setRotation(1);
-  tft.fillScreen(TFT_BLACK);
+
   
 
   Serial.begin(9600);

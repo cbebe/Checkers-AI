@@ -38,7 +38,7 @@ struct sharedVars {
   // array to store all board positions
   tile board[32];
   
-  int8_t selectedTile; // current selected tile
+  int8_t selected; // current selected tile
 };
 
 #endif
