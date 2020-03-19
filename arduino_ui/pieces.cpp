@@ -29,15 +29,21 @@ screenPos piecePosition(int8_t pos) {
 
 // draw piece on board
 void drawPiece(Piece piece) {
+  // does not draw if piece is captured
+  if (piece.pos == -1) return;
+
+  // find piece's position on screen
   screenPos dp = piecePosition(piece.pos);
+  // colour scheme
   uint16_t colour[] = {TFT_BLACK, TFT_WHITE}; 
-  if (piece.colour == 0 ) {
+  // change colour for other side
+  if (piece.colour == 0) {
     colour[0] = TFT_WHITE;
     colour[1] = TFT_BLACK;
   }
-  shared.tft->fillCircle(dp.x, dp.y, 15, colour[0]);
-  shared.tft->drawCircle(dp.x, dp.y, 12, colour[1]);
 
+  shared.tft->fillCircle(dp.x, dp.y, PC_RAD, colour[0]);
+  shared.tft->drawCircle(dp.x, dp.y, PC_RAD - 3, colour[1]);
 
   // marks king piece
   if (piece.king) {
@@ -47,7 +53,10 @@ void drawPiece(Piece piece) {
 
 // highlight piece for moving
 void highlightPiece(Piece piece) {
+  // does not highlight if piece is captured
+  if (piece.pos == -1) return;
   screenPos dp = piecePosition(piece.pos);
-  shared.tft->drawCircle(dp.x, dp.y, 15, TFT_YELLOW);
-  shared.tft->drawCircle(dp.x, dp.y, 14, TFT_YELLOW);
+  // yellow ring on highlighted piece
+  shared.tft->drawCircle(dp.x, dp.y, PC_RAD, TFT_YELLOW);
+  shared.tft->drawCircle(dp.x, dp.y, PC_RAD - 1, TFT_YELLOW);
 }

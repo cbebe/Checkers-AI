@@ -64,7 +64,7 @@ void choosePiece() {
         moveSt moves = findMove(piece);
         if (hasMoves(moves)) {
           highlightPiece(piece);
-          showMoves(piece, moves);
+          showMoves(piecePos, moves);
         }
       }
     }
