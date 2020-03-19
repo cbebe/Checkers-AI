@@ -16,13 +16,20 @@ void adjTileOS(int8_t p, int8_t *os) {
   }
 }
 
-void validateCapture(Piece& piece, moveSt& moves) {
+// a second check for capture moves 
+void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
   int8_t p = piece.pos;
+  // checks for UL
+  if (moves.UL == CAPTURE) {
+    if (p >= 5 && p <= 7) {
+      moves.UL == NOT;
+    }
+  } 
 }
 
 
 // checks for enemy pieces to capture
-void captureCheck(Piece& piece, moveSt& moves) {
+void captureCheck(Piece& piece, moveSt& moves, bool &chain) {
   int8_t os[4];
   int8_t p = piece.pos;
   adjTileOS(p, os); // determines offset of tiles
@@ -49,7 +56,7 @@ void captureCheck(Piece& piece, moveSt& moves) {
       shared.board[p + 9] == EMPTY) {
       moves.DR = CAPTURE;  
   }
-  validateCapture(piece, moves);
+  validateCapture(piece, moves, chain);
 }
 
 
@@ -147,9 +154,15 @@ void showMoves(int8_t pos, moveSt& moves) {
 // lets player choose where to move the piece
 // returns true if the piece is moved
 bool makeMove(int8_t piecePos) {
-  Piece piece = findPiece(piecePos);
-  highlightPiece(piece);
-  
-  // find tiles where a move can be made
-  findMove(piece);
+  if (piecePos >= 0) {      
+    if (shared.board[piecePos] == PLAYER) {
+      Piece piece = findPiece(piecePos);
+      moveSt moves = findMove(piece);
+      if (hasMoves(moves)) {
+        highlightPiece(piece);
+        showMoves(piecePos, moves);
+      }
+    }
+  }
+  return false;
 }

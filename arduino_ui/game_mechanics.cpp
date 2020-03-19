@@ -57,21 +57,9 @@ int8_t touchPiece() {
 // lets player choose a piece to move
 void choosePiece() {
   int8_t piecePos = touchPiece();
-  while (piecePos != -2) {
-    if (piecePos >= 0) {      
-      if (shared.board[piecePos] == PLAYER) {
-        Piece piece = findPiece(piecePos);
-        moveSt moves = findMove(piece);
-        if (hasMoves(moves)) {
-          highlightPiece(piece);
-          showMoves(piecePos, moves);
-        }
-      }
-    }
-    delay(400);
+  while (!makeMove(piecePos)) {
     piecePos = touchPiece();
   }
-  
   shared.tft->setCursor(0,0);
   shared.tft->fillRect(0,0,20,TFT_WIDTH, TFT_BLACK);
 }

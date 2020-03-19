@@ -13,8 +13,6 @@ struct moveSt {
   move DL; move DR;
 };
 
-moveSt findMove(Piece piece);
-bool hasMoves(moveSt moves);
-void showMoves(int8_t pos, moveSt& moves);
+bool makeMove(int8_t piecePos);
 
 #endif

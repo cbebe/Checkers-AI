@@ -39,6 +39,7 @@ struct sharedVars {
   tile board[32];
   
   int8_t selected; // current selected tile
+  bool turn; // whether it's the player's turn or not
 };
 
 #endif
