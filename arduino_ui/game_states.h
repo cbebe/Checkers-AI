@@ -7,5 +7,6 @@
 
 bool menuScreen();
 void gameInit(bool start);
+void game(bool start);
 
 #endif

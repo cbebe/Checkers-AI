@@ -6,7 +6,6 @@
 
 #include "consts_types.h"
 
-#include "game_mechanics.h"
 #include "game_states.h"
 
 // shared variables
@@ -40,7 +39,7 @@ int main() {
   while (true) {
     bool start = menuScreen();
     gameInit(start);
-    choosePiece();
+    game(start);
   }
   return 0;
 }

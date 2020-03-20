@@ -17,6 +17,9 @@
 #define BOARD_DARK 19458 // colours for game board
 #define BOARD_LIGHT 57113 // please change i don't like
 
+
+typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
+typedef enum {NO_PIECE, PIECE, CHAIN, DONE} selected;
 typedef enum {EMPTY, PLAYER, BOT} tile;
 
 // struct that stores piece information
@@ -39,7 +42,6 @@ struct sharedVars {
   tile board[32];
   
   int8_t selected; // current selected tile
-  bool turn; // whether it's the player's turn or not
 };
 
 #endif

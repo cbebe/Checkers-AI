@@ -54,5 +54,34 @@ void gameInit(bool start) {
     shared.board[i] = BOT;
     shared.board[i + 20] = PLAYER;
   }
-  
+}
+
+win endCheck() {
+
+}
+
+
+void doTurn(bool turn) {
+  selected pieceSel = NO_PIECE;
+  while(pieceSel != DONE) {
+    choosePiece(pieceSel);
+  }
+}
+
+void game(bool start) {
+  // true is player's turn, bot is false 
+  bool turn = true; 
+  if (!start){
+    turn = false;
+  }
+  while (true) {
+    test();
+  }
+  win state = NONE;
+  // goes on until the end
+  while (state == NONE) {
+    doTurn(turn);
+    state = endCheck();
+    turn = !turn;
+  }
 }

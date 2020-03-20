@@ -5,11 +5,12 @@ extern sharedVars shared;
 // determines adjacent tile offset depending
 // on which row the piece is in
 void adjTileOS(int8_t p, int8_t *os) {
-  // tile offsets {UL, UR, DL, DR}
+  // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
   os[0] = -5; os[2] = 3;
   os[1] = -4; os[3] = 4; 
   // second row has different offsets
   if ((p % 8)/ 4) {
+    shared.tft->println("huh");
     for (int i = 0; i < 4; i++) {
       os[i] += 1;
     } 
@@ -76,18 +77,14 @@ void emptyCheck(int8_t p, moveSt& moves) {
 // checks if the piece is on the edges of the board
 void edgeCheck(int8_t p, moveSt& moves) {
   if ((p - 4) % 8 == 0) { // left
-    moves.UL = NOT;
-    moves.DL = NOT;
+    moves.UL = NOT; moves.DL = NOT;
   } else if ((p - 3) % 8 == 0) { // right
-    moves.UR = NOT;
-    moves.DR = NOT;
+    moves.UR = NOT; moves.DR = NOT;
   }
   if (p < 4) { // top
-    moves.UL = NOT;
-    moves.UR = NOT;
+    moves.UL = NOT; moves.UR = NOT;
   } else if (p > 27) { // bottom
-    moves.DL = NOT;
-    moves.DR = NOT;
+    moves.DL = NOT; moves.DR = NOT;
   }
 }
 
@@ -114,7 +111,7 @@ void moveCheck(Piece piece, moveSt& moves) {
 // function to see if there are legal moves
 // returns a struct of legal moves
 moveSt findMove(Piece piece) {
-  
+  // create move Struct  
   moveSt valid = {NOT, NOT, NOT, NOT};
   moveCheck(piece, valid);
   return valid;
@@ -137,12 +134,15 @@ void markMove(int8_t pos) {
 
 // show valid moves on the screen
 void showMoves(int8_t pos, moveSt& moves) {
+  // adjacent tile offsets vary depending on row
+  int8_t os[4];
+  adjTileOS(pos, os);
 
   // piece moves
-  if (moves.UL == MOVE) {markMove(pos - 5);}
-  if (moves.UR == MOVE) {markMove(pos - 4);}
-  if (moves.DL == MOVE) {markMove(pos + 3);}
-  if (moves.DR == MOVE) {markMove(pos + 5);}
+  if (moves.UL == MOVE) {markMove(pos + os[0]);}
+  if (moves.UR == MOVE) {markMove(pos + os[1]);}
+  if (moves.DL == MOVE) {markMove(pos + os[2]);}
+  if (moves.DR == MOVE) {markMove(pos + os[3]);}
   // piece captures
   if (moves.UL == CAPTURE) {markMove(pos - 9);}
   if (moves.UR == CAPTURE) {markMove(pos - 7);}
@@ -151,9 +151,9 @@ void showMoves(int8_t pos, moveSt& moves) {
 
 }
 
-// lets player choose where to move the piece
-// returns true if the piece is moved
-bool makeMove(int8_t piecePos) {
+// shows the player where to move the piece
+// returns true if a piece can move
+bool pieceCanMove(int8_t piecePos) {
   if (piecePos >= 0) {      
     if (shared.board[piecePos] == PLAYER) {
       Piece piece = findPiece(piecePos);
@@ -161,6 +161,7 @@ bool makeMove(int8_t piecePos) {
       if (hasMoves(moves)) {
         highlightPiece(piece);
         showMoves(piecePos, moves);
+        return true;
       }
     }
   }

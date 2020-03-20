@@ -13,6 +13,7 @@ struct moveSt {
   move DL; move DR;
 };
 
-bool makeMove(int8_t piecePos);
+bool pieceCanMove(int8_t piecePos);
+void movePiece(int8_t oldPos, int8_t newPos);
 
 #endif
