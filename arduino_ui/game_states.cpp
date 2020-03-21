@@ -60,14 +60,13 @@ void gameInit(bool start) {
 }
 
 win endCheck() {
-
+  
 }
-
 
 void doTurn(bool turn) {
   selected pieceSel = NO_PIECE;
   while(pieceSel != DONE) {
-    choosePiece(pieceSel);
+    choosePiece(pieceSel, turn);
   }
 }
 

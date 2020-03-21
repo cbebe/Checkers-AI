@@ -7,12 +7,12 @@ extern sharedVars shared;
 void adjTileOS(int8_t p, int8_t *os) {
   // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
   os[0] = -4; os[2] = 4;
-  os[1] = -3; os[3] = 5; 
+  os[1] = -3; os[3] = 5;
   // second row has different offsets
   if (((p % 8)/ 4)) {
     for (int i = 0; i < 4; i++) {
       os[i] -= 1;
-    } 
+    }
   }
 }
 
@@ -24,13 +24,10 @@ Returns -2 if touch was out of bounds of the board */
 int8_t touchPiece() {
   screenPos tp = processTouchScreen();
   // if touch screen was untouched
-  if (tp.x == UNTOUCHED){
-    return -1;
-  } 
+  if (tp.x == UNTOUCHED){return -1;} 
   // if touch screen was out of bounds
-  if ((tp.y > 300 || tp.y < 20) || (tp.x > 380 || tp.x < 100)) {
-    return -2;
-  }
+  if ((tp.y > 300 || tp.y < 20) || 
+      (tp.x > 380 || tp.x < 100)) {return -2;}
 
   /* NOTE: The math here might be a bit hard to understand
   so just imagine the 8x8 board divided into 16 regions
@@ -58,17 +55,15 @@ int8_t touchPiece() {
 
   // multiplication is logically the same as AND
   // addition is logically the same as OR
+  // checks if a light tile was touched
   if ((fsRow * fsCol) == 1 || 
-      (fsRow + fsCol) == 0) {
-    // a light tile was touched
-    return -1;
-  }
+      (fsRow + fsCol) == 0) {return -1;}
   
   return regX + (8 * regY) + (4 * fsRow);
 }
 
 // lets player choose a piece to move
-void choosePiece(selected& pieceSel) {
+void choosePiece(selected& pieceSel, bool turn) {
   int8_t piecePos = touchPiece();
   // loop again if nothing was touched
   if (piecePos == -1) {return;} 
@@ -76,38 +71,28 @@ void choosePiece(selected& pieceSel) {
   if (shared.board[piecePos] == EMPTY) {
     if (pieceSel == NO_PIECE) {return;}
     if (pieceSel == PIECE) {
-      Piece piece = findPiece(shared.selected);
-      unhighlightPiece(piece);
-      movePiece(piece.pos, piecePos);
+      // check if the moves are legal for this one
+      Piece* piece = &shared.gamePieces[pieceIndex(shared.selected)];
+      unhighlightPiece(*piece);
+      movePiece(piece->pos, piecePos);
       pieceSel = DONE;
       return;
     }
   }
   // selecting a new piece
   moveSt moves;
-  if (pieceCanMove(piecePos, moves)) {
+  tile currentPlayer = BOT;
+  if (turn) {
+    currentPlayer = PLAYER;
+  }
+  if (pieceCanMove(piecePos, moves, currentPlayer)) {
     if (piecePos == shared.selected) {return;}
-    shared.tft->println("hey");
     pieceSel = PIECE;
-    Piece oldPiece = findPiece(shared.selected);
-    unhighlightPiece(oldPiece);
+    unhighlightPiece(shared.gamePieces[pieceIndex(shared.selected)]);
     shared.selected = piecePos;
     showMoves(piecePos, moves);
     return;
   }
-}
-
-// finds the piece from the board position
-Piece findPiece(int8_t piecePos) {
-  // return a dummy piece if not found (unlikely)
-  Piece piece = {0, EMPTY, false, -1}; 
-  for (int i = 0; i < 2 * NUM_PIECES; i++) {
-    if (shared.gamePieces[i].pos == piecePos) {
-      piece = shared.gamePieces[i];
-      break;
-    }
-  }
-  return piece;
 }
 
 // determines cursor position on the screen
@@ -131,7 +116,7 @@ void clearTile(int8_t tileNum) {
 }
 
 // draw piece on board
-void drawPiece(Piece& piece) {
+void drawPiece(const Piece& piece) {
   // does not draw if piece is captured
   if (piece.pos == -1) return;
 
@@ -155,7 +140,7 @@ void drawPiece(Piece& piece) {
 }
 
 // highlight piece for moving
-void highlightPiece(Piece& piece) {
+void highlightPiece(const Piece& piece) {
   // does not highlight if piece is captured
   if (piece.pos == -1) return;
   screenPos dp = piecePosition(piece.pos);
@@ -165,13 +150,18 @@ void highlightPiece(Piece& piece) {
 }
 
 // unhighlights selected piece
-void unhighlightPiece(Piece& piece) {
+void unhighlightPiece(const Piece& piece) {
   drawPiece(piece);
-  int8_t os[4];
+  int8_t os[4], dg[] = {-9, -7, 7, 9};
   adjTileOS(piece.pos, os);
+  // clears the moves
   for (int i = 0; i < 4; i++) {
     if (shared.board[piece.pos + os[i]] == EMPTY) {
       clearTile(piece.pos + os[i]);
+    }
+    // clear capture moves
+    if (shared.board[piece.pos + dg[i]] == EMPTY) {
+      clearTile(piece.pos + dg[i]);
     }
   }
 }
@@ -188,8 +178,6 @@ int8_t pieceIndex(int8_t pos) {
   }
   return -1;
 }
-
-
 
 // moves a piece from one position to another
 void movePiece(int8_t oldPos, int8_t newPos) {

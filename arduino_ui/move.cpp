@@ -4,7 +4,7 @@ extern sharedVars shared;
 
 // a second check for capture moves 
 // WORK IN PROGRESS
-void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
+void validateCapture(const Piece& piece, moveSt& moves) {
   int8_t p = piece.pos;
   // checks for UL
   if (moves.UL == CAPTURE) {
@@ -19,9 +19,8 @@ void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
   }
 }
 
-
 // checks for enemy pieces to capture
-void captureCheck(Piece& piece, moveSt& moves, bool &chain) {
+void captureCheck(const Piece& piece, moveSt& moves) {
   int8_t os[4];
   int8_t p = piece.pos;
   adjTileOS(p, os); // determines offset of tiles
@@ -48,9 +47,8 @@ void captureCheck(Piece& piece, moveSt& moves, bool &chain) {
       shared.board[p + 9] == EMPTY) {
       moves.DR = CAPTURE;  
   }
-  validateCapture(piece, moves, chain);
+  validateCapture(piece, moves);
 }
-
 
 // checks if there are empty tiles next 
 // to the piece on the board
@@ -80,7 +78,7 @@ void edgeCheck(int8_t p, moveSt& moves) {
 }
 
 // checks for moves that can be made by the piece
-void moveCheck(Piece piece, moveSt& moves) {
+void moveCheck(const Piece &piece, moveSt& moves) {
   int8_t p = piece.pos; 
   emptyCheck(p, moves); // checks for empty tiles
   edgeCheck(p, moves); // removes edge moves
@@ -101,7 +99,7 @@ void moveCheck(Piece piece, moveSt& moves) {
 
 // function to see if there are legal moves
 // returns a struct of legal moves
-moveSt findMove(Piece piece) {
+moveSt findMove(const Piece &piece, const tile& currentPlayer) {
   // create move Struct  
   moveSt valid = {NOT, NOT, NOT, NOT};
   moveCheck(piece, valid);
@@ -124,7 +122,7 @@ void markMove(int8_t pos) {
 }
 
 // show valid moves on the screen
-void showMoves(int8_t pos, moveSt& moves) {
+void showMoves(int8_t pos, const moveSt& moves) {
   // adjacent tile offsets vary depending on row
   int8_t os[4];
   adjTileOS(pos, os);
@@ -144,13 +142,13 @@ void showMoves(int8_t pos, moveSt& moves) {
 
 // shows the player where to move the piece
 // returns true if a piece can move
-bool pieceCanMove(int8_t piecePos, moveSt& moves) {
+bool pieceCanMove(int8_t piecePos, moveSt& moves, tile currentPlayer) {
   if (piecePos >= 0) {      
-    if (shared.board[piecePos] != EMPTY) {
-      Piece piece = findPiece(piecePos);
-      moves = findMove(piece);
+    if (shared.board[piecePos] == currentPlayer) {
+      Piece *piece = &shared.gamePieces[pieceIndex(piecePos)];
+      moves = findMove(*piece, currentPlayer);
       if (hasMoves(moves)) {
-        highlightPiece(piece);
+        highlightPiece(*piece);
         showMoves(piecePos, moves);
         return true;
       }
