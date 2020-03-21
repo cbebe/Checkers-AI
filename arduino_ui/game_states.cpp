@@ -58,7 +58,7 @@ void gameInit(bool start) {
     shared.board[i + 20] = PLAYER;
   }
   // dummy piece
-  shared.gamePieces[24] = {0, EMPTY, false, -1}; 
+  shared.gamePieces[DUMMY] = {0, EMPTY, false, -1}; 
 }
 
 win endCheck() {
@@ -67,8 +67,9 @@ win endCheck() {
 
 void doTurn(bool turn) {
   selected pieceSel = NO_PIECE;
+  moveSt moves;
   while(pieceSel != DONE) {
-    choosePiece(pieceSel, turn);
+    choosePiece(pieceSel, turn, moves);
   }
 }
 
@@ -78,10 +79,6 @@ void game(bool start) {
   if (!start){
     turn = false;
   }
-  int8_t num = 0;
-  // while (true) {
-  //   testing(num);
-  // }
   win state = NONE;
   // goes on until the end
   while (state == NONE) {

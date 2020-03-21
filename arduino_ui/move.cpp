@@ -143,16 +143,13 @@ void showMoves(int8_t pos, const moveSt& moves) {
 // shows the player where to move the piece
 // returns true if a piece can move
 bool pieceCanMove(int8_t piecePos, moveSt& moves, tile currentPlayer) {
-  if (piecePos >= 0) {      
-    if (shared.board[piecePos] == currentPlayer) {
-      Piece *piece = &shared.gamePieces[pieceIndex(piecePos)];
-      moves = findMove(*piece, currentPlayer);
-      if (hasMoves(moves)) {
-        highlightPiece(*piece);
-        showMoves(piecePos, moves);
-        return true;
-      }
-    }
+  Piece *piece = &shared.gamePieces[pieceIndex(piecePos)];
+  moveSt temp = moves; // keep previous moveset
+  moves = findMove(*piece, currentPlayer);
+  if (hasMoves(moves)) {
+    highlightPiece(*piece);
+    return true;
   }
+  moves = temp; // revert to previous moveset
   return false;
 }

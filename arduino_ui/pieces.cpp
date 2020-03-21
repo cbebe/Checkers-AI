@@ -62,37 +62,57 @@ int8_t touchPiece() {
   return regX + (8 * regY) + (4 * fsRow);
 }
 
+// checks if the selected move is legal
+bool legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
+  int8_t os[4], dg[] = {-9, -7, 7, 9};
+  adjTileOS(piece.pos, os); // adjust adjacent tile offsets
+  // CAPTUREs
+  if (moves.UL == CAPTURE && newPos == piece.pos - 9) {return true;}
+  if (moves.UR == CAPTURE && newPos == piece.pos - 7) {return true;}
+  if (moves.DL == CAPTURE && newPos == piece.pos + 7) {return true;}
+  if (moves.DR == CAPTURE && newPos == piece.pos + 9) {return true;}
+  // MOVEs
+  if (moves.UL == MOVE && newPos == piece.pos + os[0]) {return true;}
+  if (moves.UR == MOVE && newPos == piece.pos + os[1]) {return true;}
+  if (moves.DL == MOVE && newPos == piece.pos + os[2]) {return true;}
+  if (moves.DR == MOVE && newPos == piece.pos + os[3]) {return true;}
+  
+  return false;
+}
+
 // lets player choose a piece to move
-void choosePiece(selected& pieceSel, bool turn) {
+void choosePiece(selected& pieceSel, bool turn, moveSt& moves) {
   int8_t piecePos = touchPiece();
   // loop again if nothing was touched
-  if (piecePos == -1) {return;} 
+  if (piecePos < 0) {return;} 
 
-  if (shared.board[piecePos] == EMPTY) {
-    if (pieceSel == NO_PIECE) {return;}
-    if (pieceSel == PIECE) {
-      // check if the moves are legal for this one
-      Piece* piece = &shared.gamePieces[pieceIndex(shared.selected)];
-      unhighlightPiece(*piece);
-      movePiece(piece->pos, piecePos);
-      pieceSel = DONE;
-      shared.selected = -1; // now no piece is selected
-      return;
-    }
-  }
   // selecting a new piece
-  moveSt moves;
   tile currentPlayer = BOT;
   if (turn) {
     currentPlayer = PLAYER;
   }
-  if (pieceCanMove(piecePos, moves, currentPlayer)) {
-    if (piecePos == shared.selected) {return;}
-    pieceSel = PIECE;
-    unhighlightPiece(shared.gamePieces[pieceIndex(shared.selected)]);
-    shared.selected = piecePos;
-    showMoves(piecePos, moves);
-    return;
+  if (shared.board[piecePos] == currentPlayer) {
+    if (pieceCanMove(piecePos, moves, currentPlayer)) {
+      // do nothing if same piece was selected
+      if (piecePos == shared.selected) {return;}
+      // unhighlights old piece and its moves
+      unhighlightPiece(shared.gamePieces[pieceIndex(shared.selected)]);
+      shared.selected = piecePos;
+      showMoves(piecePos, moves);
+      pieceSel = PIECE; // now a piece is selected
+    }
+  } else if (shared.board[piecePos] == EMPTY) {
+    if (pieceSel == NO_PIECE) {return;}
+    if (pieceSel == PIECE) {
+      // check if the moves are legal for this piece
+      Piece* piece = &shared.gamePieces[pieceIndex(shared.selected)];
+      if(legalMove(*piece, piecePos, moves)) {
+        unhighlightPiece(*piece); // remove move marks
+        movePiece(piece->pos, piecePos); // move piece
+        shared.selected = -1; // now no piece is selected
+        pieceSel = DONE; // done moving
+      }
+    }
   }
 }
 
@@ -172,14 +192,14 @@ void unhighlightPiece(const Piece& piece) {
 // in terms of position
 // return dummy piece if not found
 int8_t pieceIndex(int8_t pos) {
-  if (pos < 0) {return 24;}
+  if (pos < 0) {return DUMMY;}
   // find the piece in the board that matches the position
   for (int i = 0; i < NUM_PIECES * 2; i++) {
     if (shared.gamePieces[i].pos == pos) {
       return i;
     }
   }
-  return 24;
+  return DUMMY;
 }
 
 // moves a piece from one position to another

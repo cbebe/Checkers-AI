@@ -12,6 +12,7 @@
 #define SD_CS 10
 
 #define NUM_PIECES 12 // number of pieces per player
+#define DUMMY 24
 #define B_SQ 35 // board square side length
 
 #define BOARD_DARK 19458 // colours for game board
