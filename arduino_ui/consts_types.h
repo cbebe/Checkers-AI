@@ -21,6 +21,9 @@
 typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
 typedef enum {NO_PIECE, PIECE, CHAIN, DONE} selected;
 typedef enum {EMPTY, PLAYER, BOT} tile;
+// moves that can be made by a piece
+typedef enum {NOT, MOVE, CAPTURE} move;
+
 
 // struct that stores piece information
 struct Piece {
@@ -32,6 +35,11 @@ struct Piece {
   int8_t pos; 
 };
 
+// struct to store moves in all 4 directions
+struct moveSt {
+  move UL; move UR;
+  move DL; move DR;
+};
 
 struct sharedVars {
   

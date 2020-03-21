@@ -14,6 +14,9 @@ bool menuScreen() {
   while (t.x == UNTOUCHED) {
     t = processTouchScreen();
   }
+  shared.tft->setTextSize(1);
+  shared.tft->setTextColor(TFT_WHITE);
+  shared.tft->setCursor(0,0);
   return true;
 }
 
@@ -74,9 +77,10 @@ void game(bool start) {
   if (!start){
     turn = false;
   }
-  while (true) {
-    test();
-  }
+  int8_t num = 0;
+  // while (true) {
+  //   testing(num);
+  // }
   win state = NONE;
   // goes on until the end
   while (state == NONE) {

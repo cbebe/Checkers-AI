@@ -2,6 +2,20 @@
 
 extern sharedVars shared; 
 
+// determines adjacent tile offset depending
+// on which row the piece is in
+void adjTileOS(int8_t p, int8_t *os) {
+  // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
+  os[0] = -4; os[2] = 4;
+  os[1] = -3; os[3] = 5; 
+  // second row has different offsets
+  if (((p % 8)/ 4)) {
+    for (int i = 0; i < 4; i++) {
+      os[i] -= 1;
+    } 
+  }
+}
+
 /* int8_t touchPiece():
 Determines which position of board that was touched
 Returns -1 if the board is untouched
@@ -58,25 +72,28 @@ void choosePiece(selected& pieceSel) {
   int8_t piecePos = touchPiece();
   // loop again if nothing was touched
   if (piecePos == -1) {return;} 
-  if (pieceSel == NO_PIECE && piecePos == EMPTY) {return;}
-  if (pieceSel == PIECE && piecePos == EMPTY) {
-    Piece piece = findPiece(shared.selected);
-    movePiece(piece.pos, piecePos);
-    pieceSel = DONE;
+
+  if (shared.board[piecePos] == EMPTY) {
+    if (pieceSel == NO_PIECE) {return;}
+    if (pieceSel == PIECE) {
+      Piece piece = findPiece(shared.selected);
+      unhighlightPiece(piece);
+      movePiece(piece.pos, piecePos);
+      pieceSel = DONE;
+      return;
+    }
   }
-  if (pieceCanMove(piecePos)) {
+  // selecting a new piece
+  moveSt moves;
+  if (pieceCanMove(piecePos, moves)) {
+    if (piecePos == shared.selected) {return;}
+    shared.tft->println("hey");
     pieceSel = PIECE;
     Piece oldPiece = findPiece(shared.selected);
     unhighlightPiece(oldPiece);
+    shared.selected = piecePos;
+    showMoves(piecePos, moves);
     return;
-  }
-  if (pieceSel == PIECE) {
-    if (piecePos == EMPTY) {
-
-    }
-    if (piecePos != shared.selected) {
-      
-    }
   }
 }
 
@@ -103,6 +120,14 @@ screenPos piecePosition(int8_t pos) {
   dp.x = ((1 - ForS) * B_SQ) + (2 * col * B_SQ) + 117;
   dp.y = (2 * group * B_SQ) + (ForS * B_SQ) + 37;
   return dp;
+}
+
+// clears the tile of a piece or move
+void clearTile(int8_t tileNum) {
+  if (tileNum < 0 || tileNum > 31) {return;}
+  screenPos dp = piecePosition(tileNum);
+  dp.x -= B_SQ/2; dp.y -= B_SQ/2;
+  shared.tft->fillRect(dp.x, dp.y, B_SQ, B_SQ, BOARD_DARK);
 }
 
 // draw piece on board
@@ -142,6 +167,13 @@ void highlightPiece(Piece& piece) {
 // unhighlights selected piece
 void unhighlightPiece(Piece& piece) {
   drawPiece(piece);
+  int8_t os[4];
+  adjTileOS(piece.pos, os);
+  for (int i = 0; i < 4; i++) {
+    if (shared.board[piece.pos + os[i]] == EMPTY) {
+      clearTile(piece.pos + os[i]);
+    }
+  }
 }
 
 // find a piece's index on the board array
@@ -157,12 +189,7 @@ int8_t pieceIndex(int8_t pos) {
   return -1;
 }
 
-// clears the tile of a piece
-void clearTile(int8_t tileNum) {
-  screenPos dp = piecePosition(tileNum);
-  dp.x -= B_SQ/2; dp.y -= B_SQ/2;
-  shared.tft->fillRect(dp.x, dp.y, B_SQ, B_SQ, BOARD_DARK);
-}
+
 
 // moves a piece from one position to another
 void movePiece(int8_t oldPos, int8_t newPos) {
@@ -178,9 +205,18 @@ void movePiece(int8_t oldPos, int8_t newPos) {
   shared.board[newPos] = shared.gamePieces[pi].side;
 }
 
-void test() {
-  int8_t pos = touchPiece();
-  if (pos > 0) {
-    while ()
-  }
+void testing(int8_t &state) {
+  // int8_t pos = touchPiece();
+
+  // if (pos > 0 && pos != shared.selected) {
+  //   if (state == 0) {
+  //     shared.selected = pos;
+  //     state = 1;
+  //   } else if (state == 1) {
+  //     movePiece(shared.selected, pos);
+  //     shared.tft->println("moved");
+  //     state = 0;
+  //   }
+  //   delay(500);
+  // }
 }

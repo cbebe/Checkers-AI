@@ -4,16 +4,8 @@
 #include "consts_types.h"
 #include "pieces.h"
 
-// moves that can be made by a piece
-typedef enum {NOT, MOVE, CAPTURE} move;
-
-// struct to store moves in all 4 directions
-struct moveSt {
-  move UL; move UR;
-  move DL; move DR;
-};
-
-bool pieceCanMove(int8_t piecePos);
+bool pieceCanMove(int8_t piecePos, moveSt& moves);
 void movePiece(int8_t oldPos, int8_t newPos);
+void showMoves(int8_t pos, moveSt& moves);
 
 #endif

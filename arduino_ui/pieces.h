@@ -17,6 +17,6 @@ void choosePiece(selected& pieceSel);
 void highlightPiece(Piece& piece);
 void unhighlightPiece(Piece& piece);
 void drawPiece(Piece& piece);
-void test();
-
+void testing(int8_t &state);
+void adjTileOS(int8_t p, int8_t *os);
 #endif

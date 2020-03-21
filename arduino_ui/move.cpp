@@ -2,20 +2,6 @@
 
 extern sharedVars shared;
 
-// determines adjacent tile offset depending
-// on which row the piece is in
-void adjTileOS(int8_t p, int8_t *os) {
-  // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
-  os[0] = -4; os[2] = 4;
-  os[1] = -3; os[3] = 5; 
-  // second row has different offsets
-  if (((p % 8)/ 4)) {
-    for (int i = 0; i < 4; i++) {
-      os[i] -= 1;
-    } 
-  }
-}
-
 // a second check for capture moves 
 // WORK IN PROGRESS
 void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
@@ -158,11 +144,11 @@ void showMoves(int8_t pos, moveSt& moves) {
 
 // shows the player where to move the piece
 // returns true if a piece can move
-bool pieceCanMove(int8_t piecePos) {
+bool pieceCanMove(int8_t piecePos, moveSt& moves) {
   if (piecePos >= 0) {      
-    if (shared.board[piecePos] == PLAYER) {
+    if (shared.board[piecePos] != EMPTY) {
       Piece piece = findPiece(piecePos);
-      moveSt moves = findMove(piece);
+      moves = findMove(piece);
       if (hasMoves(moves)) {
         highlightPiece(piece);
         showMoves(piecePos, moves);
