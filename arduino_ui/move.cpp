@@ -6,18 +6,18 @@ extern sharedVars shared;
 // on which row the piece is in
 void adjTileOS(int8_t p, int8_t *os) {
   // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
-  os[0] = -5; os[2] = 3;
-  os[1] = -4; os[3] = 4; 
+  os[0] = -4; os[2] = 4;
+  os[1] = -3; os[3] = 5; 
   // second row has different offsets
-  if ((p % 8)/ 4) {
-    shared.tft->println("huh");
+  if (((p % 8)/ 4)) {
     for (int i = 0; i < 4; i++) {
-      os[i] += 1;
+      os[i] -= 1;
     } 
   }
 }
 
 // a second check for capture moves 
+// WORK IN PROGRESS
 void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
   int8_t p = piece.pos;
   // checks for UL
@@ -25,7 +25,12 @@ void validateCapture(Piece& piece, moveSt& moves, bool &chain) {
     if (p >= 5 && p <= 7) {
       moves.UL == NOT;
     }
-  } 
+  }
+  if (moves.UR == CAPTURE) {
+    if (p >= 5 && p <= 7) {
+      moves.UL == NOT;
+    }
+  }
 }
 
 
