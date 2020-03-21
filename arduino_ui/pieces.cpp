@@ -64,7 +64,7 @@ int8_t touchPiece() {
 
 // checks if the selected move is legal
 bool legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
-  int8_t os[4], dg[] = {-9, -7, 7, 9};
+  int8_t os[4];
   adjTileOS(piece.pos, os); // adjust adjacent tile offsets
   // CAPTUREs
   if (moves.UL == CAPTURE && newPos == piece.pos - 9) {return true;}
@@ -76,7 +76,7 @@ bool legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
   if (moves.UR == MOVE && newPos == piece.pos + os[1]) {return true;}
   if (moves.DL == MOVE && newPos == piece.pos + os[2]) {return true;}
   if (moves.DR == MOVE && newPos == piece.pos + os[3]) {return true;}
-  
+
   return false;
 }
 
