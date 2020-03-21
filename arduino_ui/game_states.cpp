@@ -31,9 +31,9 @@ void gameInit(bool start) {
   // print the light tiles
   for (int8_t i = 0; i < 8; i += 2) {
     for (int8_t j = 0; j < 8; j += 2) {
-      shared.tft->fillRect(off_x + (i*board_sq), off_y + (j*board_sq), 
+      shared.tft->fillRect( off_x + (i*board_sq), off_y + (j*board_sq), 
                             board_sq, board_sq, board_light);
-      shared.tft->fillRect(off_x + ((i+1)*board_sq), off_y + ((j+1)*board_sq), 
+      shared.tft->fillRect( off_x + ((i+1)*board_sq), off_y + ((j+1)*board_sq), 
                             board_sq, board_sq, board_light);
     }
   }

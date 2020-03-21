@@ -134,6 +134,7 @@ screenPos piecePosition(int8_t pos) {
 void clearTile(int8_t tileNum) {
   if (tileNum > 0 && tileNum < 31) {
     screenPos dp = piecePosition(tileNum);
+    // dp initially points to the centre of the square
     dp.x -= c::board_sq/2; dp.y -= c::board_sq/2;
     shared.tft->fillRect(dp.x, dp.y, c::board_sq, c::board_sq, c::board_dark);
   }
@@ -150,8 +151,7 @@ void drawPiece(const Piece& piece) {
   uint16_t colour[] = {TFT_BLACK, TFT_WHITE}; 
   // change colour for other side
   if (piece.colour == 0) {
-    colour[0] = TFT_WHITE;
-    colour[1] = TFT_BLACK;
+    colour[0] = TFT_WHITE; colour[1] = TFT_BLACK;
   }
 
   shared.tft->fillCircle(dp.x, dp.y, c::pc_rad, colour[0]);
@@ -159,7 +159,7 @@ void drawPiece(const Piece& piece) {
 
   // marks king piece
   if (piece.king) {
-    shared.tft->fillCircle(dp.x, dp.y, 4, TFT_RED);
+    shared.tft->fillCircle(dp.x, dp.y, c::pc_rad/4 + 1, TFT_RED);
   }
 }
 
@@ -176,7 +176,7 @@ void highlightPiece(const Piece& piece) {
 // unhighlights selected piece
 void unhighlightPiece(const Piece& piece) {
   if (piece.pos == -1) {return;}
-  drawPiece(piece); // draws a new piece to remove highlight
+  drawPiece(piece); // redraws piece to remove highlight
   int8_t os[4], dg[] = {-9, -7, 7, 9};
   adjTileOS(piece.pos, os); // adjusts adjacent tile offsets
   // clears the moves
@@ -198,9 +198,7 @@ int8_t pieceIndex(int8_t pos) {
   if (pos < 0) {return c::dummy;}
   // find the piece in the board that matches the position
   for (int i = 0; i < c::num_pieces * 2; i++) {
-    if (shared.gamePieces[i].pos == pos) {
-      return i;
-    }
+    if (shared.gamePieces[i].pos == pos) {return i;}
   }
   return c::dummy;
 }
