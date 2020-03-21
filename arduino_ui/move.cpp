@@ -31,20 +31,20 @@ void captureCheck(const Piece& piece, moveSt& moves) {
 
   // checks for adjacent enemy pieces
   // and empty tiles behind those pieces
-  if (shared.board[p + os[0]] == enemy &&
-      shared.board[p - 9] == EMPTY) {
+  if (board(p + os[0]) == enemy &&
+      board(p - 9) == EMPTY) {
       moves.UL = CAPTURE;
   }
-  if (shared.board[p + os[1]] == enemy && 
-      shared.board[p - 7] == EMPTY) {
+  if (board(p + os[1]) == enemy && 
+      board(p - 7) == EMPTY) {
       moves.UR = CAPTURE;
   }
-  if (shared.board[p + os[2]] == enemy &&
-      shared.board[p + 7] == EMPTY) {
+  if (board(p + os[2]) == enemy &&
+      board(p + 7) == EMPTY) {
       moves.DL = CAPTURE;
   }
-  if (shared.board[p + os[3]] == enemy &&
-      shared.board[p + 9] == EMPTY) {
+  if (board(p + os[3]) == enemy &&
+      board(p + 9) == EMPTY) {
       moves.DR = CAPTURE;  
   }
   validateCapture(piece, moves);
@@ -57,10 +57,10 @@ void emptyCheck(int8_t p, moveSt& moves) {
   int8_t os[4];
   adjTileOS(p, os);
 
-  if (shared.board[p + os[0]] == EMPTY) {moves.UL = MOVE;}
-  if (shared.board[p + os[1]] == EMPTY) {moves.UR = MOVE;}
-  if (shared.board[p + os[2]] == EMPTY) {moves.DL = MOVE;}
-  if (shared.board[p + os[3]] == EMPTY) {moves.DR = MOVE;}
+  if (board(p + os[0]) == EMPTY) {moves.UL = MOVE;}
+  if (board(p + os[1]) == EMPTY) {moves.UR = MOVE;}
+  if (board(p + os[2]) == EMPTY) {moves.DL = MOVE;}
+  if (board(p + os[3]) == EMPTY) {moves.DR = MOVE;}
 }
 
 // checks if the piece is on the edges of the board

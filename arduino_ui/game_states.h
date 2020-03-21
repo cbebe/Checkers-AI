@@ -2,11 +2,11 @@
 #define _GAME_STATES_H
 
 #include "consts_types.h"
-#include "touchs.h"
 #include "pieces.h"
+#include "touchs.h"
 
-bool menuScreen();
-void gameInit(bool start);
 void game(bool start);
+void gameInit(bool start);
+bool menuScreen();
 
 #endif

@@ -2,6 +2,15 @@
 
 extern sharedVars shared; 
 
+// returns the tile value of a board position
+// use only for checking, not for value assignment
+tile board(int8_t pos) {
+  // out of bounds
+  if (pos < 0 || pos > 31) {return OUT;}
+  return shared.board[pos];
+}
+
+
 // determines adjacent tile offset depending
 // on which row the piece is in
 void adjTileOS(int8_t p, int8_t *os) {
@@ -93,7 +102,7 @@ void choosePiece(selected& pieceSel, bool turn, moveSt& moves) {
   if (turn) {
     currentPlayer = PLAYER;
   }
-  if (shared.board[piecePos] == currentPlayer) {
+  if (board(piecePos) == currentPlayer) {
     if (pieceCanMove(piecePos, moves, currentPlayer)) {
       // do nothing if same piece was selected
       if (piecePos == shared.selected) {return;}
@@ -103,7 +112,7 @@ void choosePiece(selected& pieceSel, bool turn, moveSt& moves) {
       showMoves(piecePos, moves);
       pieceSel = PIECE; // now a piece is selected
     }
-  } else if (shared.board[piecePos] == EMPTY) {
+  } else if (board(piecePos) == EMPTY) {
     if (pieceSel == NO_PIECE) {return;}
     if (pieceSel == PIECE) {
       // check if the moves are legal for this piece
@@ -181,11 +190,11 @@ void unhighlightPiece(const Piece& piece) {
   adjTileOS(piece.pos, os); // adjusts adjacent tile offsets
   // clears the moves
   for (int i = 0; i < 4; i++) {
-    if (shared.board[piece.pos + os[i]] == EMPTY) {
+    if (board(piece.pos + os[i]) == EMPTY) {
       clearTile(piece.pos + os[i]);
     }
     // clear capture moves
-    if (shared.board[piece.pos + dg[i]] == EMPTY) {
+    if (board(piece.pos + dg[i]) == EMPTY) {
       clearTile(piece.pos + dg[i]);
     }
   }

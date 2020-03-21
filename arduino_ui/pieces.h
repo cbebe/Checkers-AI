@@ -17,4 +17,5 @@ void unhighlightPiece(const Piece& piece);
 void drawPiece(const Piece& piece);
 void adjTileOS(int8_t p, int8_t *os);
 int8_t pieceIndex(int8_t pos);
+tile board(int8_t pos);
 #endif

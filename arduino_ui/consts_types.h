@@ -23,11 +23,11 @@ namespace c {
   // board offsets
   const uint8_t off_x = 100;
   const uint8_t off_y = 20;
-}
+};
 
 typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
 typedef enum {NO_PIECE, PIECE, CHAIN, DONE} selected;
-typedef enum {EMPTY, PLAYER, BOT} tile;
+typedef enum {EMPTY, PLAYER, BOT, OUT} tile;
 // moves that can be made by a piece
 typedef enum {NOT, MOVE, CAPTURE} move;
 
