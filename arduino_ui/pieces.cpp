@@ -10,7 +10,7 @@ void adjTileOS(int8_t p, int8_t *os) {
   os[1] = -3; os[3] = 5;
   // second row has different offsets
   if (((p % 8)/ 4)) {
-    for (int i = 0; i < 4; i++) {
+    for (int8_t i = 0; i < 4; i++) {
       os[i] -= 1;
     }
   }
@@ -22,12 +22,15 @@ Returns -1 if the board is untouched
 or a light tile was touched in the board  
 Returns -2 if touch was out of bounds of the board */
 int8_t touchPiece() {
+  // namespace only used when not using would
+  // lead to lesser readability
+  using namespace c;
   screenPos tp = processTouchScreen();
   // if touch screen was untouched
-  if (tp.x == UNTOUCHED){return -1;} 
+  if (tp.x == touch::untch){return -1;} 
   // if touch screen was out of bounds
-  if ((tp.y > 300 || tp.y < 20) || 
-      (tp.x > 380 || tp.x < 100)) {return -2;}
+  if ((tp.y > off_y + board_w || tp.y < off_y) || 
+      (tp.x > off_x + board_w || tp.x < off_x)) {return -2;}
 
   /* NOTE: The math here might be a bit hard to understand
   so just imagine the 8x8 board divided into 16 regions
@@ -38,20 +41,19 @@ int8_t touchPiece() {
   calculated in terms of these values.*/
  
   // remove board offset
-  tp.x -= 100; tp.y -= 20;
-
+  tp.x -= off_x; tp.y -= off_y;
   /* calculation for 2x2 matrix */
 
   // determine if first (0) or second (1) row was touched
-  int8_t fsRow = (tp.y % (B_SQ * 2)) / B_SQ;
+  int8_t fsRow = (tp.y % (board_sq * 2)) / board_sq;
   // determine if first (0) or second (1) column was touched
-  int8_t fsCol = (tp.x % (B_SQ * 2)) / B_SQ;
+  int8_t fsCol = (tp.x % (board_sq * 2)) / board_sq;
 
   /* calculation for 4x4 matrix */
 
   // determines which region of the board was touched
-  int8_t regY = tp.y / (B_SQ * 2); 
-  int8_t regX = tp.x / (B_SQ * 2); 
+  int8_t regY = tp.y / (board_sq * 2); 
+  int8_t regX = tp.x / (board_sq * 2); 
 
   // multiplication is logically the same as AND
   // addition is logically the same as OR
@@ -123,17 +125,18 @@ screenPos piecePosition(int8_t pos) {
   int8_t ForS = (pos % 8) / 4; // first or second row of group
   int8_t col = pos % 4; // the column of the piece
   screenPos dp;
-  dp.x = ((1 - ForS) * B_SQ) + (2 * col * B_SQ) + 117;
-  dp.y = (2 * group * B_SQ) + (ForS * B_SQ) + 37;
+  dp.x = (3/2 - ForS + 2 * col) * c::board_sq + c::off_x;
+  dp.y = (2 * group + ForS + 1/2) * c::board_sq + c::off_y;
   return dp;
 }
 
 // clears the tile of a piece or move
 void clearTile(int8_t tileNum) {
-  if (tileNum < 0 || tileNum > 31) {return;}
-  screenPos dp = piecePosition(tileNum);
-  dp.x -= B_SQ/2; dp.y -= B_SQ/2;
-  shared.tft->fillRect(dp.x, dp.y, B_SQ, B_SQ, BOARD_DARK);
+  if (tileNum > 0 && tileNum < 31) {
+    screenPos dp = piecePosition(tileNum);
+    dp.x -= c::board_sq/2; dp.y -= c::board_sq/2;
+    shared.tft->fillRect(dp.x, dp.y, c::board_sq, c::board_sq, c::board_dark);
+  }
 }
 
 // draw piece on board
@@ -151,8 +154,8 @@ void drawPiece(const Piece& piece) {
     colour[1] = TFT_BLACK;
   }
 
-  shared.tft->fillCircle(dp.x, dp.y, PC_RAD, colour[0]);
-  shared.tft->drawCircle(dp.x, dp.y, PC_RAD - 3, colour[1]);
+  shared.tft->fillCircle(dp.x, dp.y, c::pc_rad, colour[0]);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad - 3, colour[1]);
 
   // marks king piece
   if (piece.king) {
@@ -166,16 +169,16 @@ void highlightPiece(const Piece& piece) {
   if (piece.pos == -1) {return;}
   screenPos dp = piecePosition(piece.pos);
   // yellow ring on highlighted piece
-  shared.tft->drawCircle(dp.x, dp.y, PC_RAD, TFT_YELLOW);
-  shared.tft->drawCircle(dp.x, dp.y, PC_RAD - 1, TFT_YELLOW);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad, TFT_YELLOW);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad - 1, TFT_YELLOW);
 }
 
 // unhighlights selected piece
 void unhighlightPiece(const Piece& piece) {
   if (piece.pos == -1) {return;}
-  drawPiece(piece);
+  drawPiece(piece); // draws a new piece to remove highlight
   int8_t os[4], dg[] = {-9, -7, 7, 9};
-  adjTileOS(piece.pos, os);
+  adjTileOS(piece.pos, os); // adjusts adjacent tile offsets
   // clears the moves
   for (int i = 0; i < 4; i++) {
     if (shared.board[piece.pos + os[i]] == EMPTY) {
@@ -192,14 +195,14 @@ void unhighlightPiece(const Piece& piece) {
 // in terms of position
 // return dummy piece if not found
 int8_t pieceIndex(int8_t pos) {
-  if (pos < 0) {return DUMMY;}
+  if (pos < 0) {return c::dummy;}
   // find the piece in the board that matches the position
-  for (int i = 0; i < NUM_PIECES * 2; i++) {
+  for (int i = 0; i < c::num_pieces * 2; i++) {
     if (shared.gamePieces[i].pos == pos) {
       return i;
     }
   }
-  return DUMMY;
+  return c::dummy;
 }
 
 // moves a piece from one position to another

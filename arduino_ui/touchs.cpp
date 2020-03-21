@@ -1,21 +1,21 @@
 #include "touchs.h"
-
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+using namespace touch;
+TouchScreen ts = TouchScreen(xp, yp, xm, ym, 300);
 
 // Processes touch screen input
 // Returns the coordinates of the touched point
 screenPos processTouchScreen() {
 	TSPoint touch = ts.getPoint();
-	pinMode(YP, OUTPUT); 
-	pinMode(XM, OUTPUT); 
+	pinMode(yp, OUTPUT); 
+	pinMode(xm, OUTPUT); 
   screenPos tp;
   // checks if screen was not touched
-	if (touch.z < MINPRESSURE || touch.z > MAXPRESSURE) {
+	if (touch.z < minpr || touch.z > maxpr) {
     // return an arbitrarily large negative number
-    tp.x = UNTOUCHED; tp.y = UNTOUCHED;
+    tp.x = untch; tp.y = untch;
     return tp;
   }
-	tp.x = map(touch.y, TS_MINX, TS_MAXX, TFT_WIDTH - 1, 0);
-	tp.y = map(touch.x, TS_MINY, TS_MAXY, TFT_HEIGHT - 1, 0);
+	tp.x = map(touch.y, ts_minx, ts_maxx, tft_width - 1, 0);
+	tp.y = map(touch.x, ts_miny, ts_maxy, tft_height - 1, 0);
   return tp;
 }

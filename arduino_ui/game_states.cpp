@@ -11,7 +11,7 @@ bool menuScreen() {
   shared.tft->setTextSize(2);
   shared.tft->println("RESETTING");
   screenPos t = processTouchScreen();
-  while (t.x == UNTOUCHED) {
+  while (t.x == touch::untch) {
     t = processTouchScreen();
   }
   shared.tft->setTextSize(1);
@@ -22,43 +22,47 @@ bool menuScreen() {
 
 // initialize game
 void gameInit(bool start) {
-
+  // namespace is only used when not using 
+  // would lead to lesser readability
+  using namespace c;
   shared.tft->fillScreen(TFT_BLACK);
   // draw checkers board
-  shared.tft->fillRect(100,20,280,280, BOARD_DARK);
+  shared.tft->fillRect(off_x, off_y, board_w, board_w, board_dark);
   // print the light tiles
-  for (int i = 0; i < 8; i += 2) {
-    for (int j = 0; j < 8; j += 2) {
-      shared.tft->fillRect(100 + (i*B_SQ), 20 + (j*B_SQ), B_SQ, B_SQ, BOARD_LIGHT);
-      shared.tft->fillRect(135 + (i*B_SQ), 55 + (j*B_SQ), B_SQ, B_SQ, BOARD_LIGHT);
+  for (int8_t i = 0; i < 8; i += 2) {
+    for (int8_t j = 0; j < 8; j += 2) {
+      shared.tft->fillRect(off_x + (i*board_sq), off_y + (j*board_sq), 
+                            board_sq, board_sq, board_light);
+      shared.tft->fillRect(off_x + ((i+1)*board_sq), off_y + ((j+1)*board_sq), 
+                            board_sq, board_sq, board_light);
     }
   }
   // initialize empty spaces on board
-  for (int i = 12; i < 20; i++) {
+  for (int8_t i = 12; i < 20; i++) {
     shared.board[i] = EMPTY;
   }
   
   // places pieces on board
-  for (int8_t i = 0; i < NUM_PIECES; i++) {
+  for (int8_t i = 0; i < num_pieces; i++) {
     // bot pieces
     shared.gamePieces[i] = {1, BOT, false, i};
     // player pieces
-    shared.gamePieces[i + NUM_PIECES] = {0, PLAYER, false, i + 20};
+    shared.gamePieces[i + num_pieces] = {0, PLAYER, false, i + 20};
     
     // change colour if player chose black
     if (start) {
       shared.gamePieces[i].colour = 0;
-      shared.gamePieces[i+ NUM_PIECES].colour = 1;
+      shared.gamePieces[i+ num_pieces].colour = 1;
     }
     // draw pieces on board
     drawPiece(shared.gamePieces[i]);
-    drawPiece(shared.gamePieces[i + NUM_PIECES]);
+    drawPiece(shared.gamePieces[i + num_pieces]);
     // place pieces in board array
     shared.board[i] = BOT;
     shared.board[i + 20] = PLAYER;
   }
   // dummy piece
-  shared.gamePieces[DUMMY] = {0, EMPTY, false, -1}; 
+  shared.gamePieces[dummy] = {0, EMPTY, false, -1}; 
 }
 
 win endCheck() {

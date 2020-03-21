@@ -8,16 +8,22 @@
 #include <SD.h>
 
 #include "screenpos.h"
-
-#define SD_CS 10
-
-#define NUM_PIECES 12 // number of pieces per player
-#define DUMMY 24
-#define B_SQ 35 // board square side length
-
-#define BOARD_DARK 19458 // colours for game board
-#define BOARD_LIGHT 57113 // please change i don't like
-
+// defined constants
+namespace c {
+  const uint8_t sd_cs = 10; // sd card pin
+  
+  const uint8_t num_pieces = 12; // number of pieces per player
+  const uint8_t dummy = 24;
+  
+  const uint8_t board_sq = 35; // board square side length
+  const uint16_t board_w = board_sq * 8; // board width
+  const uint16_t board_dark = 19458; // colours for game board
+  const uint16_t board_light = 57113; // please change i don't like
+  const uint8_t pc_rad = 15; // piece radius
+  // board offsets
+  const uint8_t off_x = 100;
+  const uint8_t off_y = 20;
+}
 
 typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
 typedef enum {NO_PIECE, PIECE, CHAIN, DONE} selected;
@@ -46,7 +52,7 @@ struct sharedVars {
   
   MCUFRIEND_kbv* tft; // the tft display
   // array to store all pieces + a dummy piece
-  Piece gamePieces[NUM_PIECES * 2 + 1];
+  Piece gamePieces[c::num_pieces * 2 + 1];
   // array to store all board positions
   tile board[32];
   

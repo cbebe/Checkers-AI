@@ -6,29 +6,30 @@
 #include <Adafruit_GFX.h>
 #include <TouchScreen.h>
 
-// touch screen pins, obtained from the documentation
-#define YP A3 // must be an analog pin, use "An" notation!
-#define XM A2 // must be an analog pin, use "An" notation!
-#define YM 9  // can be a digital pin
-#define XP 8  // can be a digital pin
-
-// calibration data for the touch screen, obtained from documentation
-// the minimum/maximum possible readings from the touch point
-#define TS_MINX 100
-#define TS_MINY 120
-#define TS_MAXX 940
-#define TS_MAXY 920
-
-// touch screen dimensions
-#define TFT_HEIGHT 320
-#define TFT_WIDTH 480
-
-// thresholds to determine if there was a touch
-#define MINPRESSURE   10
-#define MAXPRESSURE 1000
-
-#define UNTOUCHED -100
 #include "screenpos.h"
+
+namespace touch {
+  // touch screen pins, obtained from the documentation
+  const uint8_t yp = A3;
+  const uint8_t xm = A2;
+  const uint8_t ym = 9;
+  const uint8_t xp = 8;
+  // calibration data for the touch screen, obtained from documentation
+  // the minimum/maximum possible readings from the touch point
+  const uint16_t ts_minx = 100;
+  const uint16_t ts_miny = 120;
+  const uint16_t ts_maxx = 940;
+  const uint16_t ts_maxy = 920;
+
+  // touch screen dimensions
+  const uint16_t tft_height = 320;
+  const uint16_t tft_width = 480;
+
+  // thresholds to determine if there was a touch
+  const uint16_t minpr = 10;
+  const uint16_t maxpr = 1000;
+  const int16_t untch = -100; // assigned if not touched
+}
 
 screenPos processTouchScreen();
 

@@ -26,7 +26,7 @@ void setup() {
   Serial.flush();
   
   // initialize SD card
-  if (!SD.begin(SD_CS)) {
+  if (!SD.begin(c::sd_cs)) {
     while (1) {};    // Just wait, stuff exploded.
   }
 }

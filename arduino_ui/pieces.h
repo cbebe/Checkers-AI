@@ -8,8 +8,6 @@
 #include "touchs.h"
 #include "move.h"
 
-#define PC_RAD 15 // piece radius
-
 Piece findPiece(int8_t piecePos);
 screenPos piecePosition(int8_t pos);
 

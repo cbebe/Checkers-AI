@@ -117,8 +117,8 @@ bool hasMoves(moveSt moves) {
 
 void markMove(int8_t pos) {
   screenPos dp = piecePosition(pos);
-  shared.tft->drawCircle(dp.x, dp.y, PC_RAD/2, TFT_RED);
-  shared.tft->drawCircle(dp.x, dp.y, PC_RAD/2 + 1, TFT_RED);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad/2, TFT_RED);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad/2 + 1, TFT_RED);
 }
 
 // show valid moves on the screen
