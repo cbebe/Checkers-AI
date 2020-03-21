@@ -44,8 +44,8 @@ struct moveSt {
 struct sharedVars {
   
   MCUFRIEND_kbv* tft; // the tft display
-  // array to store all pieces
-  Piece gamePieces[NUM_PIECES * 2];
+  // array to store all pieces + a dummy piece
+  Piece gamePieces[NUM_PIECES * 2 + 1];
   // array to store all board positions
   tile board[32];
   

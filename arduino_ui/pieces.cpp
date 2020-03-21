@@ -76,6 +76,7 @@ void choosePiece(selected& pieceSel, bool turn) {
       unhighlightPiece(*piece);
       movePiece(piece->pos, piecePos);
       pieceSel = DONE;
+      shared.selected = -1; // now no piece is selected
       return;
     }
   }
@@ -142,7 +143,7 @@ void drawPiece(const Piece& piece) {
 // highlight piece for moving
 void highlightPiece(const Piece& piece) {
   // does not highlight if piece is captured
-  if (piece.pos == -1) return;
+  if (piece.pos == -1) {return;}
   screenPos dp = piecePosition(piece.pos);
   // yellow ring on highlighted piece
   shared.tft->drawCircle(dp.x, dp.y, PC_RAD, TFT_YELLOW);
@@ -151,6 +152,7 @@ void highlightPiece(const Piece& piece) {
 
 // unhighlights selected piece
 void unhighlightPiece(const Piece& piece) {
+  if (piece.pos == -1) {return;}
   drawPiece(piece);
   int8_t os[4], dg[] = {-9, -7, 7, 9};
   adjTileOS(piece.pos, os);
@@ -168,15 +170,16 @@ void unhighlightPiece(const Piece& piece) {
 
 // find a piece's index on the board array
 // in terms of position
+// return dummy piece if not found
 int8_t pieceIndex(int8_t pos) {
-  if (pos < 0) {return -1;}
+  if (pos < 0) {return 24;}
   // find the piece in the board that matches the position
   for (int i = 0; i < NUM_PIECES * 2; i++) {
     if (shared.gamePieces[i].pos == pos) {
       return i;
     }
   }
-  return -1;
+  return 24;
 }
 
 // moves a piece from one position to another
@@ -191,20 +194,4 @@ void movePiece(int8_t oldPos, int8_t newPos) {
   // update board
   shared.board[oldPos] = EMPTY;
   shared.board[newPos] = shared.gamePieces[pi].side;
-}
-
-void testing(int8_t &state) {
-  // int8_t pos = touchPiece();
-
-  // if (pos > 0 && pos != shared.selected) {
-  //   if (state == 0) {
-  //     shared.selected = pos;
-  //     state = 1;
-  //   } else if (state == 1) {
-  //     movePiece(shared.selected, pos);
-  //     shared.tft->println("moved");
-  //     state = 0;
-  //   }
-  //   delay(500);
-  // }
 }

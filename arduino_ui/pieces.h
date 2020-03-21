@@ -17,7 +17,6 @@ void choosePiece(selected& pieceSel, bool turn);
 void highlightPiece(const Piece& piece);
 void unhighlightPiece(const Piece& piece);
 void drawPiece(const Piece& piece);
-void testing(int8_t &state);
 void adjTileOS(int8_t p, int8_t *os);
 int8_t pieceIndex(int8_t pos);
 #endif

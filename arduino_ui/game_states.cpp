@@ -57,10 +57,12 @@ void gameInit(bool start) {
     shared.board[i] = BOT;
     shared.board[i + 20] = PLAYER;
   }
+  // dummy piece
+  shared.gamePieces[24] = {0, EMPTY, false, -1}; 
 }
 
 win endCheck() {
-  
+
 }
 
 void doTurn(bool turn) {
