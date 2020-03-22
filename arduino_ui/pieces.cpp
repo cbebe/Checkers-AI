@@ -10,7 +10,6 @@ tile board(int8_t pos) {
   return shared.board[pos];
 }
 
-
 // determines adjacent tile offset depending
 // on which row the piece is in
 void adjTileOS(int8_t p, int8_t *os) {
@@ -73,22 +72,56 @@ int8_t touchPiece() {
   return regX + (8 * regY) + (4 * fsRow);
 }
 
+// clears the tile of a piece or move
+void clearTile(int8_t tileNum) {
+  if (tileNum >= 0 && tileNum <= 31) {
+    screenPos dp = piecePosition(tileNum);
+    // dp initially points to the centre of the square
+    dp.x -= c::board_sq/2; dp.y -= c::board_sq/2;
+    shared.tft->fillRect(dp.x, dp.y, c::board_sq, c::board_sq, c::board_dark);
+  }
+}
+
+// remove a piece from the board
+void removePiece(int8_t piecePos) {
+  // piece is captured
+  shared.gamePieces[pieceIndex(piecePos)].pos = -1;
+  clearTile(piecePos);
+  shared.board[piecePos] = EMPTY;
+}
+
+// captures a piece
+void capturePiece(Piece &piece, int8_t newPos) {
+  int8_t os[4]; adjTileOS(piece.pos, os); // set tile offsets
+  int8_t dg[] = {-9, -7, 7, 9};
+  for (int i = 0; i < 4; i++) {
+    // checks which direction the capturing piece jumped to
+    if (newPos - piece.pos == dg[i]) {
+      // remove captured piece from the board
+      removePiece(piece.pos + os[i]); 
+      break;
+    }
+  }  
+  movePiece(piece.pos, newPos);
+  
+}
+
 // checks if the selected move is legal
-bool legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
+move legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
   int8_t os[4];
   adjTileOS(piece.pos, os); // adjust adjacent tile offsets
-  // CAPTUREs
-  if (moves.UL == CAPTURE && newPos == piece.pos - 9) {return true;}
-  if (moves.UR == CAPTURE && newPos == piece.pos - 7) {return true;}
-  if (moves.DL == CAPTURE && newPos == piece.pos + 7) {return true;}
-  if (moves.DR == CAPTURE && newPos == piece.pos + 9) {return true;}
-  // MOVEs
-  if (moves.UL == MOVE && newPos == piece.pos + os[0]) {return true;}
-  if (moves.UR == MOVE && newPos == piece.pos + os[1]) {return true;}
-  if (moves.DL == MOVE && newPos == piece.pos + os[2]) {return true;}
-  if (moves.DR == MOVE && newPos == piece.pos + os[3]) {return true;}
-
-  return false;
+  // CAPTURES
+  if ((moves.UL == CAPTURE && newPos == piece.pos - 9) ||
+      (moves.UR == CAPTURE && newPos == piece.pos - 7) ||
+      (moves.DL == CAPTURE && newPos == piece.pos + 7) ||
+      (moves.DR == CAPTURE && newPos == piece.pos + 9)) {return CAPTURE;}
+  // MOVES
+  if ((moves.UL == MOVE && newPos == piece.pos + os[0]) ||
+      (moves.UR == MOVE && newPos == piece.pos + os[1]) ||
+      (moves.DL == MOVE && newPos == piece.pos + os[2]) ||
+      (moves.DR == MOVE && newPos == piece.pos + os[3])) {return MOVE;}
+  // piece can't move to the selected position
+  return NOT;
 }
 
 // lets player choose a piece to move
@@ -117,9 +150,14 @@ void choosePiece(selected& pieceSel, bool turn, moveSt& moves) {
     if (pieceSel == PIECE) {
       // check if the moves are legal for this piece
       Piece* piece = &shared.gamePieces[pieceIndex(shared.selected)];
-      if(legalMove(*piece, piecePos, moves)) {
+      move legal = legalMove(*piece, piecePos, moves); 
+      if(legal != NOT) {
         unhighlightPiece(*piece); // remove move marks
-        movePiece(piece->pos, piecePos); // move piece
+        if (legal == CAPTURE) {
+          capturePiece(*piece, piecePos); // remove captured piece
+        } else {
+          movePiece(piece->pos, piecePos); // move piece
+        }
         shared.selected = -1; // now no piece is selected
         pieceSel = DONE; // done moving
       }
@@ -137,16 +175,6 @@ screenPos piecePosition(int8_t pos) {
   dp.x = (1 - ForS + 2 * col) * c::board_sq + c::board_sq/2 + c::off_x;
   dp.y = (2 * group + ForS ) * c::board_sq + c::board_sq/2 + c::off_y;
   return dp;
-}
-
-// clears the tile of a piece or move
-void clearTile(int8_t tileNum) {
-  if (tileNum > 0 && tileNum < 31) {
-    screenPos dp = piecePosition(tileNum);
-    // dp initially points to the centre of the square
-    dp.x -= c::board_sq/2; dp.y -= c::board_sq/2;
-    shared.tft->fillRect(dp.x, dp.y, c::board_sq, c::board_sq, c::board_dark);
-  }
 }
 
 // draw piece on board
@@ -214,14 +242,22 @@ int8_t pieceIndex(int8_t pos) {
 
 // moves a piece from one position to another
 void movePiece(int8_t oldPos, int8_t newPos) {
-  int8_t pi = pieceIndex(oldPos);
+  Piece* piece = &shared.gamePieces[pieceIndex(oldPos)];
   // update piece's position in the board
-  shared.gamePieces[pi].pos = newPos;
+  piece->pos = newPos;
+  // checks for promotion
+  if (!piece->king) {
+    // promotion if a piece reaches the other side of the board
+    if ((piece->side == BOT && newPos >= 28 && newPos < 32) ||
+        (piece->side == PLAYER && newPos >= 0 && newPos < 3)) {
+      piece->king = true;
+    }
+  }
   // now tile is empty
   clearTile(oldPos);
   // draw piece in new position
-  drawPiece(shared.gamePieces[pi]);
+  drawPiece(*piece);
   // update board
   shared.board[oldPos] = EMPTY;
-  shared.board[newPos] = shared.gamePieces[pi].side;
+  shared.board[newPos] = piece->side;
 }

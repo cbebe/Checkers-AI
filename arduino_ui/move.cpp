@@ -104,10 +104,10 @@ moveSt findMove(const Piece &piece, const tile& currentPlayer) {
 
 // check if there are valid moves
 bool hasMoves(moveSt moves) {
-  if (moves.UL != NOT) {return true;}
-  if (moves.UR != NOT) {return true;}
-  if (moves.DL != NOT) {return true;}
-  if (moves.DR != NOT) {return true;}
+  if ((moves.UL != NOT) ||
+      (moves.UR != NOT) ||
+      (moves.DL != NOT) ||
+      (moves.DR != NOT)) {return true;}
   return false;
 }
 
