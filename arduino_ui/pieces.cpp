@@ -134,8 +134,8 @@ screenPos piecePosition(int8_t pos) {
   int8_t ForS = (pos % 8) / 4; // first or second row of group
   int8_t col = pos % 4; // the column of the piece
   screenPos dp;
-  dp.x = (3/2 - ForS + 2 * col) * c::board_sq + c::off_x;
-  dp.y = (2 * group + ForS + 1/2) * c::board_sq + c::off_y;
+  dp.x = (1 - ForS + 2 * col) * c::board_sq + c::board_sq/2 + c::off_x;
+  dp.y = (2 * group + ForS ) * c::board_sq + c::board_sq/2 + c::off_y;
   return dp;
 }
 

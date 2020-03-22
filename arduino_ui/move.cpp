@@ -3,20 +3,17 @@
 extern sharedVars shared;
 
 // a second check for capture moves 
-// WORK IN PROGRESS
 void validateCapture(const Piece& piece, moveSt& moves) {
   int8_t p = piece.pos;
-  // checks for UL
-  if (moves.UL == CAPTURE) {
-    if (p >= 5 && p <= 7) {
-      moves.UL == NOT;
-    }
-  }
-  if (moves.UR == CAPTURE) {
-    if (p >= 5 && p <= 7) {
-      moves.UL == NOT;
-    }
-  }
+  // the empty tile might not be diagonal to the piece 
+  // on specific positions on the board
+  // these checks are for those positions 
+  bool left = p % 8 == 0;
+  bool right = (p - 7) % 8 == 0;
+  if (moves.UL == CAPTURE && left) {moves.UL = NOT;}
+  if (moves.DL == CAPTURE && left) {moves.DL = NOT;}
+  if (moves.UR == CAPTURE && right) {moves.UR = NOT;}
+  if (moves.DR == CAPTURE && right) {moves.DR = NOT;}
 }
 
 // checks for enemy pieces to capture
@@ -24,10 +21,8 @@ void captureCheck(const Piece& piece, moveSt& moves) {
   int8_t os[4];
   int8_t p = piece.pos;
   adjTileOS(p, os); // determines offset of tiles
-  tile enemy = BOT;
-  if (piece.side == BOT) {
-    enemy = PLAYER;
-  }
+  // change the enemy depending on the piece's side
+  tile enemy = (piece.side == BOT) ? PLAYER : BOT;
 
   // checks for adjacent enemy pieces
   // and empty tiles behind those pieces
@@ -81,7 +76,6 @@ void edgeCheck(int8_t p, moveSt& moves) {
 void moveCheck(const Piece &piece, moveSt& moves) {
   int8_t p = piece.pos; 
   emptyCheck(p, moves); // checks for empty tiles
-  edgeCheck(p, moves); // removes edge moves
 
   if (!piece.king) {
     // player non-king can only move up
@@ -103,6 +97,8 @@ moveSt findMove(const Piece &piece, const tile& currentPlayer) {
   // create move Struct  
   moveSt valid = {NOT, NOT, NOT, NOT};
   moveCheck(piece, valid);
+  captureCheck(piece, valid);
+  edgeCheck(piece.pos, valid); // removes edge moves
   return valid;
 }
 
