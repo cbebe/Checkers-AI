@@ -89,6 +89,8 @@ void removePiece(int8_t piecePos) {
   clearTile(piecePos);
   shared.board[piecePos] = EMPTY;
 }
+// forward declaration for capture piece
+void captureChain(Piece &piece);
 
 // captures a piece
 void capturePiece(Piece &piece, int8_t newPos) {
@@ -103,7 +105,7 @@ void capturePiece(Piece &piece, int8_t newPos) {
     }
   }  
   movePiece(piece.pos, newPos);
-  
+  captureChain(piece); // checks for capture chain
 }
 
 // checks if the selected move is legal
@@ -122,6 +124,27 @@ move legalMove(const Piece &piece, int8_t newPos, const moveSt& moves) {
       (moves.DR == MOVE && newPos == piece.pos + os[3])) {return MOVE;}
   // piece can't move to the selected position
   return NOT;
+}
+
+void captureChain(Piece &piece) {
+  moveSt moves = {NOT, NOT, NOT, NOT};
+  captureCheck(piece, moves);
+  edgeCheck(piece.pos, moves);
+  // do nothing if there are no moves
+  if (!hasMoves(moves)) {return;}
+
+  // highlight possible moves
+  highlightPiece(piece);
+  showMoves(piece.pos, moves);
+  int8_t pos = touchPiece();
+  // waits for the player to make a legal move
+  while (!legalMove(piece, pos, moves)) {
+    pos = touchPiece();  
+  }
+  unhighlightPiece(piece);
+  // recursively calls capture piece until 
+  // there are no valid captures
+  capturePiece(piece, pos);
 }
 
 // lets player choose a piece to move

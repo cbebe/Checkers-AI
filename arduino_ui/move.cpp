@@ -91,6 +91,29 @@ void moveCheck(const Piece &piece, moveSt& moves) {
   }
 }
 
+// implements rule that a piece must capture
+// if there are available moves
+void mustCapture(moveSt &moves) {
+  if (moves.UL == CAPTURE || moves.UR == CAPTURE ||
+      moves.DL == CAPTURE || moves.DR == CAPTURE) {
+    if (moves.UL == MOVE) {moves.UL = NOT;}
+    if (moves.UR == MOVE) {moves.UR = NOT;}
+    if (moves.DL == MOVE) {moves.DL = NOT;}
+    if (moves.DR == MOVE) {moves.DR = NOT;}
+  }    
+}
+
+// removes backward captures from non-king pieces
+void backwardCap(const Piece& piece, moveSt& moves) {
+  if (piece.side == BOT) {
+    if (moves.UL == CAPTURE) {moves.UL = NOT;}
+    if (moves.UR == CAPTURE) {moves.UR = NOT;}
+  } else {
+    if (moves.DL == CAPTURE) {moves.DL = NOT;}
+    if (moves.DR == CAPTURE) {moves.DR = NOT;}
+  }
+}
+
 // function to see if there are legal moves
 // returns a struct of legal moves
 moveSt findMove(const Piece &piece, const tile& currentPlayer) {
@@ -98,7 +121,11 @@ moveSt findMove(const Piece &piece, const tile& currentPlayer) {
   moveSt valid = {NOT, NOT, NOT, NOT};
   moveCheck(piece, valid);
   captureCheck(piece, valid);
+  if (!piece.king) {
+    backwardCap(piece, valid); // removes backward captures
+  }
   edgeCheck(piece.pos, valid); // removes edge moves
+  mustCapture(valid); // enforces must capture rule
   return valid;
 }
 
