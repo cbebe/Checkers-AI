@@ -10,9 +10,9 @@ bool menuScreen() {
   shared.tft->setTextColor(TFT_BLACK); 
   shared.tft->setTextSize(2);
   shared.tft->println("RESETTING");
-  screenPos t = processTouchScreen();
+  screenPos t = touch::process();
   while (t.x == touch::untch) {
-    t = processTouchScreen();
+    t = touch::process();
   }
   shared.tft->setTextSize(1);
   shared.tft->setTextColor(TFT_WHITE);
@@ -55,8 +55,8 @@ void gameInit(bool start) {
       shared.gamePieces[i+ num_pieces].colour = 1;
     }
     // draw pieces on board
-    drawPiece(shared.gamePieces[i]);
-    drawPiece(shared.gamePieces[i + num_pieces]);
+    draw::piece(shared.gamePieces[i]);
+    draw::piece(shared.gamePieces[i + num_pieces]);
     // place pieces in board array
     shared.board[i] = BOT;
     shared.board[i + 20] = PLAYER;
@@ -78,9 +78,9 @@ void checkMustCapture(bool turn, bool *capture) {
   for (int i = start; i < start + num_pieces; i++) {
     Piece *piece = &shared.gamePieces[i];
     moveSt moves = {NOT, NOT, NOT, NOT};
-    captureCheck(*piece, moves);
+    check::capture(*piece, moves);
     // fill array with bool
-    capture[i % num_pieces] = hasCaptureMoves(moves);
+    capture[i % num_pieces] = has::captures(moves);
   }
 }
 
@@ -98,9 +98,6 @@ void mustCapture(bool turn) {
   if (!check) {return;}
   // else, make the player capture
   selected pieceSel = NO_PIECE;
-  while (!done) {
-
-  }
 }
 
 void doTurn(bool turn) {
@@ -108,7 +105,7 @@ void doTurn(bool turn) {
   selected pieceSel = NO_PIECE;
   moveSt moves;
   while(pieceSel != DONE) {
-    choosePiece(pieceSel, turn, moves);
+    nspiece::choose(pieceSel, turn, moves);
   }
 }
 

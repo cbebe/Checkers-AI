@@ -29,8 +29,9 @@ namespace touch {
   const uint16_t minpr = 10;
   const uint16_t maxpr = 1000;
   const int16_t untch = -100; // assigned if not touched
+  
+  screenPos process();
 };
 
-screenPos processTouchScreen();
 
 #endif

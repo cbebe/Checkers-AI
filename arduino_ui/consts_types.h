@@ -3,7 +3,6 @@
 
 #include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
-#include <TouchScreen.h>
 #include <SPI.h>
 #include <SD.h>
 
@@ -48,8 +47,8 @@ struct moveSt {
   move DL; move DR;
 };
 
+// struct that stores all shared variables
 struct sharedVars {
-  
   MCUFRIEND_kbv* tft; // the tft display
   // array to store all pieces + a dummy piece
   Piece gamePieces[c::num_pieces * 2 + 1];
@@ -58,5 +57,12 @@ struct sharedVars {
   
   int8_t selected; // current selected tile
 };
+
+// returns the tile value of a board position
+// use only for comparing, not for value assignment
+tile board(int8_t pos);
+// determines adjacent tile offset depending
+// on which row the piece is in
+void tileOS(int8_t p, int8_t *os);
 
 #endif

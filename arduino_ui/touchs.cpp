@@ -1,10 +1,11 @@
 #include "touchs.h"
-using namespace touch;
-TouchScreen ts = TouchScreen(xp, yp, xm, ym, 300);
+TouchScreen ts = TouchScreen( touch::xp, touch::yp, 
+                              touch::xm, touch::ym, 300);
 
 // Processes touch screen input
 // Returns the coordinates of the touched point
-screenPos processTouchScreen() {
+screenPos touch::process() {
+  using namespace touch;
 	TSPoint touch = ts.getPoint();
 	pinMode(yp, OUTPUT); 
 	pinMode(xm, OUTPUT); 
