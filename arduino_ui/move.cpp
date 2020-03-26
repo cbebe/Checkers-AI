@@ -18,6 +18,8 @@ void validateCapture(const Piece& piece, moveSt& moves) {
 
 // checks for enemy pieces to capture
 void captureCheck(const Piece& piece, moveSt& moves) {
+  // do nothing if piece is captured
+  if (piece.pos == -1) {return;}
   int8_t os[4];
   int8_t p = piece.pos;
   adjTileOS(p, os); // determines offset of tiles
@@ -93,9 +95,8 @@ void moveCheck(const Piece &piece, moveSt& moves) {
 
 // implements rule that a piece must capture
 // if there are available moves
-void mustCapture(moveSt &moves) {
-  if (moves.UL == CAPTURE || moves.UR == CAPTURE ||
-      moves.DL == CAPTURE || moves.DR == CAPTURE) {
+void removeMoves(moveSt &moves) {
+  if (hasCaptureMoves(moves)) {
     if (moves.UL == MOVE) {moves.UL = NOT;}
     if (moves.UR == MOVE) {moves.UR = NOT;}
     if (moves.DL == MOVE) {moves.DL = NOT;}
@@ -125,16 +126,24 @@ moveSt findMove(const Piece &piece, const tile& currentPlayer) {
     backwardCap(piece, valid); // removes backward captures
   }
   edgeCheck(piece.pos, valid); // removes edge moves
-  mustCapture(valid); // enforces must capture rule
+  removeMoves(valid); // enforces must capture rule
   return valid;
 }
 
+bool hasCaptureMoves(moveSt moves) {
+  if ((moves.UL == CAPTURE) ||
+      (moves.UR == CAPTURE) ||
+      (moves.DL == CAPTURE) ||
+      (moves.DR == CAPTURE)) {return true;}
+  return false;
+}
+
 // check if there are valid moves
-bool hasMoves(moveSt moves) {
-  if ((moves.UL != NOT) ||
-      (moves.UR != NOT) ||
-      (moves.DL != NOT) ||
-      (moves.DR != NOT)) {return true;}
+bool hasMoves(const moveSt& moves) {
+  if ((moves.UL == MOVE) ||
+      (moves.UR == MOVE) ||
+      (moves.DL == MOVE) ||
+      (moves.DR == MOVE)) {return true;}
   return false;
 }
 
@@ -170,7 +179,7 @@ bool pieceCanMove(int8_t piecePos, moveSt& moves, tile currentPlayer) {
   moveSt temp = moves; // keep previous moveset
   moves = findMove(*piece, currentPlayer);
   if (hasMoves(moves)) {
-    highlightPiece(*piece);
+    highlightPiece(*piece, false);
     return true;
   }
   moves = temp; // revert to previous moveset

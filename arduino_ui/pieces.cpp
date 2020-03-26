@@ -134,7 +134,7 @@ void captureChain(Piece &piece) {
   if (!hasMoves(moves)) {return;}
 
   // highlight possible moves
-  highlightPiece(piece);
+  highlightPiece(piece, false);
   showMoves(piece.pos, moves);
   int8_t pos = touchPiece();
   // waits for the player to make a legal move
@@ -223,14 +223,16 @@ void drawPiece(const Piece& piece) {
   }
 }
 
-// highlight piece for moving
-void highlightPiece(const Piece& piece) {
+// highlight piece for moving/capturing
+void highlightPiece(const Piece& piece, bool cap) {
   // does not highlight if piece is captured
   if (piece.pos == -1) {return;}
   screenPos dp = piecePosition(piece.pos);
-  // yellow ring on highlighted piece
-  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad, TFT_YELLOW);
-  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad - 1, TFT_YELLOW);
+  int16_t colour = cap ? TFT_RED : TFT_YELLOW;
+  // yellow ring on highlighted piece if moving
+  // red ring on highlighted piece if capturing
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad, colour);
+  shared.tft->drawCircle(dp.x, dp.y, c::pc_rad - 1, colour);
 }
 
 // unhighlights selected piece

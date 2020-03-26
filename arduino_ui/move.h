@@ -11,5 +11,6 @@ void showMoves(int8_t pos, const moveSt& moves);
 void captureCheck(const Piece &piece, moveSt& moves);
 void edgeCheck(int8_t p, moveSt& moves);
 bool hasMoves(moveSt moves);
+bool hasCaptureMoves(moveSt moves);
 moveSt findMove(const Piece &piece, const tile& currentPlayer);
 #endif

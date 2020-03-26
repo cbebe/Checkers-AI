@@ -69,7 +69,42 @@ win endCheck() {
 
 }
 
+// checks if any of the player's/bot's pieces must capture
+void checkMustCapture(bool turn, bool *capture) {
+  using c::num_pieces;
+  // starts the index at start
+  // depending on which side the current player is
+  int8_t start = turn ? num_pieces : 0;
+  for (int i = start; i < start + num_pieces; i++) {
+    Piece *piece = &shared.gamePieces[i];
+    moveSt moves = {NOT, NOT, NOT, NOT};
+    captureCheck(*piece, moves);
+    // fill array with bool
+    capture[i % num_pieces] = hasCaptureMoves(moves);
+  }
+}
+
+void mustCapture(bool turn) {
+  bool capture[c::num_pieces];
+  checkMustCapture(turn, capture);
+  bool check = false;
+  for (int i = 0; i < c::num_pieces; i++) {
+    if (capture[i]) {
+      check = true;
+      break;
+    }
+  }
+  // if there are no captures, move on to just moves
+  if (!check) {return;}
+  // else, make the player capture
+  selected pieceSel = NO_PIECE;
+  while (!done) {
+
+  }
+}
+
 void doTurn(bool turn) {
+  mustCapture(turn);
   selected pieceSel = NO_PIECE;
   moveSt moves;
   while(pieceSel != DONE) {
