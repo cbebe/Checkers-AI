@@ -10,7 +10,7 @@ namespace nsmove {
   // show valid moves
   void show(int8_t pos, const moveSt& moves);
   // checks if the piece can move and alters move struct to show moves
-  bool canMove(int8_t piecePos, moveSt& moves, tile currentPlayer);
+  bool canMove(int8_t piecePos, moveSt& moves, tile currentPlayer, move type);
   // moves a piece
   void piece(int8_t oldPos, int8_t newPos);
   // captures a piece

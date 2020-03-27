@@ -18,23 +18,6 @@ void nsmove::capture(Piece &piece, int8_t newPos) {
   nsmove::chain(piece); // checks for capture chain
 }
 
-// checks if the selected move is legal
-move nsmove::legal(const Piece &piece, int8_t newPos, const moveSt& moves) {
-  int8_t os[4]; tileOS(piece.pos, os); // adjust adjacent tile offsets
-  // CAPTURES
-  if ((moves.UL == CAPTURE && newPos == piece.pos - 9) ||
-      (moves.UR == CAPTURE && newPos == piece.pos - 7) ||
-      (moves.DL == CAPTURE && newPos == piece.pos + 7) ||
-      (moves.DR == CAPTURE && newPos == piece.pos + 9)) {return CAPTURE;}
-  // MOVES
-  if ((moves.UL == MOVE && newPos == piece.pos + os[0]) ||
-      (moves.UR == MOVE && newPos == piece.pos + os[1]) ||
-      (moves.DL == MOVE && newPos == piece.pos + os[2]) ||
-      (moves.DR == MOVE && newPos == piece.pos + os[3])) {return MOVE;}
-  // piece can't move to the selected position
-  return NOT;
-}
-
 void nsmove::chain(Piece &piece) {
   moveSt moves = {NOT, NOT, NOT, NOT};
   check::capture(piece, moves);
@@ -53,6 +36,23 @@ void nsmove::chain(Piece &piece) {
   // recursively calls capture piece until 
   // there are no valid captures
   nsmove::capture(piece, pos);
+}
+
+// checks if the selected move is legal
+move nsmove::legal(const Piece &piece, int8_t newPos, const moveSt& moves) {
+  int8_t os[4]; tileOS(piece.pos, os); // adjust adjacent tile offsets
+  // CAPTURES
+  if ((moves.UL == CAPTURE && newPos == piece.pos - 9) ||
+      (moves.UR == CAPTURE && newPos == piece.pos - 7) ||
+      (moves.DL == CAPTURE && newPos == piece.pos + 7) ||
+      (moves.DR == CAPTURE && newPos == piece.pos + 9)) {return CAPTURE;}
+  // MOVES
+  if ((moves.UL == MOVE && newPos == piece.pos + os[0]) ||
+      (moves.UR == MOVE && newPos == piece.pos + os[1]) ||
+      (moves.DL == MOVE && newPos == piece.pos + os[2]) ||
+      (moves.DR == MOVE && newPos == piece.pos + os[3])) {return MOVE;}
+  // piece can't move to the selected position
+  return NOT;
 }
 
 // moves a piece from one position to another
@@ -97,14 +97,26 @@ void nsmove::show(int8_t pos, const moveSt& moves) {
 }
 
 // shows the player where to move the piece
-// returns true if a piece can move
-bool nsmove::canMove(int8_t piecePos, moveSt& moves, tile currentPlayer) {
+// returns true if a piece can move/capture
+bool nsmove::canMove( int8_t piecePos, moveSt& moves, 
+                      tile currentPlayer, move type) {
+
   Piece *piece = nspiece::find(piecePos);
   moveSt temp = moves; // keep previous moveset
-  check::move(*piece, moves); // checks for valid moves
-  if (has::moves(moves)) {
-    draw::highlight(*piece);
-    return true;
+  if (type == MOVE) {
+    check::move(*piece, moves); // checks for valid moves
+    check::backwards(*piece, moves); // backwards check
+    if (has::moves(moves)) {
+      draw::highlight(*piece);
+      return true;
+    }
+  } else if (type == CAPTURE) {
+    check::capture(*piece, moves); // checks for valid captures
+    check::backwards(*piece, moves); // backwards check
+    if (has::captures(moves)) {
+      draw::highlight(*piece);
+      return true;
+    }
   }
   moves = temp; // revert to previous moveset
   return false;

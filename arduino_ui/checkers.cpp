@@ -19,6 +19,7 @@ tile board(int8_t pos) {
   return shared.board[pos];
 }
 
+// adjusts tile offsets depending on row 
 void tileOS(int8_t p, int8_t *os) {
   // tile offsets {0:UL, 1:UR, 2:DL, 3:DR}
   os[0] = -4; os[2] = 4;

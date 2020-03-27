@@ -69,7 +69,8 @@ void gameInit(bool start) {
 }
 
 void doTurn(bool turn) {
-  mustCapture(turn);
+  // will skip moves
+  if (mustCapture(turn)) {return;}
   selected pieceSel = NO_PIECE;
   moveSt moves;
   while(pieceSel != DONE) {

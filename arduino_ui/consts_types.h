@@ -25,7 +25,7 @@ namespace c {
 };
 
 typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
-typedef enum {NO_PIECE, PIECE, CHAIN, DONE} selected;
+typedef enum {NO_PIECE, PIECE, DONE} selected;
 typedef enum {EMPTY, PLAYER, BOT, OUT} tile;
 // moves that can be made by a piece
 typedef enum {NOT, MOVE, CAPTURE} move;

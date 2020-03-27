@@ -4,14 +4,17 @@ extern sharedVars shared;
 
 // removing backward moves or captures 
 void check::backwards(const Piece& piece, moveSt& moves) {
-  // bot side cannot move up
-  // player side cannot move down
-  if (piece.side == BOT) {
-    moves.UL = NOT;
-    moves.UR = NOT;
-  } else {
-    moves.DL = NOT;
-    moves.DR = NOT;
+  // non-king pieces cannot move backwards
+  if (!piece.king) {
+    // bot side cannot move up
+    // player side cannot move down
+    if (piece.side == BOT) {
+      moves.UL = NOT;
+      moves.UR = NOT;
+    } else {
+      moves.DL = NOT;
+      moves.DR = NOT;
+    }
   }
 }
 
@@ -92,13 +95,8 @@ void check::move(const Piece &piece, moveSt& moves) {
   int8_t p = piece.pos; 
   if (p < 0) {return;} // do nothing if captured
   empty(p, moves); // checks for empty tiles
-
-  // non-king pieces cannot move backwards
-  if (!piece.king) {
-    check::backwards(piece, moves);
-  }
   // removes moves if pieces are on the edge
-  edge(p, moves);
+  edge(p, moves); 
 }
 
 bool has::captures(const moveSt &moves) {

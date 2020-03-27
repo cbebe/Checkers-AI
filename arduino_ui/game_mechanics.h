@@ -4,7 +4,8 @@
 #include "consts_types.h"
 #include "move.h"
 
-void chooseMove(selected& pieceSel, bool turn, moveSt& moves);
-void mustCapture(bool turn);
+void chooseMove(selected& pieceSel, bool turn, moveSt& moves, bool *capture = NULL, move type = MOVE);
+bool mustCapture(bool turn);
+void showCap(bool *capture, bool turn, bool show = true);
 
 #endif
