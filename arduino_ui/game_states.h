@@ -2,8 +2,7 @@
 #define _GAME_STATES_H
 
 #include "consts_types.h"
-#include "pieces.h"
-#include "touchs.h"
+#include "game_mechanics.h"
 
 void game(bool start);
 void gameInit(bool start);

@@ -25,16 +25,19 @@ void gameInit(bool start) {
   // namespace is only used when not using 
   // would lead to lesser readability
   using namespace c;
-  shared.tft->fillScreen(TFT_BLACK);
+  MCUFRIEND_kbv *tft = shared.tft;
+  tft->fillScreen(TFT_BLACK);
   // draw checkers board
-  shared.tft->fillRect(off_x, off_y, board_w, board_w, board_dark);
+  tft->fillRect(off_x, off_y, board_w, board_w, board_dark);
   // print the light tiles
   for (int8_t i = 0; i < 8; i += 2) {
     for (int8_t j = 0; j < 8; j += 2) {
-      shared.tft->fillRect( off_x + (i*board_sq), off_y + (j*board_sq), 
-                            board_sq, board_sq, board_light);
-      shared.tft->fillRect( off_x + ((i+1)*board_sq), off_y + ((j+1)*board_sq), 
-                            board_sq, board_sq, board_light);
+      tft->fillRect(off_x + (i*board_sq), 
+                    off_y + (j*board_sq), 
+                    board_sq, board_sq, board_light);
+      tft->fillRect(off_x + ((i+1)*board_sq), 
+                    off_y + ((j+1)*board_sq), 
+                    board_sq, board_sq, board_light);
     }
   }
   // initialize empty spaces on board
@@ -65,48 +68,17 @@ void gameInit(bool start) {
   shared.gamePieces[dummy] = {0, EMPTY, false, -1}; 
 }
 
-win endCheck() {
-
-}
-
-// checks if any of the player's/bot's pieces must capture
-void checkMustCapture(bool turn, bool *capture) {
-  using c::num_pieces;
-  // starts the index at start
-  // depending on which side the current player is
-  int8_t start = turn ? num_pieces : 0;
-  for (int i = start; i < start + num_pieces; i++) {
-    Piece *piece = &shared.gamePieces[i];
-    moveSt moves = {NOT, NOT, NOT, NOT};
-    check::capture(*piece, moves);
-    // fill array with bool
-    capture[i % num_pieces] = has::captures(moves);
-  }
-}
-
-void mustCapture(bool turn) {
-  bool capture[c::num_pieces];
-  checkMustCapture(turn, capture);
-  bool check = false;
-  for (int i = 0; i < c::num_pieces; i++) {
-    if (capture[i]) {
-      check = true;
-      break;
-    }
-  }
-  // if there are no captures, move on to just moves
-  if (!check) {return;}
-  // else, make the player capture
-  selected pieceSel = NO_PIECE;
-}
-
 void doTurn(bool turn) {
   mustCapture(turn);
   selected pieceSel = NO_PIECE;
   moveSt moves;
   while(pieceSel != DONE) {
-    nspiece::choose(pieceSel, turn, moves);
+    chooseMove(pieceSel, turn, moves);
   }
+}
+
+win endCheck() {
+
 }
 
 void game(bool start) {

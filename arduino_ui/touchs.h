@@ -8,6 +8,7 @@
 
 #include "screenpos.h"
 
+// wrap const values in namespace
 namespace touch {
   // touch screen pins, obtained from the documentation
   const uint8_t yp = A3;

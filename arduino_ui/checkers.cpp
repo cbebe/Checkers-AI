@@ -4,7 +4,6 @@
 #include <SPI.h>
 #include <SD.h>
 
-#include "consts_types.h"
 #include "game_states.h"
 
 // shared variables
