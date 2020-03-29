@@ -47,7 +47,8 @@ void newSel(int8_t piecePos, moveSt& moves) {
   nsmove::show(piecePos, moves);
 }
 
-void attemptMove(selected& pieceSel, int8_t piecePos, moveSt& moves, move type) {
+void attemptMove( selected& pieceSel, int8_t piecePos, 
+                  moveSt& moves, move type, bool* capture) {
   // do nothing if no piece was selected
   if (pieceSel == PIECE) {
     // check if the moves are legal for this piece
@@ -58,6 +59,8 @@ void attemptMove(selected& pieceSel, int8_t piecePos, moveSt& moves, move type) 
       if (type == MOVE) {
         nsmove::piece(piece->pos, piecePos); // move piece
       } else {
+        // unhighlight the pieces that could capture
+        showCap(capture, turn, false);
         nsmove::capture(*piece, piecePos);
       }
       shared.selected = -1; // now no piece is selected
@@ -99,9 +102,6 @@ void chooseMove(selected& pieceSel, bool turn,
 
   // selecting a new piece
   tile currentPlayer = turn ? PLAYER : BOT;
-  if (type == CAPTURE) {
-    showCap(capture, turn);
-  } 
   if (board(piecePos) == currentPlayer) {
     if (nsmove::canMove(piecePos, moves, currentPlayer, type)) {
       // do nothing if same piece was selected
@@ -113,9 +113,7 @@ void chooseMove(selected& pieceSel, bool turn,
       pieceSel = PIECE; // now a piece is selected
     }
   } else if (board(piecePos) == EMPTY) {
-    if (type == CAPTURE) {
-      showCap(capture, turn, false);
-    }
-    attemptMove(pieceSel,piecePos, moves, type);
+    // now check if the move is valid
+    attemptMove(pieceSel,piecePos, moves, type, capture);
   }
 }
