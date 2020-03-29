@@ -56,6 +56,7 @@ struct sharedVars {
   tile board[32];
   
   int8_t selected; // current selected tile
+  bool pTurn; // current player
 };
 
 // returns the tile value of a board position
