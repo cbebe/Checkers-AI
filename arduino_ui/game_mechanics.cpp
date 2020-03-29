@@ -47,15 +47,19 @@ void newSel(int8_t piecePos, moveSt& moves) {
   nsmove::show(piecePos, moves);
 }
 
-void attemptMove(selected& pieceSel, int8_t piecePos, moveSt& moves) {
+void attemptMove(selected& pieceSel, int8_t piecePos, moveSt& moves, move type) {
   // do nothing if no piece was selected
   if (pieceSel == PIECE) {
     // check if the moves are legal for this piece
     Piece* piece = nspiece::find(shared.selected);
     move legal = nsmove::legal(*piece, piecePos, moves); 
-    if (legal == MOVE) {
-      draw::unhighlight(*piece); // remove move marks        
-      nsmove::piece(piece->pos, piecePos); // move piece
+    if (legal == type) {
+      draw::unhighlight(*piece); // remove move marks
+      if (type == MOVE) {
+        nsmove::piece(piece->pos, piecePos); // move piece
+      } else {
+        nsmove::capture(*piece, piecePos);
+      }
       shared.selected = -1; // now no piece is selected
       pieceSel = DONE; // done moving
     }
@@ -99,7 +103,6 @@ void chooseMove(selected& pieceSel, bool turn,
   if (board(piecePos) == currentPlayer) {
     if (nsmove::canMove(piecePos, moves, currentPlayer, type)) {
       // do nothing if same piece was selected
-      shared.tft->println("im here");
       if (piecePos == shared.selected) {return;}
       // unhighlights old piece and its moves
       draw::unhighlight(*nspiece::find(shared.selected));
@@ -108,6 +111,6 @@ void chooseMove(selected& pieceSel, bool turn,
       pieceSel = PIECE; // now a piece is selected
     }
   } else if (board(piecePos) == EMPTY) {
-    attemptMove(pieceSel,piecePos, moves);
+    attemptMove(pieceSel,piecePos, moves, type);
   }
 }

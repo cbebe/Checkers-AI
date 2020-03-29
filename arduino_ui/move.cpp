@@ -103,20 +103,17 @@ bool nsmove::canMove( int8_t piecePos, moveSt& moves,
 
   Piece *piece = nspiece::find(piecePos);
   moveSt temp = moves; // keep previous moveset
+  moves = {NOT, NOT, NOT, NOT};
   if (type == MOVE) {
     check::move(*piece, moves); // checks for valid moves
-    check::backwards(*piece, moves); // backwards check
-    if (has::moves(moves)) {
-      draw::highlight(*piece);
-      return true;
-    }
   } else if (type == CAPTURE) {
     check::capture(*piece, moves); // checks for valid captures
-    check::backwards(*piece, moves); // backwards check
-    if (has::captures(moves)) {
-      draw::highlight(*piece);
-      return true;
-    }
+  }
+
+  check::backwards(*piece, moves); // backwards check
+  if (has::moves(moves) || has::captures(moves)) {
+    draw::highlight(*piece);
+    return true;
   }
   moves = temp; // revert to previous moveset
   return false;

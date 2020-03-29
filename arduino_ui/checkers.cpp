@@ -11,6 +11,13 @@ sharedVars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
 
+// for good ol' printf debugging
+void db(const char* msg) {
+  shared.tft->fillRect(0, 0, touch::tft_width, 10, TFT_BLACK);
+  shared.tft->setCursor(0, 0);
+  shared.tft->print(msg);
+}
+
 // returns the tile value of a board position
 // use only for comparing, not for value assignment
 tile board(int8_t pos) {

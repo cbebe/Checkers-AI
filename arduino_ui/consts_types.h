@@ -65,4 +65,6 @@ tile board(int8_t pos);
 // on which row the piece is in
 void tileOS(int8_t p, int8_t *os);
 
+void db(const char* msg);
+
 #endif
