@@ -69,8 +69,9 @@ void gameInit(bool start) {
 }
 
 void doTurn(bool turn) {
-  // will skip moves
+  // will skip moves if the player must capture
   if (mustCapture(turn)) {return;}
+  // else just move
   selected pieceSel = NO_PIECE;
   moveSt moves;
   while(pieceSel != DONE) {
@@ -78,21 +79,56 @@ void doTurn(bool turn) {
   }
 }
 
-win endCheck() {
+bool noPieces(tile side) {
+  int start = (side == BOT) ? 0 : c::num_pieces;
+  for (int i = start; i < start + c::num_pieces; i++) {
+    if (shared.gamePieces[i].pos != -1) {
+      return false;
+    }
+  }
+  return true;
+}
 
+bool noMoves(bool turn) {
+  // determine start index
+  int start = (turn) ? c::num_pieces : 0;
+
+  for (int i = start; i < start + c::num_pieces; i++) {
+    Piece *piece = &shared.gamePieces[i];
+    moveSt moves = {NOT, NOT, NOT, NOT};
+    // check for valid moves or captures
+    check::move(*piece, moves);
+    check::capture(*piece, moves);
+    check::backwards(*piece, moves);
+    if (has::moves(moves) || has::captures(moves)) {
+      // there are moves that can still be made
+      return false;
+    }
+  }
+  // no more moves
+  return true;
+}
+
+// check for endgame conditions
+win endCheck(bool turn) {
+  if (noPieces(PLAYER)){return BOTW;}
+  if (noPieces(BOT)) {return PLAYERW;}
+  if (noMoves(turn)) {return DRAW;}
+  // game continues
+  return NONE;
 }
 
 void game(bool start) {
   // true is player's turn, bot is false 
-  bool turn = true; 
+  bool pTurn = true; 
   if (!start){
-    turn = false;
+    pTurn = false;
   }
   win state = NONE;
   // goes on until the end
   while (state == NONE) {
-    doTurn(turn);
-    state = endCheck();
-    turn = !turn;
+    doTurn(pTurn);
+    pTurn = !pTurn;
+    state = endCheck(pTurn);
   }
 }

@@ -99,7 +99,9 @@ void chooseMove(selected& pieceSel, bool turn,
 
   // selecting a new piece
   tile currentPlayer = turn ? PLAYER : BOT;
-
+  if (type == CAPTURE) {
+    showCap(capture, turn);
+  } 
   if (board(piecePos) == currentPlayer) {
     if (nsmove::canMove(piecePos, moves, currentPlayer, type)) {
       // do nothing if same piece was selected
@@ -111,6 +113,9 @@ void chooseMove(selected& pieceSel, bool turn,
       pieceSel = PIECE; // now a piece is selected
     }
   } else if (board(piecePos) == EMPTY) {
+    if (type == CAPTURE) {
+      showCap(capture, turn, false);
+    }
     attemptMove(pieceSel,piecePos, moves, type);
   }
 }
