@@ -6,5 +6,12 @@
 
 ## AI decision making
 
-- We kinda need to find a better way for our AI to decide
-on which moves to make
+- We kinda need to find a better way for our AI to decide on which moves to make
+
+- NVM we are sticking with minimax
+
+## Heuristics
+
+- Pawn: 5 , King: 8
+- Back row: 4, Middle Box: 3
+- Middle two rows: 1, Vulnerable: -3, Protected: 3
