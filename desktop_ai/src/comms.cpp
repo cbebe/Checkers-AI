@@ -11,7 +11,9 @@ CommLink::~CommLink() {
 }
 
 Board* CommLink::getBoardState() {
+  Board* ptr = NULL;
 
+  return ptr;
 }
 
 void CommLink::sendMove(int8 pos, int8 newPos) {

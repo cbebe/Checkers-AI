@@ -3,12 +3,14 @@
 // check for endgame condition
 bool gameOver(int position) {
 
+  return true;
 }
 
 // static evaluation of the board
 // refer to the readme for the heuristics
 int staticEval(int position) {
 
+  return 0;
 }
 
 // not implemented yet

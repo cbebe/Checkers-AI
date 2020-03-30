@@ -19,7 +19,7 @@ Board newBoard() {
 void displayBoard(const Board& board) {
   using std::cout;
   using std::endl;
-  
+
   cout << "  =================================================" << endl;
   cout << "   _______________________________________________" << endl;
   for (int i = 0; i <= 24; i += 8) 
@@ -41,7 +41,6 @@ void displayBoard(const Board& board) {
   cout << "  =================================================" << endl;
 }
 
-
 // creates a copy of a board
 Board copy(const Board& board) {
   Board boardCopy;
@@ -55,7 +54,7 @@ Board copy(const Board& board) {
 std::list<Board> possibleMoves(const Board& board, piece player) {
   std::list<Board> moves;
   Board bcopy = copy(board);
-
+  moves.push_back(bcopy);
 
   return moves;
 }
