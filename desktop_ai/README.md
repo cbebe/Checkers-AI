@@ -15,3 +15,7 @@
 - Pawn: 5 , King: 8
 - Back row: 4, Middle Box: 3
 - Middle two rows: 1, Vulnerable: -3, Protected: 3
+
+## Tree searching
+
+[Minimax and Monte Carlo Tree Search (MCTS)](https://towardsdatascience.com/game-ais-with-minimax-and-monte-carlo-tree-search-af2a177361b0)

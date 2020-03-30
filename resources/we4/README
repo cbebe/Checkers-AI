@@ -1,0 +1,30 @@
+---------------------------------------------------
+Name : Charles Ancheta
+ID: 1581672
+CMPUT 275 , Winter 2020
+
+Weekly Exercise 4: Dynamic Hashing
+---------------------------------------------------
+
+Included files:
+exercise4.cpp
+hash_table.h
+linked_list.h
+Makefile
+README
+
+Running Instructions:
+1. Open the terminal on the cmput274 virtual machine. Navigate to the directory.
+2. Type "make" on the command line to compile the program and "./exercise4" to test.
+
+Notes and Assumptions:
+The program assumes that the HashTable size will be a non-zero positive integer.
+If the size is set to 0, the program prints an error message and exits the program.
+If no parameter was provided, the table assumes a default size of 10.
+
+Implemented HashTable class methods:
+  void copy(LinkedList<T> *newTable, unsigned int size)
+  - Copies the contents of the original table to the new table
+  void changeSize(bool toShrink);
+  - Shrinks or expands the table depending on which conditions are met
+  
