@@ -18,6 +18,8 @@ unsigned long fibb(int n) {
 
 int main() {
   std::unordered_map<int, unsigned long> mem;
-  std::cout << fibb(1000) << '\n';
-  std::cout << fib(1000, mem) << '\n';
+  std::cout << fibb(10) << '\n';
+  for (int i = 0; i < 10000; i++) {
+    std::cout << fib(i, mem) << '\n';
+  }
 }

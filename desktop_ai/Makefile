@@ -25,3 +25,4 @@ obj:
 # removes all object files and the executable
 clean:
 	@rm $(OBJ) $(EXE)
+	@rmdir obj

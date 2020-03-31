@@ -1,10 +1,10 @@
-#include "minimax.h"
-#include "searchtree.h"
 #include "comms.h"
-#include "board.h"
+#include "game.h"
 
 int main() {
-  Board board = newBoard();
-  displayBoard(board);
+  CommLink comms();
+  std::cout << "Communication ready!" << std::endl;
+  
+
   return 0;
 }

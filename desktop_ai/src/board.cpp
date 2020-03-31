@@ -42,19 +42,10 @@ void displayBoard(const Board& board) {
 }
 
 // creates a copy of a board
-Board copy(const Board& board) {
-  Board boardCopy;
+Board boardCopy(const Board& board) {
+  Board bCopy;
   for (int i = 0; i < 32; i++) {
-    boardCopy.bArray[i] = board.bArray[i];
+    bCopy.bArray[i] = board.bArray[i];
   }
-  return boardCopy;
-}
-
-// returns a list of possible board moves
-std::list<Board> possibleMoves(const Board& board, piece player) {
-  std::list<Board> moves;
-  Board bcopy = copy(board);
-  moves.push_back(bcopy);
-
-  return moves;
+  return bCopy;
 }

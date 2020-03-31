@@ -1,6 +1,7 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
+#include "check.h"
 #include <list>
 #include <iostream>
 
@@ -20,6 +21,7 @@ struct Board {
 
 
 Board newBoard();
+Board boardCopy(const Board& board);
 void displayBoard(const Board& board);
 std::list<Board> possibleMoves(const Board& board, piece player);
 
