@@ -2,6 +2,11 @@
 
 extern sharedVars shared;
 
+// sends current board state to Serial
+void sendBoardState() {
+  
+}
+
 // not really important rn
 bool menuScreen() {
   int off = 100;

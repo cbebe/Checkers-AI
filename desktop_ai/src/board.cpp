@@ -44,7 +44,7 @@ void displayBoard(const Board& board) {
 // creates a copy of a board
 Board boardCopy(const Board& board) {
   Board bCopy;
-  for (int i = 0; i < 32; i++) {
+  for (int i = 0; i < bSize; i++) {
     bCopy.a[i] = board.a[i];
   }
   return bCopy;

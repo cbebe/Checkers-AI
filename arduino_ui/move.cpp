@@ -66,6 +66,10 @@ void nsmove::piece(int8_t oldPos, int8_t newPos) {
     if ((piece->side == BOT && newPos >= 28 && newPos < 32) ||
         (piece->side == PLAYER && newPos >= 0 && newPos < 4)) {
       piece->king = true;
+      tile newType = (piece->side == BOT) ? BK : PK;
+      piece->side = newType
+      // converts to king piece on the board
+      shared.board[piece->pos] = newType;
     }
   }
   // now tile is empty

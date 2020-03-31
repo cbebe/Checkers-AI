@@ -10,10 +10,15 @@ CommLink::~CommLink() {
   delete(Serial);
 }
 
-Board* CommLink::getBoardState() {
-  Board* ptr = NULL;
-
-  return ptr;
+// reads board state sent by Arduino
+Board CommLink::getBoardState() {
+  Board board;
+  string c = Serial->readline(0);
+  for (int i = 0; i < bSize; i++) {
+    board.a[i] = static_cast<piece>(c[i]);
+  }
+  
+  return board;
 }
 
 void CommLink::sendMove(int8 pos, int8 newPos) {

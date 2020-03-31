@@ -11,11 +11,12 @@ typedef enum {
   WK,BK // white and black kings
 } piece;
 
-const int8 numpcs = 12;
+const int8 numpcs = 12; // number of pieces per player
+const int8 bSize = 32; // board size
 
 struct Board {
   // board array
-  piece a[32];
+  piece a[bSize];
 };
 
 
