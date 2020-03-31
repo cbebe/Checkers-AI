@@ -1,4 +1,4 @@
-#include "comms.h"
+#include "commlink.h"
 
 CommLink::CommLink(const char *portName) {
   // create new connection
@@ -17,5 +17,5 @@ Board* CommLink::getBoardState() {
 }
 
 void CommLink::sendMove(int8 pos, int8 newPos) {
-
+  Serial->writeline("hi");
 }
