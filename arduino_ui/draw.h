@@ -9,11 +9,11 @@ namespace draw {
   // gives the screen position of the centre of the chosen tile
   screenPos position(int8_t pos);
   // draws the piece on the board
-  void piece(const Piece& piece);
+  void piece(int8_t pos);
   // highlights the piece for moving
-  void highlight(const Piece& piece, bool cap = false);
+  void highlight(int8_t pos, bool cap = false);
   // unhighlights the piece and its moves
-  void unhighlight(const Piece& piece);
+  void unhighlight(int8_t pos);
   // places a mark on the board if a piece can move there
   void mark(int8_t pos);
   // clear the tile of marks/pieces

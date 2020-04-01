@@ -41,31 +41,23 @@ void gameInit(bool start) {
     }
   }
   // initialize empty spaces on board
-  for (int8_t i = 12; i < 20; i++) {
+  for (int8_t i = num_pcs; i < 20; i++) {
     shared.board[i] = EMPTY;
   }
   
   // places pieces on board
-  for (int8_t i = 0; i < num_pieces; i++) {
-    // bot pieces
-    shared.gamePieces[i] = {1, BOT, false, i};
-    // player pieces
-    shared.gamePieces[i + num_pieces] = {0, PLAYER, false, i + 20};
+  for (int8_t i = 0; i < num_pcs; i++) {
     
-    // change colour if player chose black
-    if (start) {
-      shared.gamePieces[i].colour = 0;
-      shared.gamePieces[i+ num_pieces].colour = 1;
-    }
-    // draw pieces on board
-    draw::piece(shared.gamePieces[i]);
-    draw::piece(shared.gamePieces[i + num_pieces]);
     // place pieces in board array
+    // bot pieces
     shared.board[i] = BOT;
+    // player pieces
     shared.board[i + 20] = PLAYER;
+    
+    // draw pieces on board
+    draw::piece(i);
+    draw::piece(i + 20);
   }
-  // dummy piece
-  shared.gamePieces[dummy] = {0, EMPTY, false, -1}; 
 }
 
 void doTurn() {
@@ -79,30 +71,38 @@ void doTurn() {
   }
 }
 
-bool noPieces(tile side) {
-  int start = (side == BOT) ? 0 : c::num_pieces;
-  for (int i = start; i < start + c::num_pieces; i++) {
-    if (shared.gamePieces[i].pos != -1) {
-      return false;
+// check if all pieces are gone
+win checkPieces() {
+  int8_t bot = 0, player = 0;
+  for (int i = 0; i < c::bsize; i++) {
+    piece_t p = board(i);
+    if (p != EMPTY) {
+      if (p == PK || p == PLAYER) {
+        player++;
+      } else if (p == BK || p == BOT) {
+        bot++;
+      }
     }
   }
-  return true;
+  if (bot == 0) {
+    return PLAYERW;
+  } else if (player == 0) {
+    return BOTW;
+  }
+  return NONE; // continue game
 }
 
-bool noMoves() {
-  // determine start index
-  int start = shared.pTurn ? c::num_pieces : 0;
-
-  for (int i = start; i < start + c::num_pieces; i++) {
-    Piece *piece = &shared.gamePieces[i];
-    moveSt moves = {NOT, NOT, NOT, NOT};
-    // check for valid moves or captures
-    check::move(*piece, moves);
-    check::capture(*piece, moves);
-    check::backwards(*piece, moves);
-    if (has::moves(moves) || has::captures(moves)) {
-      // there are moves that can still be made
-      return false;
+// check if pieces can move
+bool noMoves(piece_t side) {
+  // king piece
+  piece_t sidek = (side == BOT) ? BK : PK;
+  for (int8_t i = 0; i < c::bsize; i++) {
+    if (board(i) == side || board(i) == sidek) {
+      moveSt moves = c::empty_m;
+      // check for valid moves or captures
+      if (nsmove::canMove(i, moves, NOT)) {
+        return false;
+      }
     }
   }
   // no more moves
@@ -110,22 +110,21 @@ bool noMoves() {
 }
 
 // check for endgame conditions
-win endCheck() {
-  if (noPieces(PLAYER)){return BOTW;}
-  if (noPieces(BOT)) {return PLAYERW;}
-  if (noMoves()) {return DRAW;}
-  // game continues
-  return NONE;
+win endCheck(piece_t side) {
+  if (noMoves(side)) {return DRAW;}
+  return checkPieces();
 }
 
 void game(bool start) {
   // true is player's turn, bot is false 
-  shared.pTurn = start;
   win state = NONE;
   // goes on until the end
   while (state == NONE) {
     doTurn();
-    shared.pTurn = !shared.pTurn;
-    state = endCheck();
+    state = endCheck(BOT);
+    if (state != NONE) {
+      sendBoardState();
+      state = endCheck(PLAYER);
+    }
   }
 }

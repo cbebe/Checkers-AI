@@ -3,115 +3,105 @@
 extern sharedVars shared;
 
 // removing backward moves or captures 
-void check::backwards(const Piece& piece, moveSt& moves) {
+void check::backwards(int8_t pos, moveSt& moves) {
+  piece_t p = board(pos);
   // non-king pieces cannot move backwards
-  if (!piece.king) {
-    // bot side cannot move up
-    // player side cannot move down
-    if (piece.side == BOT) {
-      moves.UL = NOT;
-      moves.UR = NOT;
-    } else {
-      moves.DL = NOT;
-      moves.DR = NOT;
-    }
+  // bot side cannot move up
+  // player side cannot move down
+  if (p == BOT) {
+    moves.m[0] = NOT;
+    moves.m[1] = NOT;
+  } else if (p == PLAYER) {
+    moves.m[2] = NOT;
+    moves.m[3] = NOT;
   }
 }
 
 // checks if the piece is on the edges of the board
 void edge(int8_t p, moveSt& moves) {
   // do nothing if captured
-  if (p < 0) {return;}
+  if (p < 0 || p > 31) {return;}
   if ((p - 4) % 8 == 0) { // left
-    moves.UL = NOT; moves.DL = NOT;
+    moves.m[0] = NOT; moves.m[2] = NOT;
   } else if ((p - 3) % 8 == 0) { // right
-    moves.UR = NOT; moves.DR = NOT;
+    moves.m[1] = NOT; moves.m[3] = NOT;
   }
   if (p < 4) { // top
-    moves.UL = NOT; moves.UR = NOT;
+    moves.m[0] = NOT; moves.m[1] = NOT;
   } else if (p > 27) { // bottom
-    moves.DL = NOT; moves.DR = NOT;
+    moves.m[2] = NOT; moves.m[3] = NOT;
   }
 }
 
 // checks for enemy pieces to capture
-void check::capture(const Piece &piece, moveSt &moves) {
-  // do nothing if piece is captured
-  if (piece.pos == -1) {return;}
-  int8_t p = piece.pos;
-  // determines offset of tiles
-  int8_t os[4]; tileOS(p, os); 
-  // change the enemy depending on the piece's side
-  tile enemy = (piece.side == BOT) ? PLAYER : BOT;
+void check::capture(int8_t pos, moveSt &moves) {
+  // do nothing if out of bounds
+  if (pos < 0 || pos > 31) {return;}
 
-  // checks for adjacent enemy pieces
-  // and empty tiles behind those pieces
-  if (board(p + os[0]) == enemy && 
-      board(p - 9) == EMPTY) {
-      moves.UL = CAPTURE;
+  // determines offset of tiles
+  int8_t os[4]; 
+  tileOS(pos, os); 
+  // change the enemy depending on the piece's side
+  piece_t enemy = (board(pos) == BOT || board(pos) == BK) ? PLAYER : BOT;
+  piece_t enemyk = (enemy == BOT) ? BK : PK;
+
+  /* checks for adjacent enemy pieces
+  and empty tiles behind those pieces
+
+  the empty tile might not be diagonal to the piece 
+  on specific positions on the board
+  these checks are for those positions */
+  bool left = pos % 8 == 0;
+  bool right = (pos - 7) % 8 == 0;
+  // moves : UL UR DL DR
+  for (int i = 0; i < 4; i++) {
+    piece_t t = board(pos + os[i]); // target
+    if ((t == enemy || t == enemyk) && 
+        board(pos + c::dg[i]) == EMPTY) {
+        moves.m[i] = CAPTURE;
+      // disable right moves if piece is on the right
+      // disable left moves if piece is on the left
+      if ((right && (i % 2)) || (left && !(i % 2))) {
+        moves.m[i] = NOT;
+      }
+    }
   }
-  if (board(p + os[1]) == enemy && 
-      board(p - 7) == EMPTY) {
-      moves.UR = CAPTURE;
-  }
-  if (board(p + os[2]) == enemy &&
-      board(p + 7) == EMPTY) {
-      moves.DL = CAPTURE;
-  }
-  if (board(p + os[3]) == enemy &&
-      board(p + 9) == EMPTY) {
-      moves.DR = CAPTURE;  
-  }
-  
-  // the empty tile might not be diagonal to the piece 
-  // on specific positions on the board
-  // these checks are for those positions 
-  bool left = p % 8 == 0;
-  bool right = (p - 7) % 8 == 0;
-  if (moves.UL == CAPTURE && left) {moves.UL = NOT;}
-  if (moves.DL == CAPTURE && left) {moves.DL = NOT;}
-  if (moves.UR == CAPTURE && right) {moves.UR = NOT;}
-  if (moves.DR == CAPTURE && right) {moves.DR = NOT;}
 
   // final edge check
-  edge(p, moves);
+  edge(pos, moves);
 }
 
 // checks if there are empty tiles next 
 // to the piece on the board
-void empty(int8_t p, moveSt& moves) {void captureCheck(const Piece &piece, moveSt& moves);
+void empty(int8_t p, moveSt& moves) {
   // adjacent tile offsets are different depending on row
   int8_t os[4]; tileOS(p, os);
-
-  if (board(p + os[0]) == EMPTY) {moves.UL = MOVE;}
-  if (board(p + os[1]) == EMPTY) {moves.UR = MOVE;}
-  if (board(p + os[2]) == EMPTY) {moves.DL = MOVE;}
-  if (board(p + os[3]) == EMPTY) {moves.DR = MOVE;}
+  for (int i = 0; i < 4; i++){
+    if (board(p + os[0]) == EMPTY) {moves.m[i] = MOVE;}
+  }
 }
 
-
 // checks for moves that can be made by the piece
-void check::move(const Piece &piece, moveSt& moves) {
-  int8_t p = piece.pos; 
-  if (p < 0) {return;} // do nothing if captured
-  empty(p, moves); // checks for empty tiles
-  // removes moves if pieces are on the edge
-  edge(p, moves); 
+void check::move(int8_t pos, moveSt& moves) {
+  // do nothing if out of bounds
+  if (pos >= 0 && pos < 32) {
+    empty(pos, moves); // checks for empty tiles
+    // removes moves if pieces are on the edge
+    edge(pos, moves); 
+  } 
 }
 
 bool has::captures(const moveSt &moves) {
-  if ((moves.UL == CAPTURE) ||
-      (moves.UR == CAPTURE) ||
-      (moves.DL == CAPTURE) ||
-      (moves.DR == CAPTURE)) {return true;}
+  for (int i = 0; i < 4; i++) {
+    if (moves.m[i] == CAPTURE) return true;
+  }
   return false;
 }
 
 // check if there are valid moves
 bool has::moves(const moveSt& moves) {
-  if ((moves.UL == MOVE) ||
-      (moves.UR == MOVE) ||
-      (moves.DL == MOVE) ||
-      (moves.DR == MOVE)) {return true;}
+  for (int i = 0; i < 4; i++) {
+    if (moves.m[i] == MOVE) return true;
+  }
   return false;
 }

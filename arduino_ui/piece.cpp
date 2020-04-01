@@ -50,28 +50,10 @@ int8_t nspiece::touch() {
   return regX + (8 * regY) + (4 * fsRow);
 }
 
-// finds the piece in the gamePieces array
-// returns a pointer to the piece
-Piece* nspiece::find(int8_t pos) {
-  return &shared.gamePieces[nspiece::index(pos)];
-}
 
 // remove a piece from the board
 void nspiece::remove(int8_t piecePos) {
   // piece is captured
-  nspiece::find(piecePos)->pos = -1;
   draw::clear(piecePos);
   shared.board[piecePos] = EMPTY;
-}
-
-// find a piece's index on the board array
-// in terms of position
-// return dummy piece if not found
-int8_t nspiece::index(int8_t pos) {
-  if (pos < 0) {return c::dummy;}
-  // find the piece in the board that matches the position
-  for (int i = 0; i < c::num_pieces * 2; i++) {
-    if (shared.gamePieces[i].pos == pos) {return i;}
-  }
-  return c::dummy;
 }

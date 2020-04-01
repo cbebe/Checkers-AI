@@ -7,12 +7,12 @@
 namespace check {
   // changes the move struct fields to MOVE
   // if there are valid moves
-  void move(const Piece& piece, moveSt& moves);
+  void move(int8_t pos, moveSt& moves);
   // changes the move struct fields to CAPTURE
   // if there are valid captures
-  void capture(const Piece& piece, moveSt& moves);
+  void capture(int8_t pos, moveSt& moves);
   // removes backward moves if the pieces are not king
-  void backwards(const Piece& piece, moveSt& moves);
+  void backwards(int8_t pos, moveSt& moves);
 }
 
 // bool checks

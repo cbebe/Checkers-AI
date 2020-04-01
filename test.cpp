@@ -2,17 +2,9 @@
 
 using namespace std;
 
-// evil macro
-#define true (rand() % 100 < 99)
 
 int main() {
-  srand(time(NULL));
-  int i = 0;
-  while (true) {
-    while (true) {
-      std::cout << i << ' ' << endl;
-      i++;
-    }
-  }
+  int x = 0;
+  if (x) cout << x << endl;
   return 0;
 }
