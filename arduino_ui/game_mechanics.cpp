@@ -26,7 +26,7 @@ int8_t checkMustCapture(int8_t *capture) {
 }
 
 // show/hide which pieces can capture
-void showCap(int8_t *capture, int8_t capp, bool show) {
+void show_cap(int8_t *capture, int8_t capp, bool show) {
 
   for (int i = 0; i < capp; i++) {
     if (show) {
@@ -39,7 +39,7 @@ void showCap(int8_t *capture, int8_t capp, bool show) {
   }
 }
 
-void attemptMove( selected& pieceSel, int8_t newPos, 
+void attempt_move( selected& pieceSel, int8_t newPos, 
                   move_st& moves, move type,
                   int8_t *capture, int8_t capp) {
   // do nothing if no piece was selected
@@ -52,7 +52,7 @@ void attemptMove( selected& pieceSel, int8_t newPos,
         nsmove::piece(shared.selected, newPos); // move piece
       } else {
         // unhighlight the pieces that could capture
-        showCap(capture, capp, false);
+        show_cap(capture, capp, false);
         nsmove::capture(shared.selected, newPos);
       }
       shared.selected = -1; // now no piece is selected
@@ -63,7 +63,7 @@ void attemptMove( selected& pieceSel, int8_t newPos,
 
 // implements must capture rule
 // returns true if the player had to capture
-bool mustCapture() {
+bool must_capture() {
   int8_t capture[c::num_pcs];
   // number of pieces that can capture
   // with capture array listing the positions
@@ -74,15 +74,15 @@ bool mustCapture() {
   // else, make the player capture
   selected pieceSel = NO_PIECE;
   move_st moves;
-  showCap(capture, capp);
+  show_cap(capture, capp);
   while (pieceSel != DONE) {
-    chooseMove(pieceSel, moves, CAPTURE, capture, capp);
+    choose_move(pieceSel, moves, CAPTURE, capture, capp);
   }
   return true;
 }
 
 // lets player choose a piece to move
-void chooseMove(selected& pieceSel, move_st& moves, 
+void choose_move(selected& pieceSel, move_st& moves, 
                 move type, int8_t *capture, int8_t capp) {
   int8_t pos = nspiece::touch();
   // loop again if nothing was touched
@@ -91,16 +91,17 @@ void chooseMove(selected& pieceSel, move_st& moves,
   // selecting a new piece
   if (board(pos) == PK || board(pos) == PLAYER) {
     if (nsmove::can_move(pos, moves, type)) {
+      draw::highlight(pos); // highlight a piece
       // do nothing if same piece was selected
       if (pos == shared.selected) {return;}
       // unhighlights old piece and its moves
-      draw::unhighlight(pos);
+      draw::unhighlight(shared.selected);
       shared.selected = pos;
       nsmove::show(pos, moves); // show moves on board
       pieceSel = PIECE; // now a piece is selected
     }
   } else if (board(pos) == EMPTY) {
     // now check if the move is valid
-    attemptMove(pieceSel, pos, moves, type, capture, capp);
+    attempt_move(pieceSel, pos, moves, type, capture, capp);
   }
 }

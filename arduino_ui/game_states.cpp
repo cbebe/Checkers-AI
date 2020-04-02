@@ -62,13 +62,13 @@ void gameInit(bool start) {
 
 void doTurn() {
   // will skip moves if the player must capture
-  if (mustCapture()) {return;}
+  if (must_capture()) {return;}
   // else just move
   selected pieceSel = NO_PIECE;
   move_st moves;
   
   while(pieceSel != DONE) {
-    chooseMove(pieceSel, moves);
+    choose_move(pieceSel, moves);
   }
 }
 
@@ -125,11 +125,13 @@ void game(bool start) {
   // goes on until the end
   while (state == NONE) {
     doTurn();
+    db("done turn");
     state = endCheck(BOT);
-    if (state != NONE) {
+    if (state == NONE) {
       comm::send_state();
-      comm::get_move();
+      // comm::get_move();
       state = endCheck(PLAYER);
     }
   }
+  comm::end_game();
 }

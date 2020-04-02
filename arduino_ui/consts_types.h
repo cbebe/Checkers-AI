@@ -50,7 +50,7 @@ struct shared_vars {
   MCUFRIEND_kbv* tft; // the tft display
   // array to store all board positions
   piece_t board[c::b_size];
-  int8_t selected; // current selected tile
+  int8_t selected; // current selected piece
 };
 
 // returns the tile value of a board position

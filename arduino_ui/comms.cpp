@@ -2,16 +2,6 @@
 
 extern shared_vars shared;
 
-// sends board state 
-void comm::send_state() {
-  char b[c::b_size];
-  for (int8_t i = 0; i < c::b_size; i++) {
-    // casting enum to char
-    b[i] = (char) shared.board[i] + '0';
-  }
-  Serial.println(b); // send board to serial
-}
-
 // reads line from serial until newline char is received
 // does not include newline in string
 bool read_line(char *buff, uint32_t timeout) {
@@ -45,4 +35,19 @@ void comm::get_move() {
       nsmove::piece(from, to);
     }
   }
+}
+
+// sends board state 
+void comm::send_state() {
+  char b[c::b_size];
+  for (int8_t i = 0; i < c::b_size; i++) {
+    // casting enum to char
+    b[i] = (char) shared.board[i] + '0';
+  }
+  Serial.println(b); // send board to serial
+}
+
+// ends game
+void comm::end_game() {
+  Serial.println("E"); // end game flag to restart ai
 }

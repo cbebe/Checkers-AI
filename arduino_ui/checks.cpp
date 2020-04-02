@@ -77,7 +77,7 @@ void empty(int8_t p, move_st& moves) {
   // adjacent tile offsets are different depending on row
   int8_t os[4]; tileOS(p, os);
   for (int i = 0; i < 4; i++){
-    if (board(p + os[0]) == EMPTY) {moves.m[i] = MOVE;}
+    if (board(p + os[i]) == EMPTY) {moves.m[i] = MOVE;}
   }
 }
 

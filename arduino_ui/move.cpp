@@ -102,9 +102,9 @@ bool nsmove::can_move(int8_t pos, move_st& moves, move type) {
   }
   check::backwards(pos, moves); // backwards check
   if (has::moves(moves) || has::captures(moves)) {
-    draw::highlight(pos);
     return true;
   }
+
   moves = temp; // revert to previous moveset
   return false;
 }
