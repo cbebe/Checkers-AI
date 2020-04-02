@@ -7,7 +7,7 @@
 #include "game_states.h"
 
 // shared variables
-sharedVars shared;
+shared_vars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
 

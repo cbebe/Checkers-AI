@@ -1,6 +1,6 @@
 #include "game_states.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // not really important rn
 bool menuScreen() {
@@ -28,16 +28,16 @@ void gameInit(bool start) {
   MCUFRIEND_kbv *tft = shared.tft;
   tft->fillScreen(TFT_BLACK);
   // draw checkers board
-  tft->fillRect(off_x, off_y, board_w, board_w, board_dark);
+  tft->fillRect(off_x, off_y, b_width, b_width, b_dark);
   // print the light tiles
   for (int8_t i = 0; i < 8; i += 2) {
     for (int8_t j = 0; j < 8; j += 2) {
-      tft->fillRect(off_x + (i*board_sq), 
-                    off_y + (j*board_sq), 
-                    board_sq, board_sq, board_light);
-      tft->fillRect(off_x + ((i+1)*board_sq), 
-                    off_y + ((j+1)*board_sq), 
-                    board_sq, board_sq, board_light);
+      tft->fillRect(off_x + (i*b_sq), 
+                    off_y + (j*b_sq), 
+                    b_sq, b_sq, b_light);
+      tft->fillRect(off_x + ((i+1)*b_sq), 
+                    off_y + ((j+1)*b_sq), 
+                    b_sq, b_sq, b_light);
     }
   }
   // initialize empty spaces on board
@@ -65,17 +65,20 @@ void doTurn() {
   if (mustCapture()) {return;}
   // else just move
   selected pieceSel = NO_PIECE;
-  moveSt moves;
+  move_st moves;
+  
   while(pieceSel != DONE) {
     chooseMove(pieceSel, moves);
   }
 }
 
-// check if all pieces are gone
+// check if all pieces are captured
 win checkPieces() {
   int8_t bot = 0, player = 0;
-  for (int i = 0; i < c::bsize; i++) {
+  for (int i = 0; i < c::b_size; i++) {
     piece_t p = board(i);
+    // counts the number of pieces
+    // for each player
     if (p != EMPTY) {
       if (p == PK || p == PLAYER) {
         player++;
@@ -84,6 +87,7 @@ win checkPieces() {
       }
     }
   }
+  
   if (bot == 0) {
     return PLAYERW;
   } else if (player == 0) {
@@ -96,11 +100,11 @@ win checkPieces() {
 bool noMoves(piece_t side) {
   // king piece
   piece_t sidek = (side == BOT) ? BK : PK;
-  for (int8_t i = 0; i < c::bsize; i++) {
+  for (int8_t i = 0; i < c::b_size; i++) {
     if (board(i) == side || board(i) == sidek) {
-      moveSt moves = c::empty_m;
+      move_st moves = c::empty_m;
       // check for valid moves or captures
-      if (nsmove::canMove(i, moves, NOT)) {
+      if (nsmove::can_move(i, moves, NOT)) {
         return false;
       }
     }
@@ -123,7 +127,8 @@ void game(bool start) {
     doTurn();
     state = endCheck(BOT);
     if (state != NONE) {
-      sendBoardState();
+      comm::send_state();
+      comm::get_move();
       state = endCheck(PLAYER);
     }
   }

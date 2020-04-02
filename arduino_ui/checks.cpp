@@ -1,9 +1,9 @@
 #include "checks.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // removing backward moves or captures 
-void check::backwards(int8_t pos, moveSt& moves) {
+void check::backwards(int8_t pos, move_st& moves) {
   piece_t p = board(pos);
   // non-king pieces cannot move backwards
   // bot side cannot move up
@@ -18,7 +18,7 @@ void check::backwards(int8_t pos, moveSt& moves) {
 }
 
 // checks if the piece is on the edges of the board
-void edge(int8_t p, moveSt& moves) {
+void edge(int8_t p, move_st& moves) {
   // do nothing if captured
   if (p < 0 || p > 31) {return;}
   if ((p - 4) % 8 == 0) { // left
@@ -34,7 +34,7 @@ void edge(int8_t p, moveSt& moves) {
 }
 
 // checks for enemy pieces to capture
-void check::capture(int8_t pos, moveSt &moves) {
+void check::capture(int8_t pos, move_st &moves) {
   // do nothing if out of bounds
   if (pos < 0 || pos > 31) {return;}
 
@@ -73,7 +73,7 @@ void check::capture(int8_t pos, moveSt &moves) {
 
 // checks if there are empty tiles next 
 // to the piece on the board
-void empty(int8_t p, moveSt& moves) {
+void empty(int8_t p, move_st& moves) {
   // adjacent tile offsets are different depending on row
   int8_t os[4]; tileOS(p, os);
   for (int i = 0; i < 4; i++){
@@ -82,7 +82,7 @@ void empty(int8_t p, moveSt& moves) {
 }
 
 // checks for moves that can be made by the piece
-void check::move(int8_t pos, moveSt& moves) {
+void check::move(int8_t pos, move_st& moves) {
   // do nothing if out of bounds
   if (pos >= 0 && pos < 32) {
     empty(pos, moves); // checks for empty tiles
@@ -91,7 +91,7 @@ void check::move(int8_t pos, moveSt& moves) {
   } 
 }
 
-bool has::captures(const moveSt &moves) {
+bool has::captures(const move_st &moves) {
   for (int i = 0; i < 4; i++) {
     if (moves.m[i] == CAPTURE) return true;
   }
@@ -99,7 +99,7 @@ bool has::captures(const moveSt &moves) {
 }
 
 // check if there are valid moves
-bool has::moves(const moveSt& moves) {
+bool has::moves(const move_st& moves) {
   for (int i = 0; i < 4; i++) {
     if (moves.m[i] == MOVE) return true;
   }

@@ -1,6 +1,6 @@
 #include "game_mechanics.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 /* 
 int8_t checkMustCapture(int8_t *capture):
@@ -10,9 +10,9 @@ returns the number of pieces that can capture
 */
 int8_t checkMustCapture(int8_t *capture) {
   int8_t capp = 0; // number of pieces that can capture
-  for (int i = 0; i < c::bsize; i++) {
+  for (int i = 0; i < c::b_size; i++) {
     if (board(i) == PLAYER || board(i) == PK) {
-      moveSt moves = c::empty_m;
+      move_st moves = c::empty_m;
       // check which pieces can capture
       check::capture(i, moves);
       check::backwards(i, moves);
@@ -40,7 +40,7 @@ void showCap(int8_t *capture, int8_t capp, bool show) {
 }
 
 void attemptMove( selected& pieceSel, int8_t newPos, 
-                  moveSt& moves, move type,
+                  move_st& moves, move type,
                   int8_t *capture, int8_t capp) {
   // do nothing if no piece was selected
   if (pieceSel == PIECE) {
@@ -73,7 +73,7 @@ bool mustCapture() {
   if (capp == 0) {return false;}  
   // else, make the player capture
   selected pieceSel = NO_PIECE;
-  moveSt moves;
+  move_st moves;
   showCap(capture, capp);
   while (pieceSel != DONE) {
     chooseMove(pieceSel, moves, CAPTURE, capture, capp);
@@ -82,7 +82,7 @@ bool mustCapture() {
 }
 
 // lets player choose a piece to move
-void chooseMove(selected& pieceSel, moveSt& moves, 
+void chooseMove(selected& pieceSel, move_st& moves, 
                 move type, int8_t *capture, int8_t capp) {
   int8_t pos = nspiece::touch();
   // loop again if nothing was touched
@@ -90,7 +90,7 @@ void chooseMove(selected& pieceSel, moveSt& moves,
   
   // selecting a new piece
   if (board(pos) == PK || board(pos) == PLAYER) {
-    if (nsmove::canMove(pos, moves, type)) {
+    if (nsmove::can_move(pos, moves, type)) {
       // do nothing if same piece was selected
       if (pos == shared.selected) {return;}
       // unhighlights old piece and its moves

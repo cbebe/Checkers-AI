@@ -1,6 +1,6 @@
 #include "move.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // captures a piece
 void nsmove::capture(int8_t oldPos, int8_t newPos) {
@@ -18,7 +18,7 @@ void nsmove::capture(int8_t oldPos, int8_t newPos) {
 }
 
 void nsmove::chain(int8_t pos) {
-  moveSt moves = c::empty_m;
+  move_st moves = c::empty_m;
   check::capture(pos, moves);
   // do nothing if there are no moves
   if (!has::captures(moves)) {return;}
@@ -38,7 +38,7 @@ void nsmove::chain(int8_t pos) {
 }
 
 // checks if the selected move is legal
-move nsmove::legal(int8_t pos, int8_t newPos, const moveSt& moves) {
+move nsmove::legal(int8_t pos, int8_t newPos, const move_st& moves) {
   int8_t os[4]; tileOS(pos, os); // adjust adjacent tile offsets
   
   for (int i = 0; i < 4; i++) {
@@ -74,7 +74,7 @@ void nsmove::piece(int8_t oldPos, int8_t newPos) {
 }
 
 // show valid moves on the screen
-void nsmove::show(int8_t pos, const moveSt& moves) {
+void nsmove::show(int8_t pos, const move_st& moves) {
   using draw::mark;
   // adjacent tile offsets vary depending on row
   int8_t os[4]; tileOS(pos, os);
@@ -89,8 +89,8 @@ void nsmove::show(int8_t pos, const moveSt& moves) {
 
 // shows the player where to move the piece
 // returns true if a piece can move/capture
-bool nsmove::canMove(int8_t pos, moveSt& moves, move type) {
-  moveSt temp = moves; // keep previous moveset
+bool nsmove::can_move(int8_t pos, move_st& moves, move type) {
+  move_st temp = moves; // keep previous moveset
   moves = c::empty_m; // empty moveset
   if (type == MOVE) {
     check::move(pos, moves); // checks for valid moves

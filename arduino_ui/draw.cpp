@@ -1,14 +1,14 @@
 #include "draw.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // clears the tile of a piece or move
 void draw::clear(int8_t tile) {
   if (tile >= 0 && tile <= 31) {
     screenPos dp = draw::position(tile);
     // dp initially points to the centre of the square
-    dp.x -= c::board_sq/2; dp.y -= c::board_sq/2;
-    shared.tft->fillRect(dp.x, dp.y, c::board_sq, c::board_sq, c::board_dark);
+    dp.x -= c::b_sq/2; dp.y -= c::b_sq/2;
+    shared.tft->fillRect(dp.x, dp.y, c::b_sq, c::b_sq, c::b_dark);
   }
 }
 
@@ -43,8 +43,8 @@ screenPos draw::position(int8_t pos) {
   int8_t ForS = (pos % 8) / 4; // first or second row of group
   int8_t col = pos % 4; // the column of the piece
   screenPos dp;
-  dp.x = (1 - ForS + 2 * col) * c::board_sq + c::board_sq/2 + c::off_x;
-  dp.y = (2 * group + ForS ) * c::board_sq + c::board_sq/2 + c::off_y;
+  dp.x = (1 - ForS + 2 * col) * c::b_sq + c::b_sq/2 + c::off_x;
+  dp.y = (2 * group + ForS ) * c::b_sq + c::b_sq/2 + c::off_y;
   return dp;
 }
 
