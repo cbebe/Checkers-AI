@@ -1,0 +1,5 @@
+Communication Protocol
+Moving: <C or M> <old pos> <new pos>\n
+Board state: 32 character string representing each piece on each position
+0 - Empty, 1 - white piece, 2 - black piece, 3 - white king piece, 4 - black king piece
+Example Starting board - "22222222222200000000111111111111"
