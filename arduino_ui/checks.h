@@ -7,20 +7,20 @@
 namespace check {
   // changes the move struct fields to MOVE
   // if there are valid moves
-  void move(const Piece& piece, moveSt& moves);
+  void move(int8_t pos, move_st& moves);
   // changes the move struct fields to CAPTURE
   // if there are valid captures
-  void capture(const Piece& piece, moveSt& moves);
+  void capture(int8_t pos, move_st& moves);
   // removes backward moves if the pieces are not king
-  void backwards(const Piece& piece, moveSt& moves);
+  void backwards(int8_t pos, move_st& moves);
 }
 
 // bool checks
 namespace has {
   // if the struct has moves
-  bool moves(const moveSt& moves);
+  bool moves(const move_st& moves);
   // if the struct has captures
-  bool captures(const moveSt& moves);
+  bool captures(const move_st& moves);
 }
 
 #endif

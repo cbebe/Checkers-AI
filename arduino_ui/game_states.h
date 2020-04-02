@@ -3,6 +3,7 @@
 
 #include "consts_types.h"
 #include "game_mechanics.h"
+#include "comms.h"
 
 void game(bool start);
 void gameInit(bool start);

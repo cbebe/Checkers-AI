@@ -1,6 +1,6 @@
 #include "game_states.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // sends current board state to Serial
 void sendBoardState() {
@@ -33,81 +33,85 @@ void gameInit(bool start) {
   MCUFRIEND_kbv *tft = shared.tft;
   tft->fillScreen(TFT_BLACK);
   // draw checkers board
-  tft->fillRect(off_x, off_y, board_w, board_w, board_dark);
+  tft->fillRect(off_x, off_y, b_width, b_width, b_dark);
   // print the light tiles
   for (int8_t i = 0; i < 8; i += 2) {
     for (int8_t j = 0; j < 8; j += 2) {
-      tft->fillRect(off_x + (i*board_sq), 
-                    off_y + (j*board_sq), 
-                    board_sq, board_sq, board_light);
-      tft->fillRect(off_x + ((i+1)*board_sq), 
-                    off_y + ((j+1)*board_sq), 
-                    board_sq, board_sq, board_light);
+      tft->fillRect(off_x + (i*b_sq), 
+                    off_y + (j*b_sq), 
+                    b_sq, b_sq, b_light);
+      tft->fillRect(off_x + ((i+1)*b_sq), 
+                    off_y + ((j+1)*b_sq), 
+                    b_sq, b_sq, b_light);
     }
   }
   // initialize empty spaces on board
-  for (int8_t i = 12; i < 20; i++) {
+  for (int8_t i = num_pcs; i < 20; i++) {
     shared.board[i] = EMPTY;
   }
   
   // places pieces on board
-  for (int8_t i = 0; i < num_pieces; i++) {
-    // bot pieces
-    shared.gamePieces[i] = {1, BOT, false, i};
-    // player pieces
-    shared.gamePieces[i + num_pieces] = {0, PLAYER, false, i + 20};
+  for (int8_t i = 0; i < num_pcs; i++) {
     
-    // change colour if player chose black
-    if (start) {
-      shared.gamePieces[i].colour = 0;
-      shared.gamePieces[i+ num_pieces].colour = 1;
-    }
-    // draw pieces on board
-    draw::piece(shared.gamePieces[i]);
-    draw::piece(shared.gamePieces[i + num_pieces]);
     // place pieces in board array
+    // bot pieces
     shared.board[i] = BOT;
+    // player pieces
     shared.board[i + 20] = PLAYER;
+    
+    // draw pieces on board
+    draw::piece(i);
+    draw::piece(i + 20);
   }
-  // dummy piece
-  shared.gamePieces[dummy] = {0, EMPTY, false, -1}; 
 }
 
 void doTurn() {
   // will skip moves if the player must capture
-  if (mustCapture()) {return;}
+  if (must_capture()) {return;}
   // else just move
   selected pieceSel = NO_PIECE;
-  moveSt moves;
+  move_st moves;
+  
   while(pieceSel != DONE) {
-    chooseMove(pieceSel, moves);
+    choose_move(pieceSel, moves);
   }
 }
 
-bool noPieces(tile side) {
-  int start = (side == BOT) ? 0 : c::num_pieces;
-  for (int i = start; i < start + c::num_pieces; i++) {
-    if (shared.gamePieces[i].pos != -1) {
-      return false;
+// check if all pieces are captured
+win checkPieces() {
+  int8_t bot = 0, player = 0;
+  for (int i = 0; i < c::b_size; i++) {
+    piece_t p = board(i);
+    // counts the number of pieces
+    // for each player
+    if (p != EMPTY) {
+      if (p == PK || p == PLAYER) {
+        player++;
+      } else if (p == BK || p == BOT) {
+        bot++;
+      }
     }
   }
-  return true;
+  
+  if (bot == 0) {
+    return PLAYERW;
+  } else if (player == 0) {
+    return BOTW;
+  }
+  return NONE; // continue game
 }
 
-bool noMoves() {
-  // determine start index
-  int start = shared.pTurn ? c::num_pieces : 0;
-
-  for (int i = start; i < start + c::num_pieces; i++) {
-    Piece *piece = &shared.gamePieces[i];
-    moveSt moves = {NOT, NOT, NOT, NOT};
-    // check for valid moves or captures
-    check::move(*piece, moves);
-    check::capture(*piece, moves);
-    check::backwards(*piece, moves);
-    if (has::moves(moves) || has::captures(moves)) {
-      // there are moves that can still be made
-      return false;
+// check if pieces can move
+bool noMoves(piece_t side) {
+  // king piece
+  piece_t sidek = (side == BOT) ? BK : PK;
+  for (int8_t i = 0; i < c::b_size; i++) {
+    if (board(i) == side || board(i) == sidek) {
+      move_st moves = c::empty_m;
+      // check for valid moves or captures
+      if (nsmove::can_move(i, moves, NOT)) {
+        return false;
+      }
     }
   }
   // no more moves
@@ -115,22 +119,24 @@ bool noMoves() {
 }
 
 // check for endgame conditions
-win endCheck() {
-  if (noPieces(PLAYER)){return BOTW;}
-  if (noPieces(BOT)) {return PLAYERW;}
-  if (noMoves()) {return DRAW;}
-  // game continues
-  return NONE;
+win endCheck(piece_t side) {
+  if (noMoves(side)) {return DRAW;}
+  return checkPieces();
 }
 
 void game(bool start) {
   // true is player's turn, bot is false 
-  shared.pTurn = start;
   win state = NONE;
   // goes on until the end
   while (state == NONE) {
     doTurn();
-    shared.pTurn = !shared.pTurn;
-    state = endCheck();
+    db("done turn");
+    state = endCheck(BOT);
+    if (state == NONE) {
+      comm::send_state();
+      // comm::get_move();
+      state = endCheck(PLAYER);
+    }
   }
+  comm::end_game();
 }

@@ -7,7 +7,7 @@
 #include "game_states.h"
 
 // shared variables
-sharedVars shared;
+shared_vars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
 
@@ -20,7 +20,7 @@ void db(const char* msg) {
 
 // returns the tile value of a board position
 // use only for comparing, not for value assignment
-tile board(int8_t pos) {
+piece_t board(int8_t pos) {
   // out of bounds
   if (pos < 0 || pos > 31) {return OUT;}
   return shared.board[pos];

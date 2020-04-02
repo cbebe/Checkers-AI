@@ -1,6 +1,6 @@
 #include "piece.h"
 
-extern sharedVars shared; 
+extern shared_vars shared; 
 
 /* int8_t nspiece::touch():
 Determines which position of board that was touched
@@ -15,8 +15,8 @@ int8_t nspiece::touch() {
   // if touch screen was untouched
   if (tp.x == touch::untch){return -1;} 
   // if touch screen was out of bounds
-  if ((tp.y > off_y + board_w || tp.y < off_y) || 
-      (tp.x > off_x + board_w || tp.x < off_x)) {return -2;}
+  if ((tp.y > off_y + b_width || tp.y < off_y) || 
+      (tp.x > off_x + b_width || tp.x < off_x)) {return -2;}
 
   /* NOTE: The math here might be a bit hard to understand
   so just imagine the 8x8 board divided into 16 regions
@@ -31,47 +31,29 @@ int8_t nspiece::touch() {
   /* calculation for 2x2 matrix */
 
   // determine if first (0) or second (1) row was touched
-  int8_t fsRow = (tp.y % (board_sq * 2)) / board_sq;
+  int8_t fs_row = (tp.y % (b_sq * 2)) / b_sq;
   // determine if first (0) or second (1) column was touched
-  int8_t fsCol = (tp.x % (board_sq * 2)) / board_sq;
+  int8_t fs_col = (tp.x % (b_sq * 2)) / b_sq;
 
   /* calculation for 4x4 matrix */
 
   // determines which region of the board was touched
-  int8_t regY = tp.y / (board_sq * 2); 
-  int8_t regX = tp.x / (board_sq * 2); 
+  int8_t regY = tp.y / (b_sq * 2); 
+  int8_t regX = tp.x / (b_sq * 2); 
 
   // multiplication is logically the same as AND
   // addition is logically the same as OR
   // checks if a light tile was touched
-  if ((fsRow * fsCol) == 1 || 
-      (fsRow + fsCol) == 0) {return -1;}
+  if ((fs_row * fs_col) == 1 || 
+      (fs_row + fs_col) == 0) {return -1;}
   
-  return regX + (8 * regY) + (4 * fsRow);
+  return regX + (8 * regY) + (4 * fs_row);
 }
 
-// finds the piece in the gamePieces array
-// returns a pointer to the piece
-Piece* nspiece::find(int8_t pos) {
-  return &shared.gamePieces[nspiece::index(pos)];
-}
 
 // remove a piece from the board
 void nspiece::remove(int8_t piecePos) {
   // piece is captured
-  nspiece::find(piecePos)->pos = -1;
   draw::clear(piecePos);
   shared.board[piecePos] = EMPTY;
-}
-
-// find a piece's index on the board array
-// in terms of position
-// return dummy piece if not found
-int8_t nspiece::index(int8_t pos) {
-  if (pos < 0) {return c::dummy;}
-  // find the piece in the board that matches the position
-  for (int i = 0; i < c::num_pieces * 2; i++) {
-    if (shared.gamePieces[i].pos == pos) {return i;}
-  }
-  return c::dummy;
 }

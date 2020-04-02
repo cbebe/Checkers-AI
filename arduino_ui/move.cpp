@@ -1,124 +1,110 @@
 #include "move.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
 // captures a piece
-void nsmove::capture(Piece &piece, int8_t newPos) {
-  int8_t os[4]; tileOS(piece.pos, os); // set tile offsets
-  int8_t dg[] = {-9, -7, 7, 9};
+void nsmove::capture(int8_t oldPos, int8_t newPos) {
+  int8_t os[4]; tileOS(oldPos, os); // set tile offsets
   for (int i = 0; i < 4; i++) {
     // checks which direction the capturing piece jumped to
-    if (newPos - piece.pos == dg[i]) {
+    if (newPos - oldPos == c::dg[i]) {
       // remove captured piece from the board
-      nspiece::remove(piece.pos + os[i]); 
+      nspiece::remove(oldPos + os[i]); 
       break;
     }
   }  
-  nsmove::piece(piece.pos, newPos);
-  nsmove::chain(piece); // checks for capture chain
+  nsmove::piece(oldPos, newPos);
+  nsmove::chain(newPos); // checks for capture chain
 }
 
-void nsmove::chain(Piece &piece) {
-  moveSt moves = {NOT, NOT, NOT, NOT};
-  check::capture(piece, moves);
+void nsmove::chain(int8_t pos) {
+  move_st moves = c::empty_m;
+  check::capture(pos, moves);
   // do nothing if there are no moves
   if (!has::captures(moves)) {return;}
 
   // highlight possible moves
-  draw::highlight(piece);
-  nsmove::show(piece.pos, moves);
-  int8_t pos = nspiece::touch();
+  draw::highlight(pos);
+  nsmove::show(pos, moves);
+  int8_t newPos = nspiece::touch();
   // waits for the player to make a legal move
-  while (!nsmove::legal(piece, pos, moves)) {
-    pos = nspiece::touch();  
+  while (!nsmove::legal(pos, newPos, moves)) {
+    newPos = nspiece::touch();  
   }
-  draw::unhighlight(piece);
+  draw::unhighlight(pos);
   // recursively calls capture piece until 
   // there are no valid captures
-  nsmove::capture(piece, pos);
+  nsmove::capture(pos, newPos);
 }
 
 // checks if the selected move is legal
-move nsmove::legal(const Piece &piece, int8_t newPos, const moveSt& moves) {
-  int8_t os[4]; tileOS(piece.pos, os); // adjust adjacent tile offsets
-  // CAPTURES
-  if ((moves.UL == CAPTURE && newPos == piece.pos - 9) ||
-      (moves.UR == CAPTURE && newPos == piece.pos - 7) ||
-      (moves.DL == CAPTURE && newPos == piece.pos + 7) ||
-      (moves.DR == CAPTURE && newPos == piece.pos + 9)) {return CAPTURE;}
-  // MOVES
-  if ((moves.UL == MOVE && newPos == piece.pos + os[0]) ||
-      (moves.UR == MOVE && newPos == piece.pos + os[1]) ||
-      (moves.DL == MOVE && newPos == piece.pos + os[2]) ||
-      (moves.DR == MOVE && newPos == piece.pos + os[3])) {return MOVE;}
+move nsmove::legal(int8_t pos, int8_t newPos, const move_st& moves) {
+  int8_t os[4]; tileOS(pos, os); // adjust adjacent tile offsets
+  
+  for (int i = 0; i < 4; i++) {
+    if ((moves.m[i] == CAPTURE) && 
+        newPos == (pos + c::dg[i])) {return CAPTURE;}
+    if ((moves.m[i] == MOVE) && 
+        newPos == (pos + os[i])) {return MOVE;}
+  }
   // piece can't move to the selected position
   return NOT;
 }
 
 // moves a piece from one position to another
 void nsmove::piece(int8_t oldPos, int8_t newPos) {
-  Piece* piece = nspiece::find(oldPos);
-  // update piece's position in the board
-  piece->pos = newPos;
-  // checks for promotion
-  if (!piece->king) {
-    // promotion if a piece reaches the other side of the board
-    if ((piece->side == BOT && newPos >= 28 && newPos < 32) ||
-        (piece->side == PLAYER && newPos >= 0 && newPos < 4)) {
-      piece->king = true;
-      tile newType = (piece->side == BOT) ? BK : PK;
-      piece->side = newType
-      // converts to king piece on the board
-      shared.board[piece->pos] = newType;
-    }
-  }
+  piece_t p = board(oldPos);
   // now tile is empty
   draw::clear(oldPos);
-  // draw piece in new position
-  draw::piece(*piece);
-  // update board
   shared.board[oldPos] = EMPTY;
-  shared.board[newPos] = piece->side;
+
+  // checks for promotion if piece is not king yet
+  if (!(p == PK || p == BK)) {
+    // promotion if a piece reaches the other side of the board
+    if ((p == BOT && newPos >= 28 && newPos < 32) ||
+        (p == PLAYER && newPos >= 0 && newPos < 4)) {
+      // promote piece to king
+      p = (p == BOT) ? BK : PK;
+    }
+  }
+  // piece in new position
+  shared.board[newPos] = p;
+  // draw piece in new position
+  draw::piece(newPos);
 }
 
 // show valid moves on the screen
-void nsmove::show(int8_t pos, const moveSt& moves) {
+void nsmove::show(int8_t pos, const move_st& moves) {
   using draw::mark;
   // adjacent tile offsets vary depending on row
   int8_t os[4]; tileOS(pos, os);
 
-  // piece moves
-  if (moves.UL == MOVE) {mark(pos + os[0]);}
-  if (moves.UR == MOVE) {mark(pos + os[1]);}
-  if (moves.DL == MOVE) {mark(pos + os[2]);}
-  if (moves.DR == MOVE) {mark(pos + os[3]);}
-  // piece captures
-  if (moves.UL == CAPTURE) {mark(pos - 9);}
-  if (moves.UR == CAPTURE) {mark(pos - 7);}
-  if (moves.DL == CAPTURE) {mark(pos + 7);}
-  if (moves.DR == CAPTURE) {mark(pos + 9);}
-
+  for (int i = 0; i < 4; i++) {
+    // piece moves
+    if (moves.m[i] == MOVE) mark(pos + os[i]);
+    // piece captures
+    if (moves.m[i] == CAPTURE) mark(pos + c::dg[i]);
+  }
 }
 
 // shows the player where to move the piece
 // returns true if a piece can move/capture
-bool nsmove::canMove( int8_t piecePos, moveSt& moves, 
-                      tile currentPlayer, move type) {
-
-  Piece *piece = nspiece::find(piecePos);
-  moveSt temp = moves; // keep previous moveset
-  moves = {NOT, NOT, NOT, NOT};
+bool nsmove::can_move(int8_t pos, move_st& moves, move type) {
+  move_st temp = moves; // keep previous moveset
+  moves = c::empty_m; // empty moveset
   if (type == MOVE) {
-    check::move(*piece, moves); // checks for valid moves
+    check::move(pos, moves); // checks for valid moves
   } else if (type == CAPTURE) {
-    check::capture(*piece, moves); // checks for valid captures
+    check::capture(pos, moves); // checks for valid captures
+  } else if (type == NOT) { // if checking for both
+    check::move(pos, moves);
+    check::capture(pos, moves);
   }
-
-  check::backwards(*piece, moves); // backwards check
+  check::backwards(pos, moves); // backwards check
   if (has::moves(moves) || has::captures(moves)) {
-    draw::highlight(*piece);
     return true;
   }
+
   moves = temp; // revert to previous moveset
   return false;
 }

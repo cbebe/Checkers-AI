@@ -7,65 +7,59 @@
 #include <SD.h>
 
 #include "screenpos.h"
+
+typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
+typedef enum {NO_PIECE, PIECE, DONE} selected;
+typedef enum {EMPTY, BOT, PLAYER, BK, PK, OUT} piece_t;
+// moves that can be made by a piece
+typedef enum {NOT, MOVE, CAPTURE} move;
+
+// struct to store moves in all 4 directions
+struct move_st {
+  move m[4]; // wrap move array in a struct 
+};
+
 // defined constants
 namespace c {
   const uint8_t sd_cs = 10; // sd card pin
   
-  const uint8_t num_pieces = 12; // number of pieces per player
-  const uint8_t dummy = 24;
+  const uint8_t num_pcs = 12; // pieces per player 
+  const uint8_t b_size = 32; // board array size
   
-  const uint8_t board_sq = 35; // board square side length
-  const uint16_t board_w = board_sq * 8; // board width
-  const uint16_t board_dark = 19458; // colours for game board
-  const uint16_t board_light = 57113; // please change i don't like
+  const uint8_t b_sq = 35; // board square side length
+  const uint16_t b_width = b_sq * 8; // board width
+
+  const uint16_t b_dark = 19458; // colours for game board
+  const uint16_t b_light = 57113; // please change i don't like
+  
   const uint8_t pc_rad = 15; // piece radius
   // board offsets
   const uint8_t off_x = 100;
   const uint8_t off_y = 20;
-};
+  // diagonal moves are constant
+  const int8_t dg[] = {-9, -7, 7, 9};
+  // empty move array
+  const move_st empty_m = {{NOT, NOT, NOT, NOT}};
 
-typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
-typedef enum {NO_PIECE, PIECE, DONE} selected;
-typedef enum {EMPTY, PLAYER, BOT, PK, BK, OUT} tile;
-// moves that can be made by a piece
-typedef enum {NOT, MOVE, CAPTURE} move;
-
-
-// struct that stores piece information
-struct Piece {
-  int8_t colour; // colour of the piece
-  tile side; // 1 for player 2 for bot
-  bool king;
-  // position of the piece from 0 to 31
-  // -1 means captured
-  int8_t pos; 
-};
-
-// struct to store moves in all 4 directions
-struct moveSt {
-  move UL; move UR;
-  move DL; move DR;
+  const uint16_t t10s = 10000; // 10 second timeout
+  const uint16_t t20s = 20000; // 20 second timeout
 };
 
 // struct that stores all shared variables
-struct sharedVars {
+struct shared_vars {
   MCUFRIEND_kbv* tft; // the tft display
-  // array to store all pieces + a dummy piece
-  Piece gamePieces[c::num_pieces * 2 + 1];
   // array to store all board positions
-  tile board[32];
-  
-  int8_t selected; // current selected tile
-  bool pTurn; // current player
+  piece_t board[c::b_size];
+  int8_t selected; // current selected piece
 };
 
 // returns the tile value of a board position
 // use only for comparing, not for value assignment
-tile board(int8_t pos);
+piece_t board(int8_t pos);
 // determines adjacent tile offset depending
 // on which row the piece is in
 void tileOS(int8_t p, int8_t *os);
-
+// for print debugging
 void db(const char* msg);
 
 #endif

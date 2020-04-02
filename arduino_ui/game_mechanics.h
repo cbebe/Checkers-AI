@@ -4,8 +4,10 @@
 #include "consts_types.h"
 #include "move.h"
 
-void chooseMove(selected& pieceSel, moveSt& moves, bool *capture = NULL, move type = MOVE);
-bool mustCapture();
-void showCap(bool *capture, bool show = true);
+void choose_move(selected& pieceSel, move_st& moves, move type = MOVE, 
+                int8_t *capture = NULL, int8_t capp = 0);
+bool must_capture();
+
+void show_cap(int8_t *capture, int8_t capp, bool show = true);
 
 #endif

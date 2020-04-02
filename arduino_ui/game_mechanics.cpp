@@ -1,67 +1,59 @@
 #include "game_mechanics.h"
 
-extern sharedVars shared;
+extern shared_vars shared;
 
-// checks if any of the player's/bot's pieces must capture
-void checkMustCapture(bool *capture) {
-  using c::num_pieces;
-  // starts the index at start
-  // depending on which side the current player is
-  int8_t start = shared.pTurn ? num_pieces : 0;
-  for (int i = start; i < start + num_pieces; i++) {
-    Piece *piece = &shared.gamePieces[i];
-    moveSt moves = {NOT, NOT, NOT, NOT};
-    // check which pieces can capture
-    check::capture(*piece, moves);
-    check::backwards(*piece, moves);
-    // fill array with bool values
-    capture[i % num_pieces] = has::captures(moves);
+/* 
+int8_t checkMustCapture(int8_t *capture):
+Moves the positions of the pieces that 
+can capture in the capture array and
+returns the number of pieces that can capture
+*/
+int8_t checkMustCapture(int8_t *capture) {
+  int8_t capp = 0; // number of pieces that can capture
+  for (int i = 0; i < c::b_size; i++) {
+    if (board(i) == PLAYER || board(i) == PK) {
+      move_st moves = c::empty_m;
+      // check which pieces can capture
+      check::capture(i, moves);
+      check::backwards(i, moves);
+      if (has::captures(moves)) {
+        capture[capp] = i;
+        capp++;
+      }
+    }
   }
+  return capp;
 }
 
 // show/hide which pieces can capture
-void showCap(bool *capture, bool show) {
-  // find starting index for piece array
-  // pTurn = true : player's pieces
-  // pTurn = false : bot's pieces
-  int8_t start = shared.pTurn ? c::num_pieces : 0;
-  for (int i = 0; i < c::num_pieces; i++) {
-    if (capture[i]) {
-      if (show) {
-        // show that the piece can capture
-        draw::highlight(shared.gamePieces[i + start], true);
-      } else {
-        // redraw the piece to remove highlight
-        draw::piece(shared.gamePieces[i + start]);
-      }
+void show_cap(int8_t *capture, int8_t capp, bool show) {
+
+  for (int i = 0; i < capp; i++) {
+    if (show) {
+      // show that the piece can capture
+      draw::highlight(capture[i], true);
+    } else {
+      // redraw the piece to remove highlight
+      draw::piece(capture[i]);
     }
   }
 }
 
-void newSel(int8_t piecePos, moveSt& moves) {
-  // do nothing if same piece was selected
-  if (piecePos == shared.selected) {return;}
-  // unhighlights old piece and its moves
-  draw::unhighlight(*nspiece::find(shared.selected));
-  shared.selected = piecePos;
-  nsmove::show(piecePos, moves);
-}
-
-void attemptMove( selected& pieceSel, int8_t piecePos, 
-                  moveSt& moves, move type, bool* capture) {
+void attempt_move( selected& pieceSel, int8_t newPos, 
+                  move_st& moves, move type,
+                  int8_t *capture, int8_t capp) {
   // do nothing if no piece was selected
   if (pieceSel == PIECE) {
     // check if the moves are legal for this piece
-    Piece* piece = nspiece::find(shared.selected);
-    move legal = nsmove::legal(*piece, piecePos, moves); 
+    move legal = nsmove::legal(shared.selected, newPos, moves); 
     if (legal == type) {
-      draw::unhighlight(*piece); // remove move marks
+      draw::unhighlight(shared.selected); // remove move marks
       if (type == MOVE) {
-        nsmove::piece(piece->pos, piecePos); // move piece
+        nsmove::piece(shared.selected, newPos); // move piece
       } else {
         // unhighlight the pieces that could capture
-        showCap(capture, false);
-        nsmove::capture(*piece, piecePos);
+        show_cap(capture, capp, false);
+        nsmove::capture(shared.selected, newPos);
       }
       shared.selected = -1; // now no piece is selected
       pieceSel = DONE; // done moving
@@ -71,49 +63,45 @@ void attemptMove( selected& pieceSel, int8_t piecePos,
 
 // implements must capture rule
 // returns true if the player had to capture
-bool mustCapture() {
-  bool capture[c::num_pieces];
-  checkMustCapture(capture);
-  bool check = false;
-  for (int i = 0; i < c::num_pieces; i++) {
-    if (capture[i]) {
-      check = true;
-      break;
-    }
-  }
+bool must_capture() {
+  int8_t capture[c::num_pcs];
+  // number of pieces that can capture
+  // with capture array listing the positions
+  int8_t capp = checkMustCapture(capture); 
+  
   // if there are no captures, move on to just moves
-  if (!check) {return false;}
+  if (capp == 0) {return false;}  
   // else, make the player capture
   selected pieceSel = NO_PIECE;
-  moveSt moves;
-  showCap(capture);
+  move_st moves;
+  show_cap(capture, capp);
   while (pieceSel != DONE) {
-    chooseMove(pieceSel, moves, capture, CAPTURE);
+    choose_move(pieceSel, moves, CAPTURE, capture, capp);
   }
   return true;
 }
 
 // lets player choose a piece to move
-void chooseMove(selected& pieceSel, moveSt& moves, 
-                bool* capture, move type) {
-  int8_t piecePos = nspiece::touch();
+void choose_move(selected& pieceSel, move_st& moves, 
+                move type, int8_t *capture, int8_t capp) {
+  int8_t pos = nspiece::touch();
   // loop again if nothing was touched
-  if (piecePos < 0) {return;} 
-
+  if (pos < 0) {return;} 
+  
   // selecting a new piece
-  tile currentPlayer = shared.pTurn ? PLAYER : BOT;
-  if (board(piecePos) == currentPlayer) {
-    if (nsmove::canMove(piecePos, moves, currentPlayer, type)) {
+  if (board(pos) == PK || board(pos) == PLAYER) {
+    if (nsmove::can_move(pos, moves, type)) {
+      draw::highlight(pos); // highlight a piece
       // do nothing if same piece was selected
-      if (piecePos == shared.selected) {return;}
+      if (pos == shared.selected) {return;}
       // unhighlights old piece and its moves
-      draw::unhighlight(*nspiece::find(shared.selected));
-      shared.selected = piecePos;
-      nsmove::show(piecePos, moves); // show moves on board
+      draw::unhighlight(shared.selected);
+      shared.selected = pos;
+      nsmove::show(pos, moves); // show moves on board
       pieceSel = PIECE; // now a piece is selected
     }
-  } else if (board(piecePos) == EMPTY) {
+  } else if (board(pos) == EMPTY) {
     // now check if the move is valid
-    attemptMove(pieceSel,piecePos, moves, type, capture);
+    attempt_move(pieceSel, pos, moves, type, capture, capp);
   }
 }
