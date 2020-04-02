@@ -78,10 +78,10 @@ void doTurn() {
 }
 
 // check if all pieces are captured
-win checkPieces() {
+Win checkPieces() {
   int8_t bot = 0, player = 0;
   for (int i = 0; i < c::b_size; i++) {
-    piece_t p = board(i);
+    Piece p = board(i);
     // counts the number of pieces
     // for each player
     if (p != EMPTY) {
@@ -102,9 +102,9 @@ win checkPieces() {
 }
 
 // check if pieces can move
-bool noMoves(piece_t side) {
+bool noMoves(Piece side) {
   // king piece
-  piece_t sidek = (side == BOT) ? BK : PK;
+  Piece sidek = (side == BOT) ? BK : PK;
   for (int8_t i = 0; i < c::b_size; i++) {
     if (board(i) == side || board(i) == sidek) {
       move_st moves = c::empty_m;
@@ -119,14 +119,14 @@ bool noMoves(piece_t side) {
 }
 
 // check for endgame conditions
-win endCheck(piece_t side) {
+Win endCheck(Piece side) {
   if (noMoves(side)) {return DRAW;}
   return checkPieces();
 }
 
 void game(bool start) {
   // true is player's turn, bot is false 
-  win state = NONE;
+  Win state = NONE;
   // goes on until the end
   while (state == NONE) {
     doTurn();

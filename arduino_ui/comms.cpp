@@ -31,7 +31,7 @@ void comm::get_move() {
     sscanf(buff, "%c %d %d", &move, &from, &to);
     if (move == 'C') {
       nsmove::capture(from, to);
-    } else if (move == ';M') {
+    } else if (move == 'M') {
       nsmove::piece(from, to);
     }
   }

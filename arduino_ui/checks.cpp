@@ -4,7 +4,7 @@ extern shared_vars shared;
 
 // removing backward moves or captures 
 void check::backwards(int8_t pos, move_st& moves) {
-  piece_t p = board(pos);
+  Piece p = board(pos);
   // non-king pieces cannot move backwards
   // bot side cannot move up
   // player side cannot move down
@@ -42,8 +42,8 @@ void check::capture(int8_t pos, move_st &moves) {
   int8_t os[4]; 
   tileOS(pos, os); 
   // change the enemy depending on the piece's side
-  piece_t enemy = (board(pos) == BOT || board(pos) == BK) ? PLAYER : BOT;
-  piece_t enemyk = (enemy == BOT) ? BK : PK;
+  Piece enemy = (board(pos) == BOT || board(pos) == BK) ? PLAYER : BOT;
+  Piece enemyk = (enemy == BOT) ? BK : PK;
 
   /* checks for adjacent enemy pieces
   and empty tiles behind those pieces
@@ -55,7 +55,7 @@ void check::capture(int8_t pos, move_st &moves) {
   bool right = (pos - 7) % 8 == 0;
   // moves : UL UR DL DR
   for (int i = 0; i < 4; i++) {
-    piece_t t = board(pos + os[i]); // target
+    Piece t = board(pos + os[i]); // target
     if ((t == enemy || t == enemyk) && 
         board(pos + c::dg[i]) == EMPTY) {
         moves.m[i] = CAPTURE;

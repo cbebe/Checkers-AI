@@ -8,15 +8,16 @@
 
 #include "screenpos.h"
 
-typedef enum {NONE, BOTW, PLAYERW, DRAW} win;
-typedef enum {NO_PIECE, PIECE, DONE} selected;
-typedef enum {EMPTY, BOT, PLAYER, BK, PK, OUT} piece_t;
+
+typedef enum win {NONE, BOTW, PLAYERW, DRAW} Win;
+typedef enum selected {NO_PIECE, PIECE, DONE} Selected;
+typedef enum piece_t {EMPTY, BOT, PLAYER, BK, PK, OUT} Piece;
 // moves that can be made by a piece
-typedef enum {NOT, MOVE, CAPTURE} move;
+typedef enum move {NOT, MOVE, CAPTURE} Move;
 
 // struct to store moves in all 4 directions
 struct move_st {
-  move m[4]; // wrap move array in a struct 
+  Move m[4]; // wrap move array in a struct 
 };
 
 // defined constants
@@ -49,13 +50,13 @@ namespace c {
 struct shared_vars {
   MCUFRIEND_kbv* tft; // the tft display
   // array to store all board positions
-  piece_t board[c::b_size];
-  int8_t selected; // current selected piece
+  Piece board[c::b_size];
+  int8_t currentPc; // current selected piece
 };
 
 // returns the tile value of a board position
 // use only for comparing, not for value assignment
-piece_t board(int8_t pos);
+Piece board(int8_t pos);
 // determines adjacent tile offset depending
 // on which row the piece is in
 void tileOS(int8_t p, int8_t *os);

@@ -53,7 +53,7 @@ move nsmove::legal(int8_t pos, int8_t newPos, const move_st& moves) {
 
 // moves a piece from one position to another
 void nsmove::piece(int8_t oldPos, int8_t newPos) {
-  piece_t p = board(oldPos);
+  Piece p = board(oldPos);
   // now tile is empty
   draw::clear(oldPos);
   shared.board[oldPos] = EMPTY;

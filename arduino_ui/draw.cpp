@@ -16,7 +16,7 @@ void draw::clear(int8_t tile) {
 void draw::piece(int8_t pos) {
   // does not draw if piece is not in the board
   if (pos < 0 || pos > 31) return;
-  piece_t p = board(pos);
+  Piece p = board(pos);
   if (p == EMPTY) return; // no piece, return
 
   // find piece's position on screen
