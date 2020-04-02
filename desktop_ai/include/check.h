@@ -3,17 +3,18 @@
 
 #include <string>
 #include <vector>
+#include <algorithm> // for copy
 #include <utility> // for pair
 #include "board.h"
 
 typedef std::pair<int8, int8> mp; // position pair
 typedef std::pair<bool, bool> bp; // bool pair
 
-namespace empty {
-  bp moveU(const Board& board, int8 pos);
-  bp moveD(const Board& board, int8 pos);
-  bp jumpU(const Board& board, int8 pos);
-  bp jumpD(const Board& board, int8 pos);
-}
+typedef enum {UP, DOWN} dir_t; // direction of the piece
+typedef enum {ADJACENT, DIAGONAL} tile_t;
+// checks for enemies/empty tiles
+bp boardCheck(const Board& board, int8 pos, 
+              tile_t nbr, dir_t d, Piece q);
+
 
 #endif
