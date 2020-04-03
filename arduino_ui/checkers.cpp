@@ -57,6 +57,9 @@ void setup() {
   if (!SD.begin(c::sd_cs)) {
     while (1) {};    // Just wait, stuff exploded.
   }
+  db("Setting up Serial Port with desktop...");
+  while(!comm::setup());
+  db("Done!");
 }
 
 int main() {

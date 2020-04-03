@@ -10,12 +10,12 @@ EXE := checkersai
 CFLAGS := -Wall -O2 -std=c++11 -Iinclude
 
 # links all objects into the executable server
-$(EXE): obj | $(OBJ)
+$(EXE): $(OBJ)
 	$(CC) $(OBJ) -o $@
 
 # compiles all source files from src/ into object files
 # and places them in the obj/ directory
-obj/%.o: src/%.cpp
+obj/%.o: src/%.cpp | obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # creates obj directory if not yet created

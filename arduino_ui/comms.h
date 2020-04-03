@@ -5,8 +5,9 @@
 #include "move.h"
 
 namespace comm {
-  void send_board();
+  bool setup();
   void receive_board();
+  void send_board();
   void end_game();
 }
 

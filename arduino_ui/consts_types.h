@@ -42,8 +42,6 @@ namespace c {
   // empty move array
   const move_st empty_m = {{NOT, NOT, NOT, NOT}};
 
-  const uint16_t t10s = 10000; // 10 second timeout
-  const uint16_t t20s = 20000; // 20 second timeout
 };
 
 // struct that stores all shared variables

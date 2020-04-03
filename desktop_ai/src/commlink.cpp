@@ -10,6 +10,13 @@ CommLink::~CommLink() {
   delete(Serial);
 }
 
+// confirm communication with Arduino
+// waits for acknowledge flag A
+void CommLink::confirm() {
+  while(Serial->readline(0)[0] != 'A');
+  Serial->writeline("A\n"); // send acknowledge back
+}
+
 // reads board state sent by Arduino
 // returns false if the game ended
 bool CommLink::getBoardState(Board& board) {
