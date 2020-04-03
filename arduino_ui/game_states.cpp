@@ -134,11 +134,11 @@ void game(bool start) {
   Win state = NONE;
   // goes on until the end
   while (state == NONE) {
+    comm::receive_board();
     doTurn();
     state = endCheck(BOT);
     if (state == NONE) {
       comm::send_board();
-      comm::receive_board();
       state = endCheck(PLAYER);
     }
   }

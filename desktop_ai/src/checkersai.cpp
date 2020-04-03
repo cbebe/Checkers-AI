@@ -4,12 +4,16 @@
 int main() {
   CommLink comms; // start communication with Arduino
   std::cout << "Communication ready!" << std::endl;
-  Board board;
+  Board board, test;
+  for (int i = 0; i < bSize; i++) {
+    test.a[i] = E;
+  }
+  
   while (true) {
+    comms.sendBoardState(test);
     if (comms.getBoardState(board)) {
       displayBoard(board);
     }
-
   }
   
   return 0;
