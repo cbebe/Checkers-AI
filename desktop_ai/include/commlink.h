@@ -9,10 +9,13 @@ class CommLink {
 public:
   CommLink(const char* portName = "/dev/ttyACM0");
   ~CommLink();
+  
   // get board state from Serial
-  Board getBoardState();
-  // send move to Serial
-  void sendMove(int8 pos, int8 newPos);
+  // returns false if game ended, true otherwise
+  bool getBoardState(Board& board);
+
+  // send board state to Serial
+  void sendBoardState(const Board& board);
   
 private:
   SerialPort *Serial;

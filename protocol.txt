@@ -1,5 +1,9 @@
 Communication Protocol
-Moving: <C or M> <old pos> <new pos>\n
 Board state: 32 character string representing each piece on each position
 0 - Empty, 1 - white piece, 2 - black piece, 3 - white king piece, 4 - black king piece
 Example Starting board - "22222222222200000000111111111111"
+
+Both the desktop and Arduino would send their copy of the board to each other
+The desktop would receive the Arduino's board and set that as the current board
+The Arduino would receive the desktop's board, compare the differences to its board,
+and make changes to the display

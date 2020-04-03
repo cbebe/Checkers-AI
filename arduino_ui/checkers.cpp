@@ -13,8 +13,9 @@ MCUFRIEND_kbv tft;
 
 // for good ol' printf debugging
 void db(const char* msg) {
-  shared.tft->fillRect(0, 0, touch::tft_width, 10, TFT_BLACK);
-  shared.tft->setCursor(0, 0);
+  shared.tft->fillRect(0, touch::tft_height - 30, touch::tft_width, 30, TFT_BLACK);
+  shared.tft->setCursor(0, touch::tft_height - 25);
+  shared.tft->setTextSize(2);
   shared.tft->print(msg);
 }
 

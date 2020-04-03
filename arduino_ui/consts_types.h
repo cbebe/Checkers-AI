@@ -11,7 +11,7 @@
 
 typedef enum win {NONE, BOTW, PLAYERW, DRAW} Win;
 typedef enum selected {NO_PIECE, PIECE, DONE} Selected;
-typedef enum piece_t {EMPTY, BOT, PLAYER, BK, PK, OUT} Piece;
+typedef enum piece_t {EMPTY, PLAYER, BOT, PK, BK, OUT} Piece;
 // moves that can be made by a piece
 typedef enum move {NOT, MOVE, CAPTURE} Move;
 
@@ -36,7 +36,7 @@ namespace c {
   const uint8_t pc_rad = 15; // piece radius
   // board offsets
   const uint8_t off_x = 100;
-  const uint8_t off_y = 20;
+  const uint8_t off_y = 10;
   // diagonal moves are constant
   const int8_t dg[] = {-9, -7, 7, 9};
   // empty move array

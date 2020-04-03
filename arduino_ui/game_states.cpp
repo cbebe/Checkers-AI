@@ -2,11 +2,6 @@
 
 extern shared_vars shared;
 
-// sends current board state to Serial
-void sendBoardState() {
-  
-}
-
 // not really important rn
 bool menuScreen() {
   int off = 100;
@@ -124,19 +119,31 @@ Win endCheck(Piece side) {
   return checkPieces();
 }
 
+void game_result(Win state) {
+  if (state == PLAYERW) {
+    db("PLAYER WON! TOUCH TO PLAY AGAIN.");
+  } else if (state == BOTW) {
+    db("BOT WON! TOUCH TO PLAY AGAIN.");
+  } else if (state == DRAW) {
+    db("DRAW! TOUCH TO PLAY AGAIN.");
+  }
+}
+
 void game(bool start) {
   // true is player's turn, bot is false 
   Win state = NONE;
   // goes on until the end
   while (state == NONE) {
     doTurn();
-    db("done turn");
     state = endCheck(BOT);
     if (state == NONE) {
-      comm::send_state();
-      // comm::get_move();
+      comm::send_board();
+      comm::receive_board();
       state = endCheck(PLAYER);
     }
   }
+  game_result(state);
+  delay(1000);
+  while (touch::process().x == touch::untch);
   comm::end_game();
 }

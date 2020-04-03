@@ -40,5 +40,7 @@ bp boardCheck(const Board& board, int8 pos,
 
 
 std::list<mp> pieceMoves(const Board& board, int8 piecePos) {
-
+  std::list<mp> kek;
+  // pls help
+  return kek;
 } 
