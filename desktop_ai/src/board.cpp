@@ -6,7 +6,7 @@ Board::Board(const std::string& boardState) {
   int i = 0;
   for (auto iter : boardArray) {
     // cast number char to Piece enum
-    iter = (Piece) (boardState[i++] - '0');
+    iter = static_cast<Piece>(boardState[i++] - '0');
   }
 }
 
@@ -66,7 +66,7 @@ std::string Board::stateString() const {
   std::string state;
   for (int i = 0; i < bSize; i++) {
     // casting enum to char
-    state += ((char) boardArray[i]) + '0';
+    state += static_cast<char>(boardArray[i]) + '0';
   }
   return state;
 }
