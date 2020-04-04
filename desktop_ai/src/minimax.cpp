@@ -7,10 +7,32 @@ bool gameOver(const Board& board) {
   return true;
 }
 
+// return piece value
+int pieceValue(const Board& board, int8 index) {
+  int pieceVal = 0; // assume empty at first
+
+  if (board.a[index] == BK) {pieceVal = 8;}    
+  else if (board.a[index] == B) {pieceVal = 5;}    
+  else if (board.a[index] == WK) {pieceVal = -8;}    
+  else if (board.a[index] == W) {pieceVal = -5;}    
+  return pieceVal;
+}
+
+// returns the piece's weight 
+// depending on its position on the board
+int positionValue(const Board& board, int8 index) {
+  
+}
+
 // static evaluation of the board
 // refer to the readme for the heuristics
 int staticEval(const Board& board) {
-
+  int eval = 0;
+  for (int8 i = 0; i < bSize; i++) {
+    int pcVal = pieceValue(board, i);
+    int posVal = positionValue(board, i);
+  }
+  
   return 0;
 }
 

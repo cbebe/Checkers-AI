@@ -14,7 +14,7 @@
 
 - Pawn: 5 , King: 8
 - Back row: 4, Middle Box: 3
-- Middle two rows: 1, Vulnerable: -3, Protected: 3
+- Middle two rows: 1, Vulnerable: -3, Defended: 3
 
 ## Tree searching
 
