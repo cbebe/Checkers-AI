@@ -7,14 +7,11 @@ int main() {
   comms.confirm(); // confirm link with Arduino
   std::cout << "Communication ready!" << std::endl;
   Board board, test;
-  for (int i = 0; i < bSize; i++) {
-    test.a[i] = E;
-  }
+
   while (true) {
     comms.sendBoardState(test);
-    comms.sendBoardState(newBoard());
-    if (comms.getBoardState(board)) {
-      displayBoard(board);
+    if (comms.getBoardState(&board)) {
+      board.displayBoard();
     }
   }
   

@@ -10,11 +10,13 @@ bool gameOver(const Board& board) {
 // return piece value
 int pieceValue(const Board& board, int8 index) {
   int pieceVal = 0; // assume empty at first
-
-  if (board.a[index] == BK) {pieceVal = 8;}    
-  else if (board.a[index] == B) {pieceVal = 5;}    
-  else if (board.a[index] == WK) {pieceVal = -8;}    
-  else if (board.a[index] == W) {pieceVal = -5;}    
+  Piece pc = board.get(index);
+  if (pc != E) {
+    if (pc == BK) {pieceVal = 8;}    
+    else if (pc == B) {pieceVal = 5;}    
+    else if (pc == WK) {pieceVal = -8;}    
+    else if (pc == W) {pieceVal = -5;}
+  }
   return pieceVal;
 }
 
@@ -31,6 +33,7 @@ int staticEval(const Board& board) {
   for (int8 i = 0; i < bSize; i++) {
     int pcVal = pieceValue(board, i);
     int posVal = positionValue(board, i);
+    eval += pcVal * posVal;
   }
   
   return 0;
@@ -41,13 +44,12 @@ int staticEval(const Board& board) {
 // * Without duplication of course
 std::list<Board> possibleMoves(const Board& board, bool player) {
   std::list<Board> moves;
-  Board bcopy = boardCopy(board);
-  moves.push_back(bcopy);
+  Board bcopy = Board(board.stateString());
 
   int flag = 0; // Keps track of captures
 
   for (int8 i = 0; i < 32; i++){ // Iterate through all pieces
-    if (pieceCheck(bcopy, i) == B){ // If piece is black
+    if (bcopy.get(i) == B){ // If piece is black
       // Check for capturable white piece in front
 
       // Check if its an edge piece
@@ -57,15 +59,15 @@ std::list<Board> possibleMoves(const Board& board, bool player) {
       int bottomEdge = 0;
 
       if (i == 4 || i == 12 || i == 20 || i == 28){
-        leftEdge == 1;
+        leftEdge = 1;
       }
 
       else if (i == 3 || i == 11 || i == 19 || i == 27){
-        rightEdge == 1;
+        rightEdge = 1;
       }
 
       else if (i >= 28 && i <= 31){
-        bottomEdge == 1;
+        bottomEdge = 1;
       }
 
       // Find left and right diagonal offset
@@ -81,7 +83,7 @@ std::list<Board> possibleMoves(const Board& board, bool player) {
       }
     }
 
-    else if (pieceCheck(bcopy, i) == BK){ // If piece is black king
+    else if (bcopy.get(i) == BK){ // If piece is black king
 
     }
   }

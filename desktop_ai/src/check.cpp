@@ -16,7 +16,7 @@ void diagOS(int8 *os) {
 }
 
 
-int findLeftOS(int pos, int leftEdge, int bottomEdge){
+int findLeftOS(int pos, int leftEdge, int bottomEdge) {
   if (!(leftEdge == 1 || bottomEdge == 1)){
     // Left offset position only exists if piece is not at left or bottom edge
     if ((pos % 8)/ 4){
@@ -67,16 +67,10 @@ bp boardCheck(const Board& board, int8 pos,
   }
 
   int8 i = (d == UP) ? 0 : 2; // starting index for offset
-  bp lr(board.a[pos + os[i]] == q, 
-        board.a[pos + os[i + 1]] == q);
+  bp lr(board.get(pos + os[i]) == q, 
+        board.get(pos + os[i + 1]) == q);
   return lr;
 }
-
-Piece pieceCheck(const Board& board, int8 pos) {
-  // Returns value of position on board
-  return board.a[pos];
-}
-
 
 std::list<mp> pieceMoves(const Board& board, int8 piecePos) {
   std::list<mp> kek;

@@ -15,7 +15,7 @@ public:
 
   // get board state from Serial
   // returns false if game ended, true otherwise
-  bool getBoardState(Board& board);
+  bool getBoardState(Board* board);
 
   // send board state to Serial
   void sendBoardState(const Board& board);
