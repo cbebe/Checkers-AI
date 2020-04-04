@@ -15,6 +15,12 @@ typedef enum {ADJACENT, DIAGONAL} tile_t;
 // checks for enemies/empty tiles
 bp boardCheck(const Board& board, int8 pos, 
               tile_t nbr, dir_t d, Piece q);
+            
+Piece pieceCheck(const Board& board, int8 pos);
+
+int findLeftOS(int8 pos, int leftEdge, int bottomEdge);
+
+int findRightOS(int8 pos, int rightEdge, int bottomEdge);
 
 
 #endif
