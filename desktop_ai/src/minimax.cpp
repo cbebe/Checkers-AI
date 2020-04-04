@@ -23,7 +23,7 @@ int pieceValue(const Board& board, int8 index) {
 // returns the piece's weight 
 // depending on its position on the board
 int positionValue(const Board& board, int8 index) {
-  
+  return 0;
 }
 
 // static evaluation of the board
@@ -41,15 +41,10 @@ int staticEval(const Board& board) {
 
 void captureLeftAttempt(std::list<Board>& moves, const Board& board, int8 i){
   int leftEdge = 0;
-  int rightEdge = 0;
   int bottomEdge = 0;
 
   if (i == 4 || i == 12 || i == 20 || i == 28){
     leftEdge = 1;
-  }
-
-  else if (i == 3 || i == 11 || i == 19 || i == 27){
-    rightEdge = 1;
   }
 
   if (i >= 28 && i <= 31){
@@ -65,7 +60,7 @@ void captureLeftAttempt(std::list<Board>& moves, const Board& board, int8 i){
   if (leftOS != -1){ // If a left diagonal is available
     // Check if white piece is present: 
 
-    if (pieceCheck(board, leftOS) == W || pieceCheck(board, leftOS) == WK){
+    if (board.get(leftOS) == W || board.get(leftOS) == WK){
       // Need to check if the white piece can be captured, where leftOS is its position
 
       // Cant be captured if its on left or bottom edge
@@ -80,15 +75,12 @@ void captureLeftAttempt(std::list<Board>& moves, const Board& board, int8 i){
       
 
       if (whiteOnLeftEdge != 1 && whiteOnBottomEdge != 1){ // If not on edge, check if diagonal left OS is empty
-        if (pieceCheck(board, findLeftOS(leftOS, 0, 0)) == E){
+        if (board.get(findLeftOS(leftOS, 0, 0)) == E){
           // Success, piece is capturable!
-          Board postMove = boardCopy(board);
+          Board postMove = Board(board.stateString());
 
-          postMove.a[i] = E;
-          postMove.a[leftOS] = E;
-          
-          postMove.a[findLeftOS(leftOS, 0, 0)] = B;
-
+          postMove.move(i, findLeftOS(leftOS, 0, 0));
+          postMove.remove(leftOS);
           moves.push_back(postMove);
         }
       }
@@ -96,16 +88,11 @@ void captureLeftAttempt(std::list<Board>& moves, const Board& board, int8 i){
   }
 }
 
-Board captureRightAttempt(std::list<Board>& moves, const Board& board, int8 i){
-  int leftEdge = 0;
+void captureRightAttempt(std::list<Board>& moves, const Board& board, int8 i){
   int rightEdge = 0;
   int bottomEdge = 0;
 
-  if (i == 4 || i == 12 || i == 20 || i == 28){
-    leftEdge = 1;
-  }
-
-  else if (i == 3 || i == 11 || i == 19 || i == 27){
+  if (i == 3 || i == 11 || i == 19 || i == 27){
     rightEdge = 1;
   }
 
@@ -122,8 +109,8 @@ Board captureRightAttempt(std::list<Board>& moves, const Board& board, int8 i){
 
   if (rightOS != -1){ // If a left diagonal is available
     // Check if white piece is present: 
-
-    if (pieceCheck(board, rightOS) == W || pieceCheck(board, rightOS) == WK){
+    Piece pc = board.get(rightOS);
+    if (pc == W || pc == WK){
       // Need to check if the white piece can be captured, where leftOS is its position
 
       // Cant be captured if its on left or bottom edge
@@ -132,20 +119,18 @@ Board captureRightAttempt(std::list<Board>& moves, const Board& board, int8 i){
         whiteOnRightEdge = 1;
       }
 
-      if (leftOS >= 28 && leftOS <= 31){
+      if (rightOS >= 28 && rightOS <= 31){
         whiteOnBottomEdge = 1;
       }
       
 
       if (whiteOnRightEdge != 1 && whiteOnBottomEdge != 1){ // If not on edge, check if diagonal left OS is empty
-        if (pieceCheck(board, findRightOS(rightOS, 0, 0)) == E){
+        if (board.get(findRightOS(rightOS, 0, 0)) == E){
           // Success, piece is capturable!
-          Board postMove = boardCopy(board);
+          Board postMove = Board(board.stateString());
 
-          postMove.a[i] = E;
-          postMove.a[rightOS] = E;
-          
-          postMove.a[findRightOS(rightOS, 0, 0)] = B;
+          postMove.move(i, findRightOS(rightOS, 0, 0));
+          postMove.remove(rightOS);          
 
           moves.push_back(postMove);
         }
@@ -159,20 +144,18 @@ Board captureRightAttempt(std::list<Board>& moves, const Board& board, int8 i){
 // * Without duplication of course
 std::list<Board> possibleMoves(const Board& board, bool player) {
   std::list<Board> moves;
-  Board bcopy = boardCopy(board);
-  moves.push_back(bcopy);
 
   int flag = 0; // Keps track of captures
 
   for (int8 i = 0; i < 32; i++){ // Iterate through all pieces
-    if (pieceCheck(bcopy, i) == B){ // If piece is black
+    if (board.get(i) == B){ // If piece is black
       // Check for capturable white piece in front
-      captureLeftAttempt(moves, bcopy, i);
-      captureRightAttempt(moves, bcopy, i);
+      captureLeftAttempt(moves, board, i);
+      captureRightAttempt(moves, board, i);
       
     }
 
-    else if (bcopy.get(i) == BK){ // If piece is black king
+    else if (board.get(i) == BK){ // If piece is black king
 
     }
   }

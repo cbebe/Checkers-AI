@@ -28,11 +28,7 @@ bp boardCheck(const Board& board, int8 pos,
             
 Piece pieceCheck(const Board& board, int8 pos);
 
-int findLeftOS(int8 pos, int leftEdge, int bottomEdge);
-
-int findRightOS(int8 pos, int rightEdge, int bottomEdge);
-
-int findLeftOS(int pos, int leftEdge, int bottomEdge);
-int findRightOS(int pos, int rightEdge, int bottomEdge);
+int8 findLeftOS(int pos, int leftEdge, int bottomEdge);
+int8 findRightOS(int pos, int rightEdge, int bottomEdge);
 
 #endif

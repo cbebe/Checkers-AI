@@ -2,15 +2,12 @@
 
 // initializes a board with a given boart state string
 Board::Board(const std::string& boardState) {
-  boardArray = new Piece[bSize];
   // constructs board with given board state
-  for (int i = 0; i < bSize; i++) {
-    boardArray[i] = (Piece) (boardState[i] - '0');
+  int i = 0;
+  for (auto iter : boardArray) {
+    // cast number char to Piece enum
+    iter = (Piece) (boardState[i++] - '0');
   }
-}
-
-Board::~Board() {
-  delete[] boardArray; // free allocated space
 }
 
 // returns the piece in the given position

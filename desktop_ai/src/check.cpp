@@ -20,10 +20,10 @@ int8 findLeftOS(int pos, int leftEdge, int bottomEdge){
   if (!(leftEdge == 1 || bottomEdge == 1)){
     // Left offset position only exists if piece is not at left or bottom edge
     if ((pos % 8)/ 4){
-      return pos+3;
+      return pos + 3;
     }
     else{
-      return pos+4;
+      return pos + 4;
     }
   }
 
@@ -32,18 +32,16 @@ int8 findLeftOS(int pos, int leftEdge, int bottomEdge){
   }
 }
 
-int findRightOS(int pos, int rightEdge, int bottomEdge){
+int8 findRightOS(int pos, int rightEdge, int bottomEdge){
   if (!(rightEdge == 1 || bottomEdge == 1)){
     // right offset position only exists if piece is not at left or bottom edge
     if ((pos % 8)/ 4){
-      return pos+4;
+      return pos + 4;
     }
     else{
-      return pos+5;      
+      return pos + 5;      
     }
-  }
-
-  else{
+  } else{
     return -1; // If right or bottom edge, return 0
   }
 }
@@ -70,9 +68,3 @@ bp boardCheck(const Board& board, int8 pos,
         board.get(pos + os[i + 1]) == q);
   return lr;
 }
-
-std::list<mp> pieceMoves(const Board& board, int8 piecePos) {
-  std::list<mp> kek;
-  // pls help
-  return kek;
-} 
