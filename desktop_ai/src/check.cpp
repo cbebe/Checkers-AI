@@ -16,7 +16,7 @@ void diagOS(int8 *os) {
 }
 
 
-int findLeftOS(int pos, int leftEdge, int bottomEdge){
+int8 findLeftOS(int pos, int leftEdge, int bottomEdge){
   if (!(leftEdge == 1 || bottomEdge == 1)){
     // Left offset position only exists if piece is not at left or bottom edge
     if ((pos % 8)/ 4){
@@ -28,7 +28,7 @@ int findLeftOS(int pos, int leftEdge, int bottomEdge){
   }
 
   else{
-    return 0; // If left or bottom edge, return 0
+    return -1; // If left or bottom edge, return 0
   }
 }
 
@@ -44,7 +44,7 @@ int findRightOS(int pos, int rightEdge, int bottomEdge){
   }
 
   else{
-    return 0; // If right or bottom edge, return 0
+    return -1; // If right or bottom edge, return 0
   }
 }
 
