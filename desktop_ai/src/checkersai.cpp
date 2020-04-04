@@ -24,7 +24,11 @@
 int main() {
   Board board, test;
   string s = "22220102120120111222000000000000";
-  Board *p = new Board(s);
+  CommLink comms;
+  Board *p;
+  comms.getBoardState(p);
+  p->display();
+  
   test.display();
   test = *p;
   test.display();
