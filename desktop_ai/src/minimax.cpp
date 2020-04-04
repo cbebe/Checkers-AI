@@ -1,4 +1,5 @@
 #include "minimax.h"
+#include "check.h"
 
 // check for endgame condition
 bool gameOver(const Board& board) {
@@ -20,6 +21,48 @@ std::list<Board> possibleMoves(const Board& board, bool player) {
   std::list<Board> moves;
   Board bcopy = boardCopy(board);
   moves.push_back(bcopy);
+
+  int flag = 0; // Keps track of captures
+
+  for (int8 i = 0; i < 32; i++){ // Iterate through all pieces
+    if (pieceCheck(bcopy, i) == B){ // If piece is black
+      // Check for capturable white piece in front
+
+      // Check if its an edge piece
+
+      int leftEdge = 0;
+      int rightEdge = 0;
+      int bottomEdge = 0;
+
+      if (i == 4 || i == 12 || i == 20 || i == 28){
+        leftEdge == 1;
+      }
+
+      else if (i == 3 || i == 11 || i == 19 || i == 27){
+        rightEdge == 1;
+      }
+
+      else if (i >= 28 && i <= 31){
+        bottomEdge == 1;
+      }
+
+      // Find left and right diagonal offset
+      int leftOS = findLeftOS(i, leftEdge, bottomEdge);
+      int rightOS = findRightOS(i, rightEdge, bottomEdge);
+
+      // Try and find capturable pieces: 
+
+      // First check if a capture is possible: 
+
+      if (leftOS != 0){ // If a left diagonal is available
+        
+      }
+    }
+
+    else if (pieceCheck(bcopy, i) == BK){ // If piece is black king
+
+    }
+  }
 
   return moves;
 }

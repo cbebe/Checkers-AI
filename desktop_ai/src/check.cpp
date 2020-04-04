@@ -1,6 +1,6 @@
 #include "check.h"
 
-// determines row offset for adjacent tiles
+//determines row offset for adjacent tiles
 void rowOS(int8 pos, int8 *os) {
   using namespace std;
   if ((pos % 8) / 4) {
@@ -14,6 +14,40 @@ void rowOS(int8 pos, int8 *os) {
 void diagOS(int8 *os) {
   std::copy(std::begin(dg), std::end(dg), os);
 }
+
+
+int findLeftOS(int pos, int leftEdge, int bottomEdge){
+  if (!(leftEdge == 1 || bottomEdge == 1)){
+    // Left offset position only exists if piece is not at left or bottom edge
+    if ((pos % 8)/ 4){
+      return pos+3;
+    }
+    else{
+      return pos+4;
+    }
+  }
+
+  else{
+    return 0; // If left or bottom edge, return 0
+  }
+}
+
+int findRightOS(int pos, int rightEdge, int bottomEdge){
+  if (!(rightEdge == 1 || bottomEdge == 1)){
+    // right offset position only exists if piece is not at left or bottom edge
+    if ((pos % 8)/ 4){
+      return pos+4;
+    }
+    else{
+      return pos+5;      
+    }
+  }
+
+  else{
+    return 0; // If right or bottom edge, return 0
+  }
+}
+
 
 /* bp boardCheck:
 checks if tiles are empty/have enemies
@@ -36,6 +70,11 @@ bp boardCheck(const Board& board, int8 pos,
   bp lr(board.a[pos + os[i]] == q, 
         board.a[pos + os[i + 1]] == q);
   return lr;
+}
+
+Piece pieceCheck(const Board& board, int8 pos) {
+  // Returns value of position on board
+  return board.a[pos];
 }
 
 
