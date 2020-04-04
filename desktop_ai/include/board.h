@@ -3,28 +3,37 @@
 
 #include <list>
 #include <iostream>
+#include <string>
 
 typedef signed char int8;
-typedef enum Piece {
+typedef enum pc {
   E, // empty
   W,B, // white and black
-  WK,BK // white and black kings
-} piece;
+  WK,BK, // white and black kings
+  OUT // out of bounds
+} Piece;
 
-const int8 os1[] = {-4, -3, 4, 5};
-const int8 os2[] = {-5, -4, 3, 4};
-const int8 dg[] = {-9, -7, 7, 9};
-const int8 numpcs = 12; // number of pieces per player
+
 const int8 bSize = 32; // board size
 
-struct Board {
-  // board array
-  piece a[bSize];
+// string containing starting positions for pieces
+const std::string newBoard = "22222222222200000000111111111111";
+
+class Board {
+public:
+  Board(const std::string& boardState = newBoard);
+  ~Board();
+
+  bool move(int8 oldPos, int8 newPos); // moves piece
+  void remove(int8 pos); // removes a piece from the board
+  Piece get(int8 pos) const; // returns piece in position
+
+  void display() const; // display board in stdout
+  std::string stateString() const; // returns current board state string
+
+private:
+  void set(int8 pos, Piece pc);
+  Piece *boardArray;
 };
-
-
-Board newBoard();
-Board boardCopy(const Board& board);
-void displayBoard(const Board& board);
 
 #endif

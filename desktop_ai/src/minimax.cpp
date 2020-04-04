@@ -7,10 +7,35 @@ bool gameOver(const Board& board) {
   return true;
 }
 
+// return piece value
+int pieceValue(const Board& board, int8 index) {
+  int pieceVal = 0; // assume empty at first
+  Piece pc = board.get(index);
+  if (pc != E) {
+    if (pc == BK) {pieceVal = 8;}    
+    else if (pc == B) {pieceVal = 5;}    
+    else if (pc == WK) {pieceVal = -8;}    
+    else if (pc == W) {pieceVal = -5;}
+  }
+  return pieceVal;
+}
+
+// returns the piece's weight 
+// depending on its position on the board
+int positionValue(const Board& board, int8 index) {
+  
+}
+
 // static evaluation of the board
 // refer to the readme for the heuristics
 int staticEval(const Board& board) {
-
+  int eval = 0;
+  for (int8 i = 0; i < bSize; i++) {
+    int pcVal = pieceValue(board, i);
+    int posVal = positionValue(board, i);
+    eval += pcVal * posVal;
+  }
+  
   return 0;
 }
 
@@ -147,7 +172,7 @@ std::list<Board> possibleMoves(const Board& board, bool player) {
       
     }
 
-    else if (pieceCheck(bcopy, i) == BK){ // If piece is black king
+    else if (bcopy.get(i) == BK){ // If piece is black king
 
     }
   }

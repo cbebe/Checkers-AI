@@ -48,7 +48,6 @@ int findRightOS(int pos, int rightEdge, int bottomEdge){
   }
 }
 
-
 /* bp boardCheck:
 checks if tiles are empty/have enemies
 nbr is either adjacent or diagonal, 
@@ -67,16 +66,10 @@ bp boardCheck(const Board& board, int8 pos,
   }
 
   int8 i = (d == UP) ? 0 : 2; // starting index for offset
-  bp lr(board.a[pos + os[i]] == q, 
-        board.a[pos + os[i + 1]] == q);
+  bp lr(board.get(pos + os[i]) == q, 
+        board.get(pos + os[i + 1]) == q);
   return lr;
 }
-
-Piece pieceCheck(const Board& board, int8 pos) {
-  // Returns value of position on board
-  return board.a[pos];
-}
-
 
 std::list<mp> pieceMoves(const Board& board, int8 piecePos) {
   std::list<mp> kek;
