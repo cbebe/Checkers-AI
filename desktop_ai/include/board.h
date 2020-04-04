@@ -28,7 +28,7 @@ public:
   void remove(int8 pos); // removes a piece from the board
   Piece get(int8 pos) const; // returns piece in position
 
-  void displayBoard() const; // display board in stdout
+  void display() const; // display board in stdout
   std::string stateString() const; // returns current board state string
 
 private:

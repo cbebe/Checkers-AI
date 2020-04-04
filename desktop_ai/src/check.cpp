@@ -48,7 +48,6 @@ int findRightOS(int pos, int rightEdge, int bottomEdge){
   }
 }
 
-
 /* bp boardCheck:
 checks if tiles are empty/have enemies
 nbr is either adjacent or diagonal, 

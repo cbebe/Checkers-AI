@@ -7,7 +7,11 @@
 #include <utility> // for pair
 #include "board.h"
 
+enum move_t {NOT, MOVE, CAPTURE};
+
 typedef std::pair<int8, int8> mp; // position pair
+typedef std::pair<enum move_t, mp> move; // move type and position pair pair
+
 typedef std::pair<bool, bool> bp; // bool pair
 
 typedef enum {UP, DOWN} dir_t; // direction of the piece

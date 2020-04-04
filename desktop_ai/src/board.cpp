@@ -1,6 +1,6 @@
 #include "board.h"
 
-// initializes a board
+// initializes a board with a given boart state string
 Board::Board(const std::string& boardState) {
   boardArray = new Piece[bSize];
   // constructs board with given board state
@@ -10,26 +10,26 @@ Board::Board(const std::string& boardState) {
 }
 
 Board::~Board() {
-  delete(boardArray); // free allocated space
+  delete[] boardArray; // free allocated space
 }
 
 // returns the piece in the given position
 Piece Board::get(int8 pos) const {
   // out of bounds of board
   if (pos < 0 || pos > 31) {return OUT;}
-  
+  // return piece in position
   return boardArray[pos];
 }
 
 // moves a piece from one position to another
 // returns true if successful at moving
 bool Board::move(int8 oldPos, int8 newPos) {
-  Piece oldP = get(oldPos);
+  Piece oldPc = get(oldPos);
   // no piece to move or no tile to move to
-  if (oldP == E || get(newPos) != E) return false;
+  if (oldPc == E || get(newPos) != E) return false;
 
   // moves piece from oldPos to newPos
-  remove(oldPos); set(newPos, oldP);
+  remove(oldPos); set(newPos, oldPc);
   return true;
 }
 
@@ -39,7 +39,7 @@ void Board::remove(int8 pos) {
 }
 
 // displays board on stdout
-void Board::displayBoard() const {
+void Board::display() const {
   using std::cout;
   using std::endl;
 
