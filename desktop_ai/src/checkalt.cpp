@@ -191,8 +191,7 @@ std::list<Board> boardStates(const Board& board, bool player) {
     }
   }
   
-
-  // will return an empty list if
-  // there are no valid moves either i.e. draw
+  // will return an empty list 
+  // if there are no valid moves either i.e. draw
   return boardList;
 }
