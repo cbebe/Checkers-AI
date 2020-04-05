@@ -23,9 +23,19 @@ const int8 os2[] = {-5, -4, 3, 4};
 const int8 dg[] = {-9, -7, 7, 9};
 const int8 numpcs = 12; // number of pieces per player
 
-namespace check {
+namespace get {
   moveList captures(const Board& board, int8 pos);
   moveList moves(const Board& board, int8 pos);
+}
+
+namespace check {
+  bool moves(moveList& moves, const Board& board, bool player);
+  bool captures(capList& captures, const Board& board, bool player);
+}
+
+namespace parse {
+  Board capture(Board board, capSt capture);
+  Board move(Board board, moveP move);
 }
 
 std::list<Board> boardStates(const Board& board, bool player);

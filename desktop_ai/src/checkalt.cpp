@@ -78,7 +78,7 @@ moveList captureBothDirs(const Board& board, int8 pos, Piece enemy) {
   return moves;
 }
 
-moveList check::moves(const Board& board, int8 pos) {
+moveList get::moves(const Board& board, int8 pos) {
   Piece player = board.get(pos);
   moveList moves;
   // determine the direction that the piece can go towards
@@ -103,7 +103,7 @@ moveList check::moves(const Board& board, int8 pos) {
 
 
 // return a list of the captures that a single piece can make
-moveList check::captures(const Board& board, int8 pos) {
+moveList get::captures(const Board& board, int8 pos) {
   Piece player = board.get(pos);
   // determine colour of enemy pieces
   Piece enemy = (player == B || player == BK) ? W : B;
@@ -132,7 +132,7 @@ moveList check::captures(const Board& board, int8 pos) {
   return moves;
 }
 
-bool getMoves(moveList& moves, const Board& board, bool player) {
+bool check::moves(moveList& moves, const Board& board, bool player) {
   bool hasMove = false;
   // determine the current piece playing
   // if player is true, black is playing
@@ -143,7 +143,7 @@ bool getMoves(moveList& moves, const Board& board, bool player) {
     Piece p = board.get(i);
     if (p == piece || p == pieceK) {
       // get the possible moves
-      moveList pieceMoves = check::moves(board, i);
+      moveList pieceMoves = get::moves(board, i);
       
       if (!pieceMoves.empty()) {
         moves.merge(pieceMoves); // merge with the move list
@@ -154,28 +154,17 @@ bool getMoves(moveList& moves, const Board& board, bool player) {
   return hasMove;
 }
 
-bool getCaptures(capList& captures, const Board& board, bool player) {
-  
+bool check::captures(capList& captures, const Board& board, bool player) {
+
+}
+
+Board parse::capture(Board board, capSt capture) {
+
 }
 
 // moves the pieces on the board accoring to the move-position pair
-Board parseMove(Board board, moveP moveQ) {
-  if (moveQ.move == MOVE) {
-    // move the piece
-    board.move(moveQ.pos.p1, moveQ.pos.p2);
-  } else {
-    int8 adj[4], dg[4]; // get the tile offsets
-    rowOS(moveQ.pos.p1, adj); diagOS(dg);
-    int8 direction = moveQ.pos.p2 - moveQ.pos.p1;
-    for (int i = 0; i < 4; i++) {
-      // check which direction the capturing piece jumped to
-      if (direction == dg[i]) {
-        // remove the piece
-        board.remove(moveQ.pos.p1 + adj[i]);
-      }
-    }  
-    
-  }
+Board parse::move(Board board, moveP moveQ) {
+  board.move(moveQ.pos.p1, moveQ.pos.p2);
   return board;
 }
 
@@ -183,22 +172,27 @@ std::list<Board> boardStates(const Board& board, bool player) {
   
   // initialize lists
   std::list<Board> boardList;
-  moveList moves; 
+  moveList moves; capList captures;
 
   // check for captures first
-  bool mustCapture = getMoves(moves, board, player, CAPTURE);
+  bool mustCapture = check::captures(captures, board, player);
   // now check for moves if we still have to
   if (!mustCapture) {
     // check moves
-    bool hasMoves = getMoves(moves, board, player, MOVE);
-    if (!hasMoves) {
-      // there are no valid moves either i.e. draw
-      return boardList;
+    bool hasMoves = check::moves(moves, board, player);
+    if (hasMoves) {
+      for (auto move : moves) {
+        boardList.push_back(parse::move(board, move));
+      }
+    }
+  } else {
+    for (auto capture : captures) {
+      boardList.push_back(parse::capture(board, capture));
     }
   }
   
-  for (auto move : moves) {
-    boardList.push_back(parseMove(board, move));
-  }
-  
+
+  // will return an empty list if
+  // there are no valid moves either i.e. draw
+  return boardList;
 }
