@@ -19,13 +19,13 @@ void CommLink::confirm() {
 
 // reads board state sent by Arduino
 // returns false if the game ended
-bool CommLink::getBoardState(Board* board) {
+bool CommLink::getBoardState(Board& board) {
   string state = Serial->readline(0);
   // E for endgame flag
   if (state[0] == 'E') {return false;}
 
-  //
-  board = new Board(state);
+  // reassign board object
+  board = Board(state);
   return true;
 }
 

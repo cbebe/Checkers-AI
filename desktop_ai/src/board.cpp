@@ -1,12 +1,11 @@
 #include "board.h"
 
-// initializes a board with a given boart state string
+// initializes a board with a given board state string
 Board::Board(const std::string& boardState) {
   // constructs board with given board state
-  int i = 0;
-  for (auto iter : boardArray) {
+  for (int i = 0; i < bSize; i++) {
     // cast number char to Piece enum
-    iter = static_cast<Piece>(boardState[i++] - '0');
+    boardArray[i] = static_cast<Piece>(boardState[i] - '0');
   }
 }
 
@@ -39,25 +38,20 @@ void Board::remove(int8 pos) {
 void Board::display() const {
   using std::cout;
   using std::endl;
-
   cout << "  =================================================" << endl;
   cout << "   _______________________________________________" << endl;
-  for (int i = 0; i <= 24; i += 8) 
-  {
+  for (int i = 0; i < 4; i++)  {
     cout << "  |     |     |     |     |     |     |     |     |" << endl;
-    cout << "  |     |  "<< boardArray[i] << "  |     |  " << 
-                            boardArray[i + 1] << "  |     |  " << 
-                            boardArray[i + 2] << "  |     |  " <<
-                            boardArray[i + 3] << "  |" << endl;
-    cout << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
-    cout << "  |     |     |     |     |     |     |     |     |" << endl;
-    cout << "  |  " << boardArray[i + 4] << "  |     |  " << 
-                      boardArray[i + 5] << "  |     |  " << 
-                      boardArray[i + 6] << "  |     |  " << 
-                      boardArray[i + 7] << "  |     |  " << endl;
-    cout << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
+    for (int j = i * 8; j < (i * 8) + 4; j++) {
+      cout << "  |     |  "<< boardArray[j]; 
+    }
+    cout << "  |" << endl << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
+    cout << "  |     |     |     |     |     |     |     |     |" << endl << "  |  ";
+    for (int j = i * 8; j < (i* 8) + 4; j++) {
+      cout << boardArray[j + 4] << "  |     |  "; 
+    }
+    cout << endl << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
   }
-  cout << endl;
   cout << "  =================================================" << endl;
 }
 

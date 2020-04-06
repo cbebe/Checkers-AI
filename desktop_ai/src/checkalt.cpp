@@ -60,8 +60,13 @@ posP boardCheck(const Board& board, int8 pos,
 }
 
 // both directions for king pieces and chained captures
-moveList captureBothDirs(const Board& board, int8 pos, Piece enemy) {
-  moveList moves;
+moveList captureBothDirs(const Board& board, int8 pos) {
+  // get the enemy colour
+  Piece player = board.get(pos);
+  // also consider non-king piece for chain captures
+  Piece enemy = (player == B || player == BK) ? W : B;
+
+  moveList captures;
   posP emptyU = boardCheck(board, pos, DIAGONAL, UP, E);
   posP emptyD = boardCheck(board, pos, DIAGONAL, DOWN, E);
   posP enemyU = boardCheck(board, pos, ADJACENT, UP, enemy);
@@ -71,11 +76,11 @@ moveList captureBothDirs(const Board& board, int8 pos, Piece enemy) {
   int8 enemies[] = {enemyU.p1, enemyU.p2, enemyD.p1, enemyD.p2};
   for (int i = 0; i < 4; i++) {
     if (empties[i] != -1 && enemies[i] != -1) {
-      moves.push_back({ CAPTURE, { pos, empties[i] }});
+      captures.push_back({ pos, empties[i] });
     }
   }
 
-  return moves;
+  return captures;
 }
 
 moveList get::moves(const Board& board, int8 pos) {
@@ -86,16 +91,16 @@ moveList get::moves(const Board& board, int8 pos) {
   dir_t direction = (player == B || player == BK) ? DOWN : UP;
 
   posP pcMvs = boardCheck(board, pos, ADJACENT, direction, E);
-  if (pcMvs.p1 != -1) {moves.push_back({ MOVE, { pos, pcMvs.p1 } });}
-  if (pcMvs.p2 != -1) {moves.push_back({ MOVE, { pos, pcMvs.p2 } });}
+  if (pcMvs.p1 != -1) {moves.push_back({ pos, pcMvs.p1 });}
+  if (pcMvs.p2 != -1) {moves.push_back({ pos, pcMvs.p2 });}
   
   // check the other direction if piece is king
   if (player == WK || player == BK) {
     dir_t opDirection = (direction == DOWN) ? UP : DOWN;
     pcMvs = boardCheck(board, pos, ADJACENT, opDirection, E);
 
-    if (pcMvs.p1 != -1) {moves.push_back({ MOVE, { pos, pcMvs.p1 } });}
-    if (pcMvs.p2 != -1) {moves.push_back({ MOVE, { pos, pcMvs.p2 } });}  
+    if (pcMvs.p1 != -1) {moves.push_back({ pos, pcMvs.p1 });}
+    if (pcMvs.p2 != -1) {moves.push_back({ pos, pcMvs.p2 });}  
   }
 
   return moves;
@@ -107,13 +112,12 @@ moveList get::captures(const Board& board, int8 pos) {
   Piece player = board.get(pos);
   // determine colour of enemy pieces
   Piece enemy = (player == B || player == BK) ? W : B;
-
   // king can capture in both directions
   if (player == WK || player == BK) {
-    return captureBothDirs(board, pos, enemy);
+    return captureBothDirs(board, pos);
   }
 
-  moveList moves;
+  moveList captures;
   // determine the direction that the piece can go towards
   // if the pieces are not king
 
@@ -124,12 +128,18 @@ moveList get::captures(const Board& board, int8 pos) {
 
   // check if the conditions are valid for capture
   if (isEmpty.p1 != -1 && isEnemy.p1 != -1) {
-    moves.push_back({ CAPTURE, { pos, isEmpty.p1 } });
+    captures.push_back({ pos, isEmpty.p1 });
   }
   if (isEmpty.p2 != -1 && isEnemy.p2 != -1) {
-    moves.push_back({ CAPTURE, { pos, isEmpty.p2 } });
+    captures.push_back({ pos, isEmpty.p2 });
   }
-  return moves;
+  return captures;
+}
+
+// appends the second vector to the first
+void merge(moveList& first, const moveList& second) {
+  first.reserve(first.size() + second.size());
+  first.insert(first.end(), second.begin(), second.end());
 }
 
 bool check::moves(moveList& moves, const Board& board, bool player) {
@@ -146,7 +156,7 @@ bool check::moves(moveList& moves, const Board& board, bool player) {
       moveList pieceMoves = get::moves(board, i);
       
       if (!pieceMoves.empty()) {
-        moves.merge(pieceMoves); // merge with the move list
+        merge(moves, pieceMoves); // merge with the move list
         hasMove = false; // player has at least one move
       }
     }
@@ -154,43 +164,86 @@ bool check::moves(moveList& moves, const Board& board, bool player) {
   return hasMove;
 }
 
-bool check::captures(capList& captures, const Board& board, bool player) {
+int8 pieceToRemove(int8 oldPos, int8 newPos) {
+  // getting board offsets
+  int8 adj[4], dg[4]; 
+  rowOS(oldPos, adj); diagOS(dg);
 
+  // the direction that the piece jumped to
+  int8 direction = newPos - oldPos;
+  for (int i = 0; i < 4; i++) {
+    if (direction == dg[i]) {
+      return oldPos + adj[i]; // this is the captured piece
+    }
+  }
+  return -1; // never gets here
 }
 
-Board parse::capture(Board board, capSt capture) {
+// recursive function to check for capture chains
+void checkForChain(bList& boardList, moveList& captures, const Board& board) {
+  for (auto capture : captures) {
+    // make a copy of the board
+    Board bcopy = Board(board.stateString());
+    // capture the piece
+    bcopy.remove(pieceToRemove(capture.p1, capture.p2));
+    bcopy.move(capture.p1, capture.p2);
+    // get moves again
+    moveList pieceCaps = captureBothDirs(bcopy, capture.p2);
 
+    if (pieceCaps.empty()) {
+      // no chains; evaluation is complete
+      boardList.push_back(bcopy);
+    } else {
+      // recursive call
+      checkForChain(boardList, pieceCaps, bcopy);
+    }
+  }
+}
+
+void check::captures(bList& boardList, const Board& board, bool player) {
+  // determine the current piece playing
+  // if player is true, black is playing
+  Piece piece = player ? B : W;
+  Piece pieceK = (piece == B) ? BK : WK;
+
+  for (int i = 0; i < bSize; i++) {
+    Piece p = board.get(i);
+    if (p == piece || p == pieceK) {
+      // get the possible moves
+      moveList pieceCaps = get::captures(board, i);
+      
+      if (!pieceCaps.empty()) {
+        // now we're checking for capture chains
+        checkForChain(boardList, pieceCaps, board);
+      }
+    }
+  }
 }
 
 // moves the pieces on the board accoring to the move-position pair
-Board parse::move(Board board, moveP moveQ) {
-  board.move(moveQ.pos.p1, moveQ.pos.p2);
+Board parseMove(Board board, posP pos) {
+  board.move(pos.p1, pos.p2);
   return board;
 }
 
-std::list<Board> boardStates(const Board& board, bool player) {
+bList boardStates(const Board& board, bool player) {
   
   // initialize lists
-  std::list<Board> boardList;
-  moveList moves; capList captures;
+  bList boardList;
+  moveList moves;
 
   // check for captures first
-  bool mustCapture = check::captures(captures, board, player);
+  check::captures(boardList, board, player);
   // now check for moves if we still have to
-  if (!mustCapture) {
+  if (boardList.empty()) {
     // check moves
     bool hasMoves = check::moves(moves, board, player);
     if (hasMoves) {
       for (auto move : moves) {
-        boardList.push_back(parse::move(board, move));
+        boardList.push_back(parseMove(board, move));
       }
     }
-  } else {
-    for (auto capture : captures) {
-      boardList.push_back(parse::capture(board, capture));
-    }
   }
-  
   // will return an empty list 
   // if there are no valid moves either i.e. draw
   return boardList;
