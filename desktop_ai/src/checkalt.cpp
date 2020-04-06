@@ -41,20 +41,52 @@ posP boardCheck(const Board& board, int8 pos,
     queryK = (query == B) ? BK : WK;  
   }
 
-  int8 i = (direction == UP) ? 0 : 2; // starting index for offset
-  int8 leftOS = pos + offset[i];
-  int8 rightOS = pos + offset[i + 1];
-  // get the pieces in the queried tiles
-  Piece left = board.get(leftOS);
-  Piece right = board.get(rightOS);
+  bool leftEdge = !((pos - 4) % 8); // piece is on the left
+  bool rightEdge = !((pos - 3) % 8); // piece is on the right
 
-  // check if the pieces match the query
-  bool leftMove = left == query || left == queryK;
-  bool rightMove = right == query || right == queryK;
+  // checks if the pieces are on the top or bottom edge
+  if ((direction == UP && pos < 4) ||
+      (direction == DOWN && pos > 27)) {
+    return {-1, -1}; // can't move
+  }
+  // else, check
+  int8 i = (direction == UP) ? 0 : 2; // starting index for offset
+  int8 leftOS, rightOS;
   
-  // replace with -1 if the piece can't move there
-  if (!leftMove) {leftOS = -1;}
-  if (!rightMove) {rightOS = -1;}
+  // checks for second outer two columns; can't capture there
+  if (neighbour == DIAGONAL) {
+    if (!(pos % 8)) {
+      leftEdge = true; // piece is on outer left
+    }
+    if (!((pos-7) % 8)) {
+      rightEdge = true; // piece is on the outer right
+    }
+  }
+  if (leftEdge) {
+    leftOS = -1; // piece can't move
+  } else {
+    leftOS = pos + offset[i];
+    // get the pieces in the queried tiles
+    Piece left = board.get(leftOS);
+
+    // check if the pieces match the query
+    bool leftMove = left == query || left == queryK;
+
+    // replace with -1 if the piece can't move there
+    if (!leftMove) {leftOS = -1;} 
+  }
+  if (rightEdge) {
+    rightOS = -1;
+  } else {
+    rightOS = pos + offset[i + 1];
+    // get the pieces in the queried tiles
+    Piece right = board.get(rightOS);
+
+    // check if the pieces match the query
+    bool rightMove = right == query || right == queryK;
+    
+    if (!rightMove) {rightOS = -1;} // piece can't move
+  }
 
   return {leftOS, rightOS};
 }
@@ -157,7 +189,7 @@ bool check::moves(moveList& moves, const Board& board, bool player) {
       
       if (!pieceMoves.empty()) {
         merge(moves, pieceMoves); // merge with the move list
-        hasMove = false; // player has at least one move
+        hasMove = true; // player has at least one move
       }
     }
   }

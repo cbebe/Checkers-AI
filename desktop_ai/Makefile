@@ -7,7 +7,7 @@ OBJ := $(SRC:src/%.cpp=obj/%.o)
 EXE := checkersai
 # -Iinclude flag includes all header files 
 # in include/ directory in the compilation process
-CFLAGS := -Wall -O2 -std=c++11 -Iinclude
+CFLAGS := -Wall -O2 -std=c++11 -Iinclude -g
 
 # links all objects into the executable server
 $(EXE): $(OBJ)
