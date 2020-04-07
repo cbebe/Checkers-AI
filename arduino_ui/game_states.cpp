@@ -23,6 +23,7 @@ bool menuScreen() {
   tft.setCursor(off_x + b_sq, off_y + b_sq * 4);
   tft.print("First Move:");
 
+  tft.
   tft.setCursor(off_x + b_sq * 3, off_y + b_width - b_sq);
   tft.print("START");
 
