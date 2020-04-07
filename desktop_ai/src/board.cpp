@@ -34,9 +34,9 @@ bool Board::move(int8 oldPos, int8 newPos) {
 
   // checks for promotion
   if (pc == W || pc == B) {
-    if (pc == B && newPos < 4) {
+    if (pc == B && newPos > 27) {
       pc = BK; // promote to king
-    } else if (pc == W && newPos > 27) {
+    } else if (pc == W && newPos < 4) {
       pc = WK; // promote to king
     }
   }

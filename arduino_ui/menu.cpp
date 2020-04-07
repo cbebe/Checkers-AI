@@ -10,11 +10,12 @@ void printText(screenPos pos, const char* text) {
   shared.tft->print(text);
 }
 
-// bool functions to check whether a button was pressed
+// bool function to check whether a button was pressed
 bool button(screenPos t, screenPos b1, screenPos b2) {
+  const int dz = 3;
   // checks the bounds of the button
-  return  t.x > b1.x - 3 && t.x < b1.x + b2.x + 3 &&
-          t.y > b1.y - 3 && t.y < b1.y + b2.y + 3;
+  return  t.x > b1.x - dz && t.x < b1.x + b2.x + dz &&
+          t.y > b1.y - dz && t.y < b1.y + b2.y + dz;
 }
 
 void processTS(bool& turn, int& difficulty) {
@@ -31,7 +32,7 @@ void processTS(bool& turn, int& difficulty) {
       } else {
         printText(difftxt, imp);
       }
-      while (touch::process().x != touch::untch);
+      touch::hold();
     }
     // select who moves first
     if (button(t, fBtn, {box, box})) {
@@ -41,13 +42,13 @@ void processTS(bool& turn, int& difficulty) {
       } else {
         printText(firsttxt, player);
       }
-      while (touch::process().x != touch::untch);
+      touch::hold();
     }
 
     // done selecting
     if (button(t, sBtn, sBtnD)) {
       done = true;
-      while (touch::process().x != touch::untch);
+      touch::hold();
     }
   }
   // lmao

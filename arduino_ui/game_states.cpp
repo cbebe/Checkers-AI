@@ -97,8 +97,12 @@ bool noMoves(Piece side) {
 
 // check for endgame conditions
 Win endCheck(Piece side) {
-  if (noMoves(side)) {return DRAW;}
-  return checkPieces();
+  Win win = checkPieces();
+  if (win == NONE && noMoves(side)) {
+    // there are remaining pieces that cannot move
+    return DRAW; 
+  }
+  return win;
 }
 
 void game_result(Win state) {
@@ -112,22 +116,26 @@ void game_result(Win state) {
 }
 
 void game(bool start) {
-  // true is player's turn, bot is false 
   Win state = NONE;
+  
+  // if the bot is going first
+  if (start) {
+    comm::receive_board();
+  }
   // goes on until the end
   while (state == NONE) {
-    if (start) {
-      comm::receive_board();
-    }
     doTurn();
     state = endCheck(BOT);
     if (state == NONE) {
+      // send board to desktop if game is not over
       comm::send_board();
+      comm::receive_board();
       state = endCheck(PLAYER);
     }
   }
   game_result(state);
-  delay(1000);
   comm::end_game();
-  while (touch::process().x == touch::untch);
+  delay(1000);
+  // wait for player to touch screen
+  touch::wait();
 }
