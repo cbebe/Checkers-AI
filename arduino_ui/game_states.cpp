@@ -2,22 +2,33 @@
 
 extern shared_vars shared;
 
-// not really important rn
+void processTS(bool start, int difficulty) {
+  while (touch::process().x == touch::untch);
+}
+
+// sets up menu screen
 bool menuScreen() {
-  int off = 100;
-  shared.tft->fillRect(98 + off,98 + off, 109, 18, TFT_WHITE);
-  shared.tft->setCursor(100 + off, 100 + off);
-  shared.tft->setTextColor(TFT_BLACK); 
-  shared.tft->setTextSize(2);
-  shared.tft->println("RESETTING");
-  screenPos t = touch::process();
-  while (t.x == touch::untch) {
-    t = touch::process();
-  }
-  shared.tft->setTextSize(1);
-  shared.tft->setTextColor(TFT_WHITE);
-  shared.tft->setCursor(0,0);
-  return true;
+  // get tft screen
+  MCUFRIEND_kbv tft = *shared.tft;
+  using namespace c;
+  
+  tft.fillScreen(TFT_BLACK);
+  tft.fillRect(off_x, off_y, b_width, b_width, TFT_WHITE);
+
+  tft.setTextSize(2);
+  tft.setTextColor(TFT_BLACK);
+  tft.setCursor(off_x + b_sq, off_y + b_sq);
+  tft.print("Difficulty:");
+
+  tft.setCursor(off_x + b_sq, off_y + b_sq * 4);
+  tft.print("First Move:");
+
+  tft.setCursor(off_x + b_sq * 3, off_y + b_width - b_sq);
+  tft.print("START");
+
+  bool start; int difficulty;
+  processTS(start, difficulty);
+  return start;
 }
 
 // initialize game
