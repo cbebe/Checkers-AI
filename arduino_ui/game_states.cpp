@@ -4,7 +4,7 @@ extern shared_vars shared;
 
 // initialize game
 void gameInit() {
-  // namespace is only used when not using 
+  // namespace is only used when not doing so 
   // would lead to lesser readability
   using namespace c;
   MCUFRIEND_kbv *tft = shared.tft;
@@ -42,6 +42,7 @@ void gameInit() {
   }
 }
 
+// lets player do their turn
 void doTurn() {
   // will skip moves if the player must capture
   if (must_capture()) {return;}
@@ -49,6 +50,7 @@ void doTurn() {
   selected pieceSel = NO_PIECE;
   move_st moves;
   
+  // loop until a valid move is made
   while(pieceSel != DONE) {
     choose_move(pieceSel, moves);
   }
@@ -69,7 +71,7 @@ Win checkPieces() {
       }
     }
   }
-  
+
   if (bot == 0) {
     return PLAYERW;
   } else if (player == 0) {
@@ -105,6 +107,7 @@ Win endCheck(Piece side) {
   return win;
 }
 
+// prints the result of the game on the screen
 void game_result(Win state) {
   if (state == PLAYERW) {
     db("PLAYER WON! TOUCH TO PLAY AGAIN.");
@@ -122,15 +125,14 @@ void game(bool start) {
   if (start) {
     comm::receive_board();
   }
-  // goes on until the end
   while (state == NONE) {
     doTurn();
-    state = endCheck(BOT);
+    state = endCheck(BOT); // checks for endgame conditions
     if (state == NONE) {
       // send board to desktop if game is not over
       comm::send_board();
       comm::receive_board();
-      state = endCheck(PLAYER);
+      state = endCheck(PLAYER); // check again
     }
   }
   game_result(state);

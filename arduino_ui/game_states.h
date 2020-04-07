@@ -6,8 +6,8 @@
 #include "menu.h"
 #include "comms.h"
 
-void game(bool start);
-void gameInit();
-bool menuScreen();
+void game(bool start); // starts the game
+
+void gameInit(); // initializes board
 
 #endif

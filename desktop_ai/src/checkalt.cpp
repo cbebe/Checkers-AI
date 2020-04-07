@@ -17,11 +17,14 @@ void diagOS(int8 *os) {
 
 /* 
 boolP boardCheck:
-checks if tiles are empty/have enemies
-neighbour is either adjacent or diagonal, 
+General-purpose function for any checks
+that need to be made on the board
+
+Checks if tiles are empty/have enemies
+-- neighbour is either adjacent or diagonal, 
 for checking moves or jumps.
-query is either empty or the enemy piece.
-direction is either up or down, 
+-- query is either empty or the enemy piece.
+-- direction is either up or down, 
 depending on which piece the side is on.
 */
 posP boardCheck(const Board& board, int8 pos, 
@@ -104,10 +107,12 @@ moveList captureBothDirs(const Board& board, int8 pos) {
   posP enemyU = boardCheck(board, pos, ADJACENT, UP, enemy);
   posP enemyD = boardCheck(board, pos, ADJACENT, DOWN, enemy);
 
+  // place in array to iterate
   int8 empties[] = {emptyU.p1, emptyU.p2, emptyD.p1, emptyD.p2};
   int8 enemies[] = {enemyU.p1, enemyU.p2, enemyD.p1, enemyD.p2};
   for (int i = 0; i < 4; i++) {
     if (empties[i] != -1 && enemies[i] != -1) {
+      // move can be made
       captures.push_back({ pos, empties[i] });
     }
   }
@@ -232,6 +237,7 @@ void checkForChain(bList& boardList, moveList& captures, const Board& board) {
   }
 }
 
+// 
 void check::captures(bList& boardList, const Board& board, bool player) {
   // determine the current piece playing
   // if player is true, black is playing
@@ -258,6 +264,8 @@ Board parseMove(Board board, posP pos) {
   return board;
 }
 
+// returns a list of boards that are the results of all possible moves
+// that can be made by either the bot or the player
 bList boardStates(const Board& board, bool player) {
   
   // initialize lists

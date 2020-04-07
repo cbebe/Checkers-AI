@@ -8,6 +8,7 @@
 // max value for 32-bit signed
 const int inf = 2147483647;
 
+// consts for heuristics
 const int defended = 3;
 const int backrow = 4;
 const int vulnerable = -3;

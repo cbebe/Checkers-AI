@@ -61,6 +61,7 @@ void setup() {
   db("Setting up Serial Port with desktop...");
   while(!comm::setup());
   db("Done!");
+  delay(500);
 }
 
 int main() {
@@ -68,9 +69,10 @@ int main() {
   setup();
   
   while (true) {
+    // menu screen to let player choose some options
     bool start = menuScreen();
-    gameInit();
-    game(start);
+    gameInit(); // initialize board
+    game(start); // start game
   }
   return 0;
 }

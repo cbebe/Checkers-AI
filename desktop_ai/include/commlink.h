@@ -4,7 +4,8 @@
 #include "board.h"
 #include "serialport.h"
 
-
+// wrap serial communication in a class
+// to prevent unncessary access
 class CommLink {
 public:
   CommLink(const char* portName = "/dev/ttyACM0");

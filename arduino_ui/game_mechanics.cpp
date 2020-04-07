@@ -39,6 +39,11 @@ void show_cap(int8_t *capture, int8_t capp, bool show) {
   }
 }
 
+/* 
+  void attempt_move():
+  Checks if the move if valid
+  sets pieceSel to DONE if move was valid
+*/
 void attempt_move(Selected& pieceSel, int8_t newPos, 
                   move_st& moves, move type,
                   int8_t *capture, int8_t capp) {
@@ -74,7 +79,9 @@ bool must_capture() {
   // else, make the player capture
   Selected pieceSel = NO_PIECE;
   move_st moves;
-  show_cap(capture, capp);
+  show_cap(capture, capp); // show which pieces can capture
+
+  // waits until a valid capture is made
   while (pieceSel != DONE) {
     choose_move(pieceSel, moves, CAPTURE, capture, capp);
   }

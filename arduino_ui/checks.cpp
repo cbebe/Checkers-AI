@@ -91,6 +91,7 @@ void check::move(int8_t pos, move_st& moves) {
   } 
 }
 
+// check if there are valid captures
 bool has::captures(const move_st &moves) {
   for (int i = 0; i < 4; i++) {
     if (moves.m[i] == CAPTURE) return true;
