@@ -1,8 +1,8 @@
 #include "eval.h"
 
 // returns a piece value
-int pieceValue(Piece pc) {
-  int pieceVal = 0; // assume empty at first
+double pieceValue(Piece pc) {
+  double pieceVal = 0; // assume empty at first
   if (pc != E) {
     if (pc == BK) {pieceVal = kingVal;}    
     else if (pc == B) {pieceVal = pawnVal;}    
@@ -12,7 +12,7 @@ int pieceValue(Piece pc) {
   return pieceVal;
 }
 
-int positionValue(Piece pc, int8 pos) {
+double positionValue(Piece pc, int8 pos) {
   // if the conditions are not met,
   // the piece does not contribute to the decision making
   int posVal = 0; 
@@ -41,8 +41,8 @@ int positionValue(Piece pc, int8 pos) {
 
 // performs a static evaluation on the board
 // according to the given heuristics
-int staticEval(const Board& board) {
-  int eval = 0;
+double staticEval(const Board& board) {
+  double eval = 0;
   for (int i = 0; i < bSize; i++) {
     Piece pc = board.get(i);
     eval += pieceValue(pc) * positionValue(pc, i);

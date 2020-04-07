@@ -5,26 +5,26 @@
 #include "piece.h"
 #include "board.h"
 
-// max value for 32-bit signed
-const int inf = 2147483647;
+// pick an arbitrarily large number for "infinity"
+const double inf = 10000000;
 
 // consts for heuristics
-const int defended = 3;
-const int backrow = 4;
-const int vulnerable = -3;
-const int midrow = 1;
-const int midbox = 3;
-const int pawnVal = 5;
-const int kingVal = 8;
+const double defended = 3;
+const double backrow = 4;
+const double vulnerable = -3;
+const double midrow = 1;
+const double midbox = 3;
+const double pawnVal = 4.5;
+const double kingVal = 7.5;
 
 // return piece value
-int pieceValue(Piece pc);
+double pieceValue(Piece pc);
 
 // returns the piece's weight 
 // depending on its position on the board
-int positionValue(Piece pc, int8 index);
+double positionValue(Piece pc, int8 index);
 
 // evaluates the board
-int staticEval(const Board& board);
+double staticEval(const Board& board);
 
 #endif

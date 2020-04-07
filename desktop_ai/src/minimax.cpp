@@ -18,13 +18,13 @@ Board chooseMove(const Board& board, int difficulty) {
 
   // now the AI will use minimax to find the best move
   
-  int maxVal = -inf; // the AI is the maximizing player
+  double maxVal = -inf; // the AI is the maximizing player
   int depth = 4;
   Board bestBoard;
 
   for (auto bEval : boardList) {
     // get the evaluation of the move
-    int eval = minimax(bEval, depth, true, -inf, inf);
+    double eval = minimax(bEval, depth, true, -inf, inf);
 
     if (eval > maxVal) {
       // this is the new chosen board      
@@ -41,14 +41,14 @@ Board chooseMove(const Board& board, int difficulty) {
 }
 
 // recursive function to find the min/max value of a move
-int minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) {
+double minimax(const Board& board, int depth, bool maxPlayer, double alpha, double beta) {
   if (depth == 0) {
     return staticEval(board);
   }
-  int eval;
+  double eval;
 
   if (maxPlayer) {
-    int maxEval = -inf;
+    double maxEval = -inf;
     bList bStates = boardStates(board, maxPlayer);
     if (bStates.empty()) {
       return staticEval(board); // game has ended; no more moves
@@ -65,7 +65,7 @@ int minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) 
     }
     return maxEval;
   } else {
-    int minEval = inf;
+    double minEval = inf;
     bList bStates = boardStates(board, maxPlayer);
     if (bStates.empty()) {
       return staticEval(board); // game has ended; no more moves

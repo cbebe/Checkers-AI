@@ -10,7 +10,7 @@
 Board chooseMove(const Board& board, int difficulty = 1);
 
 // minimax function for decision-making
-int minimax(const Board& board, int depth, bool maxPlayer,
-            int alpha, int beta);
+double minimax(const Board& board, int depth, bool maxPlayer,
+            double alpha, double beta);
 
 #endif
