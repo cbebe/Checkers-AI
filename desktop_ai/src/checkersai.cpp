@@ -4,11 +4,11 @@
 using namespace std;
 // testing some stuff
 int main() {
-  Board board = Board("00000000000002000000022010000000");
+  Board board = Board("00000000011000400110000000000000");
   cout << "oof\n";
   board.display();
 
-  bList list = boardStates(board, false);
+  bList list = boardStates(board, true);
   if (!list.empty()) {
     for (auto b : list) {
       b.display();

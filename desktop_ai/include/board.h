@@ -4,17 +4,8 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include "eval.h"
 
-typedef signed char int8;
-typedef enum pc {
-  E, // empty
-  W,B, // white and black
-  WK,BK, // white and black kings
-  OUT // out of bounds
-} Piece;
-
-
-const int8 bSize = 32; // board size
 
 // string containing starting positions for pieces
 const std::string newBoard = "22222222222200000000111111111111";
@@ -32,8 +23,13 @@ public:
   void display() const; // display board in stdout
   std::string stateString() const; // returns current board state string
 
+  int eval() const; // static evaluation of the board
+  void calculate(int setValue = -inf - 1); // for setting or calculating board value
+
 private:
   std::array<Piece, bSize> boardArray;
+  int boardValue;
+
 };
 
 #endif

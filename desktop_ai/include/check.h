@@ -12,5 +12,6 @@ Piece pieceCheck(const Board& board, int8 pos);
 
 int8 findLeftOS(int pos, int leftEdge, int bottomEdge);
 int8 findRightOS(int pos, int rightEdge, int bottomEdge);
+std::list<Board> possibleMoves(const Board& board, bool player);
 
 #endif
