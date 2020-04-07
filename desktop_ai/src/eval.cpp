@@ -45,7 +45,12 @@ double staticEval(const Board& board) {
   double eval = 0;
   for (int i = 0; i < bSize; i++) {
     Piece pc = board.get(i);
-    eval += pieceValue(pc) * positionValue(pc, i);
+    double posVal = positionValue(pc, i);
+    // checks if the piece has not been evaluated yet
+    if (posVal == 0) {
+      posVal = secondCheck(board, i);
+    }
+    eval += pieceValue(pc) * posVal;
   }
   
   return eval;

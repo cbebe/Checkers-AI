@@ -41,7 +41,7 @@ bool comm::setup() {
 // receives board state from Serial
 void comm::receive_board() {
   char buff[c::b_size + 2];
-  if (read_line(buff, 5000)) {
+  if (read_line(buff, 10000)) {
     db(buff);
     // loop over the board char array to copy it
     for (int8_t i = 0; i < c::b_size; i++) {

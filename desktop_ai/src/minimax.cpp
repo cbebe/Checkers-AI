@@ -1,9 +1,11 @@
 #include "minimax.h"
 
-static int nodes = 0;
+static long long nodes;
 
 // lets the AI choose a move based on minimax
 Board chooseMove(const Board& board, int difficulty) {
+  srand(time(NULL)); // time seed for rand function
+
   nodes = 0; // reset the number of children
 
   // get the possible moves the AI can make
@@ -12,6 +14,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // chance that the AI will make a random move
   // the higher the difficulty the lower the chance
   if (!(rand() % difficulty)) {
+    std::cout << "RANDOM MOVE" << std::endl; 
     // AI has chosen a random move
     return boardList[rand() % boardList.size()];
   }
@@ -19,7 +22,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 4;
+  int depth = 10;
   Board bestBoard;
 
   for (auto bEval : boardList) {
@@ -32,7 +35,6 @@ Board chooseMove(const Board& board, int difficulty) {
       maxVal = eval;
     }
   }
-  bestBoard.display();
   // print board value
   std::cout << "Board value: " << maxVal << std::endl;
   std::cout << "Number of children: " << nodes << std::endl;
@@ -40,23 +42,48 @@ Board chooseMove(const Board& board, int difficulty) {
   return bestBoard;
 }
 
+// checks for endgame conditions
+bool gameOver(const Board& board) {
+  int black = 0, white = 0;
+  // counts the pieces on the board
+  for (int i = 0; i < bSize; i++) {
+    Piece pc = board.get(i);
+    if (pc == B || pc == BK) {black++;}
+    else if (pc == W || pc == WK) {white++;}
+    if (black && white) {
+      return false;
+    }
+  }
+  // return true
+  // if either side's pieces are all captured
+  return true;
+}
+
 // recursive function to find the min/max value of a move
 double minimax(const Board& board, int depth, bool maxPlayer, double alpha, double beta) {
   if (depth == 0) {
     return staticEval(board);
+  } else if (gameOver(board)) {
+    std::cout << "Someone won" << std::endl;
+    // either side's pieces are all captured
+    return staticEval(board); 
   }
   double eval;
 
+  // get the possible moves that the player can make
+  bList bStates = boardStates(board, maxPlayer);
+  if (bStates.empty()) {
+    std::cout << "Out of moves" << std::endl;
+    return staticEval(board); // game has ended; no more moves
+  }
+
   if (maxPlayer) {
     double maxEval = -inf;
-    bList bStates = boardStates(board, maxPlayer);
-    if (bStates.empty()) {
-      return staticEval(board); // game has ended; no more moves
-    }
     // make a tree of board states
     for (auto child: bStates) {
       nodes++; // count the number of children
-      eval = minimax(child, depth - 1, alpha, beta, false);
+
+      eval = minimax(child, depth - 1, false, alpha, beta);
       maxEval = std::max(maxEval, eval);
 
       // prune the other branches
@@ -66,16 +93,11 @@ double minimax(const Board& board, int depth, bool maxPlayer, double alpha, doub
     return maxEval;
   } else {
     double minEval = inf;
-    bList bStates = boardStates(board, maxPlayer);
-    if (bStates.empty()) {
-      return staticEval(board); // game has ended; no more moves
-    }
-
     // make a tree of board states
     for (auto child: bStates) {
       nodes++; // count the number of children
 
-      eval = minimax(child, depth - 1, alpha, beta, true);
+      eval = minimax(child, depth - 1, true, alpha, beta);
       minEval = std::min(minEval, eval);
 
       // prune the other branches
