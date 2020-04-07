@@ -8,6 +8,7 @@ int main() {
   cout << "Preparing communication... ";
   comms.confirm();
   cout << "Done!\n";
+  
   while (true) {
     int difficulty;
     // send a random move if the bot is playing first

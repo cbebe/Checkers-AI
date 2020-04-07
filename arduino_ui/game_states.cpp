@@ -3,29 +3,31 @@
 extern shared_vars shared;
 
 void processTS(bool start, int difficulty) {
-  while (touch::process().x == touch::untch);
+  using namespace touch;
+  if ()
+  while (process().x > );
 }
 
 // sets up menu screen
 bool menuScreen() {
   // get tft screen
   MCUFRIEND_kbv tft = *shared.tft;
-  using namespace c;
-  
+  using namespace menu;
   tft.fillScreen(TFT_BLACK);
-  tft.fillRect(off_x, off_y, b_width, b_width, TFT_WHITE);
+  tft.fillRect(c::off_x, c::off_y, c::b_width, c::b_width, TFT_WHITE);
 
   tft.setTextSize(2);
   tft.setTextColor(TFT_BLACK);
-  tft.setCursor(off_x + b_sq, off_y + b_sq);
+  // Display the Menu
+  tft.setCursor(diff.x, diff.y);
   tft.print("Difficulty:");
 
-  tft.setCursor(off_x + b_sq, off_y + b_sq * 4);
+  tft.setCursor(first.x, first.y);
   tft.print("First Move:");
 
-  tft.
-  tft.setCursor(off_x + b_sq * 3, off_y + b_width - b_sq);
+  tft.setCursor(sBtn.x, sBtn.y);
   tft.print("START");
+  tft.drawRect(sBtn.x - 3, sBtn.y - 3, sBtnD.x, sBtnD.y, TFT_BLACK);
 
   bool start; int difficulty;
   processTS(start, difficulty);
