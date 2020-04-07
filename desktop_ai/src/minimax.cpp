@@ -1,23 +1,43 @@
 #include "minimax.h"
 
-// lets the AI choose a move
-Board chooseMove(const Board& board, int difficulty) {
+static int nodes = 0;
 
-  // while minimax is not yet implemented, let the AI
-  // make completely random moves
-  difficulty = 1;
+// lets the AI choose a move based on minimax
+Board chooseMove(const Board& board, int difficulty) {
+  nodes = 0; // reset the number of children
+
+  // get the possible moves the AI can make
+  bList boardList = boardStates(board, true);
 
   // chance that the AI will make a random move
   // the higher the difficulty the lower the chance
   if (!(rand() % difficulty)) {
-    // get the possible moves the AI can make
-    bList boardList = boardStates(board, true);
-    // for now, just return random moves
+    // AI has chosen a random move
     return boardList[rand() % boardList.size()];
   }
-  // implement minimax here
+
+  // now the AI will use minimax to find the best move
   
-  return board;
+  int maxVal = -inf; // the AI is the maximizing player
+  int depth = 4;
+  Board bestBoard;
+
+  for (auto bEval : boardList) {
+    // get the evaluation of the move
+    int eval = minimax(bEval, depth, true, -inf, inf);
+
+    if (eval > maxVal) {
+      // this is the new chosen board      
+      bestBoard = bEval;
+      maxVal = eval;
+    }
+  }
+  bestBoard.display();
+  // print board value
+  std::cout << "Board value: " << maxVal << std::endl;
+  std::cout << "Number of children: " << nodes << std::endl;
+  
+  return bestBoard;
 }
 
 // recursive function to find the min/max value of a move
@@ -35,7 +55,7 @@ int minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) 
     }
     // make a tree of board states
     for (auto child: bStates) {
-
+      nodes++; // count the number of children
       eval = minimax(child, depth - 1, alpha, beta, false);
       maxEval = std::max(maxEval, eval);
 
@@ -53,6 +73,7 @@ int minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) 
 
     // make a tree of board states
     for (auto child: bStates) {
+      nodes++; // count the number of children
 
       eval = minimax(child, depth - 1, alpha, beta, true);
       minEval = std::min(minEval, eval);

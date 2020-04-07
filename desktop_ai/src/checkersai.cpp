@@ -3,7 +3,9 @@
 #include "minimax.h"
 
 using namespace std;
-// testing some stuff
+// main function for AI
+// change name to main when running program
+// int checkersAI() {
 int main() {
   CommLink comms; // start communication with Arduino
   cout << "Preparing communication... ";
@@ -18,6 +20,9 @@ int main() {
       // send a move to the Arduino
       comms.sendBoardState(chooseMove(newGame, 1));
     }
+
+    cout << "Chosen difficulty: " << difficulty << endl;
+
     Board board;
     // now this will loop until the end of the game
     while (comms.getBoardState(board)) {
@@ -28,3 +33,11 @@ int main() {
 
   return 0;
 }
+/*
+// for testing fucntions
+int main() {
+  Board board;
+  Board move = chooseMove(board, 1000);
+  return 0;
+}
+*/

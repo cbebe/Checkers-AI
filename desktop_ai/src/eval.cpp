@@ -39,6 +39,14 @@ int positionValue(Piece pc, int8 pos) {
   return posVal;
 }
 
+// performs a static evaluation on the board
+// according to the given heuristics
 int staticEval(const Board& board) {
-  return 0;
+  int eval = 0;
+  for (int i = 0; i < bSize; i++) {
+    Piece pc = board.get(i);
+    eval += pieceValue(pc) * positionValue(pc, i);
+  }
+  
+  return eval;
 }

@@ -42,9 +42,7 @@ bool CommLink::getBoardState(Board& board) {
 
 // send board state to Arduino
 void CommLink::sendBoardState(const Board& board) {
-  board.display(); // display board before sending
   string bstate = board.stateString();
-
   // send line to serial
   Serial->writeline(bstate + '\n');
 }
