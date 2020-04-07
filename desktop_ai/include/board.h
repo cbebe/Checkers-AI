@@ -18,18 +18,13 @@ public:
   bool move(int8 oldPos, int8 newPos); // moves piece
   void remove(int8 pos); // removes a piece from the board
   Piece get(int8 pos) const; // gets piece in position
-  void set(int8 pos, Piece pc); // sets the position into a piece
 
   void display() const; // display board in stdout
   std::string stateString() const; // returns current board state string
 
-  int eval() const; // returns static evaluation of the board
-  void calculate(int setValue = 0); // for setting or calculating board value
-
 private:
-  std::array<Piece, bSize> boardArray;
-  int boardValue;
-
+  void set(int8 pos, Piece pc); // sets the position into a piece
+  std::array<Piece, bSize> boardArray; // array containing board pieces
 };
 
 #endif

@@ -8,7 +8,6 @@ bool read_line(char *buff, uint32_t timeout) {
 
   uint32_t start = millis(), current = 0;
   int8_t len = 0; 
-  char counter[2];
   while (current < timeout) {
     if (Serial.available()) {
       char c = Serial.read();
@@ -21,19 +20,8 @@ bool read_line(char *buff, uint32_t timeout) {
       }
     }
     current = millis() - start;
-    // timeout counter
-    if (current % 1000 < 50) {
-      sprintf(counter, "%ld", current / 1000);
-      db(counter);
-    }
-
-    // skip timeout
-    if (touch::process().x != touch::untch) {
-      break;
-    }
   }
-  // timed out or reading failed
-  db("TIMED OUT!");
+
   return false;
 }
 
@@ -42,7 +30,7 @@ bool read_line(char *buff, uint32_t timeout) {
 bool comm::setup() {
   char buff[3];
   Serial.println("A");
-  if (read_line(buff, 5000)) {
+  if (read_line(buff, 1000)) {
     if (buff[0] == 'A') { // desktop acknowledged
       return true;
     }
@@ -53,7 +41,7 @@ bool comm::setup() {
 // receives board state from Serial
 void comm::receive_board() {
   char buff[c::b_size + 2];
-  if (read_line(buff, 20000)) {
+  if (read_line(buff, 5000)) {
     db(buff);
     // loop over the board char array to copy it
     for (int8_t i = 0; i < c::b_size; i++) {

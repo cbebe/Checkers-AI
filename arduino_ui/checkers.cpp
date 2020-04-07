@@ -16,6 +16,7 @@ void db(const char* msg) {
   shared.tft->fillRect(0, touch::tft_height - 30, touch::tft_width, 30, TFT_BLACK);
   shared.tft->setCursor(0, touch::tft_height - 25);
   shared.tft->setTextSize(2);
+  shared.tft->setTextColor(TFT_WHITE);
   shared.tft->print(msg);
 }
 

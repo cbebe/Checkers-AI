@@ -28,12 +28,21 @@ void Board::set(int8 pos, Piece pc) {
 // moves a piece from one position to another
 // returns true if successful at moving
 bool Board::move(int8 oldPos, int8 newPos) {
-  Piece oldPc = get(oldPos);
+  Piece pc = get(oldPos);
   // no piece to move or no tile to move to
-  if (oldPc == E || get(newPos) != E) return false;
+  if (pc == E || get(newPos) != E) return false;
+
+  // checks for promotion
+  if (pc == W || pc == B) {
+    if (pc == B && newPos < 4) {
+      pc = BK; // promote to king
+    } else if (pc == W && newPos > 27) {
+      pc = WK; // promote to king
+    }
+  }
 
   // moves piece from oldPos to newPos
-  remove(oldPos); set(newPos, oldPc);
+  remove(oldPos); set(newPos, pc);
   return true;
 }
 

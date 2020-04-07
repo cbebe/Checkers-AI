@@ -1,6 +1,7 @@
 #include "commlink.h"
-#include "game.h"
 #include "checkalt.h"
+#include "minimax.h"
+
 using namespace std;
 // testing some stuff
 int main() {
@@ -22,6 +23,7 @@ int main() {
     while (comms.getBoardState(board)) {
       comms.sendBoardState(chooseMove(board, difficulty));
     }
+    cout << "Game ended! Waiting for Arduino to start a new game...\n";
   }
 
   return 0;
