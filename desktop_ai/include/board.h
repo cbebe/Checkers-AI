@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <array>
-#include "eval.h"
+#include "piece.h"
 
 
 // string containing starting positions for pieces
@@ -23,8 +23,8 @@ public:
   void display() const; // display board in stdout
   std::string stateString() const; // returns current board state string
 
-  int eval() const; // static evaluation of the board
-  void calculate(int setValue = -inf - 1); // for setting or calculating board value
+  int eval() const; // returns static evaluation of the board
+  void calculate(int setValue = 0); // for setting or calculating board value
 
 private:
   std::array<Piece, bSize> boardArray;

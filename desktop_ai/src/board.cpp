@@ -12,9 +12,17 @@ Board::Board(const std::string& boardState) {
 // returns the piece in the given position
 Piece Board::get(int8 pos) const {
   // out of bounds of board
-  if (pos < 0 || pos > 31) {return OUT;}
+  if (pos < 0 || pos >= bSize) {return OUT;}
   // return piece in position
   return boardArray[pos];
+}
+
+// set a board position to a given Piece type
+void Board::set(int8 pos, Piece pc) {
+  // only set piece if within bounds
+  if (pos >= 0 && pos < bSize) {
+    boardArray[pos] = pc;
+  }
 }
 
 // moves a piece from one position to another
@@ -34,28 +42,27 @@ void Board::remove(int8 pos) {
   set(pos, E); // sets to empty
 }
 
-// displays board on stdout
+// prints the board to stdout 
 void Board::display() const {
   using std::cout;
-  using std::endl;
-  cout << "  =================================================" << endl;
-  cout << "   _______________________________________________" << endl;
+  cout << "  =================================================\n";
+  cout << "   _______________________________________________\n";
   for (int i = 0; i < 4; i++)  {
-    cout << "  |     |     |     |     |     |     |     |     |" << endl;
+    cout << "  |     |     |     |     |     |     |     |     |\n";
     for (int j = i * 8; j < (i * 8) + 4; j++) {
       cout << "  |     |  "<< boardArray[j]; 
     }
-    cout << "  |" << endl << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
-    cout << "  |     |     |     |     |     |     |     |     |" << endl << "  |  ";
+    cout << "  |\n  |_____|_____|_____|_____|_____|_____|_____|_____|\n";
+    cout << "  |     |     |     |     |     |     |     |     |\n  |  ";
     for (int j = i * 8; j < (i* 8) + 4; j++) {
       cout << boardArray[j + 4] << "  |     |  "; 
     }
-    cout << endl << "  |_____|_____|_____|_____|_____|_____|_____|_____|" << endl;
+    cout << "\n  |_____|_____|_____|_____|_____|_____|_____|_____|\n";
   }
-  cout << "  =================================================" << endl;
+  cout << "  =================================================\n";
 }
 
-// returns a string of the current board state
+// returns a string representation of the current board state
 std::string Board::stateString() const {
   std::string state;
   for (int i = 0; i < bSize; i++) {
@@ -63,11 +70,4 @@ std::string Board::stateString() const {
     state += static_cast<char>(boardArray[i]) + '0';
   }
   return state;
-}
-
-void Board::set(int8 pos, Piece pc) {
-  // only set piece if within bounds
-  if (pos >= 0 && pos < bSize) {
-    boardArray[pos] = pc;
-  }
 }

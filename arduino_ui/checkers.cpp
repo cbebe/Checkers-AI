@@ -68,7 +68,7 @@ int main() {
   
   while (true) {
     bool start = menuScreen();
-    gameInit(start);
+    gameInit();
     game(start);
   }
   return 0;

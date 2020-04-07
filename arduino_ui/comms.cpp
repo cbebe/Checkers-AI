@@ -79,6 +79,20 @@ void comm::send_board() {
   Serial.println(b); // send board to serial
 }
 
+// starts game with AI, sending the difficulty
+// and whether the AI starts first
+void comm::start_game(bool start, int difficulty) {
+  char startMsg[10]; char turn;
+  // start is true when AI goes first
+  turn = start ? 'F' : 'S';
+
+  // formats the string according to the protocol
+  sprintf(startMsg, "S%c%d", turn, difficulty);
+  
+  // send the starting message to Serial
+  Serial.println(startMsg);
+}
+
 // ends game
 void comm::end_game() {
   Serial.println("E"); // end game flag to restart ai

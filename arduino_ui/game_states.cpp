@@ -21,7 +21,7 @@ bool menuScreen() {
 }
 
 // initialize game
-void gameInit(bool start) {
+void gameInit() {
   // namespace is only used when not using 
   // would lead to lesser readability
   using namespace c;

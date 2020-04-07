@@ -6,7 +6,7 @@
 #include "comms.h"
 
 void game(bool start);
-void gameInit(bool start);
+void gameInit();
 bool menuScreen();
 
 #endif

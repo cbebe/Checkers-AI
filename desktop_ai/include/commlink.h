@@ -13,12 +13,16 @@ public:
   //confirms connection with Serial
   void confirm();
 
+  // checks whether the AI starts the game or not
+  bool startGame(int& difficulty);
+
   // get board state from Serial
   // returns false if game ended, true otherwise
   bool getBoardState(Board& board);
 
   // send board state to Serial
   void sendBoardState(const Board& board);
+
   
 private:
   SerialPort *Serial;

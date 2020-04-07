@@ -17,6 +17,17 @@ void CommLink::confirm() {
   Serial->writeline("A\n"); // send acknowledge back
 }
 
+bool CommLink::startGame(int& difficulty) {
+  string start;
+  do {
+    // waits for Arduino's decision
+    start = Serial->readline(0); 
+  } while (start[0] != 'S');
+  // get the difficulty from Arduino's message
+  difficulty = stoi(start.substr(2));
+  return start[1] == 'F'; // computer starts first
+}
+
 // reads board state sent by Arduino
 // returns false if the game ended
 bool CommLink::getBoardState(Board& board) {
@@ -31,6 +42,7 @@ bool CommLink::getBoardState(Board& board) {
 
 // send board state to Arduino
 void CommLink::sendBoardState(const Board& board) {
+  board.display(); // display board before sending
   string bstate = board.stateString();
 
   // send line to serial

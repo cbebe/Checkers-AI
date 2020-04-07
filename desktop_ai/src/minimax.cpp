@@ -1,11 +1,27 @@
 #include "minimax.h"
 
+// lets the AI choose a move
+Board chooseMove(const Board& board, int difficulty) {
 
+  // while minimax is not yet implemented, let the AI
+  // make completely random moves
+  difficulty = 1;
 
-
+  // chance that the AI will make a random move
+  // the higher the difficulty the lower the chance
+  if (!(rand() % difficulty)) {
+    // get the possible moves the AI can make
+    bList boardList = boardStates(board, true);
+    // for now, just return random moves
+    return boardList[rand() % boardList.size()];
+  }
+  // implement minimax here
+  
+  return board;
+}
 
 // recursive function to find the min/max value of a move
-Board minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) {
+int minimax(const Board& board, int depth, bool maxPlayer, int alpha, int beta) {
   if (depth == 0) {
     return staticEval(board);
   }
