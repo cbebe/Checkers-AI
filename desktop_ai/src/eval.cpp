@@ -40,16 +40,6 @@ double positionValue(Piece pc, int8 pos) {
   return posVal;
 }
 
-void getPieces(Piece pc, Piece* array) {
-  using namespace std;
-  if (pc == E) {return;} // no piece
-  if (pc == B || pc == BK) {
-    copy(begin(blackSide), end(blackSide), array);
-  } else {
-    copy(begin(whiteSide), end(whiteSide), array);
-  }
-}
-
 // check for piece vulnerability
 double defCheck(const Board& board, int8 index) {
   Piece pc = board.get(index);
@@ -110,6 +100,7 @@ double staticEval(const Board& board) {
   if (!eval) {
     for (int i = 0; i < bSize; i++) {
       Piece pc = board.get(i);
+      // get value of position
       double posVal = positionValue(pc, i);
       // checks if the piece is defended
       posVal += defCheck(board, i);

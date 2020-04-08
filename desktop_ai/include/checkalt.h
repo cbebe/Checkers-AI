@@ -1,7 +1,6 @@
 #ifndef _CHECKALT_H
 #define _CHECKALT_H
 #include <string>
-#include <vector>
 #include "board.h" // for board class
 #include "offset.h" // for board offsets
 

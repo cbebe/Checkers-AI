@@ -222,7 +222,7 @@ void checkForChain(bList& boardList, moveList& captures, const Board& board) {
   }
 }
 
-// 
+// checks for captures that can be made by either player
 void check::captures(bList& boardList, const Board& board, bool player) {
   // determine the current piece playing
   // if player is true, black is playing
