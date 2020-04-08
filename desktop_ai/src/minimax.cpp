@@ -41,9 +41,9 @@ Board chooseMove(const Board& board, int difficulty) {
       }
     }
     auto end = high_resolution_clock::now();
-    auto exectime = duration_cast<milliseconds>(end - start);
+    auto exectime = duration_cast<microseconds>(end - start);
     // display execution time
-    printf("Execution time: %ld ms\n", exectime.count());
+    printf("Execution time: %ld microseconds\n", exectime.count());
   }
 
   // print board value
