@@ -126,11 +126,13 @@ void game(bool start) {
     comm::receive_board();
   }
   while (state == NONE) {
+    db("Your turn");
     doTurn();
     state = endCheck(BOT); // checks for endgame conditions
     if (state == NONE) {
       // send board to desktop if game is not over
       comm::send_board();
+      db("Waiting for computer's turn...")
       comm::receive_board();
       state = endCheck(PLAYER); // check again
     }

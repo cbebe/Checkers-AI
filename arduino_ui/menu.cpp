@@ -62,7 +62,7 @@ bool menuScreen() {
   // Display the Menu
 
   // print all text
-  printText(diff, "Difficulty:");
+  printText(diff, "Decision making:");
   printText(difftxt, easy);
   printText(first, "First Move:");
   printText(firsttxt, bot);

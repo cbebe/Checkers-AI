@@ -23,7 +23,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 1; 
+  int depth = 5; 
   Board bestBoard;
   
   {
@@ -55,7 +55,7 @@ Board chooseMove(const Board& board, int difficulty) {
 
 // recursive function to find the min/max value of a move
 double minimax(const Board& board, int depth, bool maxPlayer, double alpha, double beta) {
-  board.display();
+  // board.display();
   if (depth == 0) {
     return staticEval(board, maxPlayer);
   } else if (gameOver(board)) {

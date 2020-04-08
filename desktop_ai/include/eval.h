@@ -10,32 +10,23 @@
 const double inf = 1000000000000;
 
 // consts for heuristics
-const double defended = 5.5;
-const double vulnerable = -100;
-
-const double pawnVal = 4.5;
-const double kingVal = 7.5;
-
-const double backrow = 1.6;
-const double midrow = 1.1;
-const double midbox = 1.3;
+const double pawnVal = 5;
+const double kingVal = 9;
 
 namespace pos {
-  const double b = backrow;
-  const double d = midbox;
-  const double r = midrow;
-
+  const double b = 0.5;
+  const double d = 2;
+  const double r = 1.5;
+  // weights for each position in the board
   const double values[] = {   b,    b,    b,    b,
                            1,    1,    1,    1,
-                              1,    1,    1,    1,
+                              1,    r,    r,    1,
                            r,    d,    d,    r,
                               r,    d,    d,    r,
-                           1,    1,    1,    1,
+                           1,    r,    r,    1,
                               1,    1,    1,    1,
                            b,    b,    b,    b};
-
 }
-
 
 // return piece value
 double pieceValue(Piece pc);

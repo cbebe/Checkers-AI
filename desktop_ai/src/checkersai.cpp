@@ -19,14 +19,16 @@ int main() {
       Board newGame = Board(newBoard);
       // send a move to the Arduino
       comms.sendBoardState(chooseMove(newGame, 1));
+      newGame.display();
     }
 
-    cout << "Chosen difficulty: " << difficulty << endl;
+    cout << "Chance of random move: 1 in " << difficulty << endl;
 
     Board board;
     // now this will loop until the end of the game
     while (comms.getBoardState(board)) {
       comms.sendBoardState(chooseMove(board, difficulty));
+      board.display();
     }
     cout << "Game ended! Waiting for Arduino to start a new game...\n";
   }

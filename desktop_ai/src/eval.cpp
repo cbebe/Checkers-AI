@@ -16,61 +16,18 @@ double pieceValue(Piece pc) {
 double positionValue(Piece pc, int8 pos) {
   // if the conditions are not met,
   // the piece does not contribute to the decision making
-  int posVal = 0; 
+  int8 row = pos/4; // get row number
+  double posVal = 0;
+  if (pc == B) {
+    posVal = row;
+  } else if (pc == W) {
+    posVal = (7 - row);
+  } else if (pc == WK || pc == BK) {
+    // want the king to be in the centre
+    posVal = abs(3.5 - row);  
+  } 
 
   return posVal;
-}
-
-
-// NOTE: THIS DOES NOT WORK AS INTENDED OMG HELP
-// check for piece vulnerability
-double defCheck(const Board& board, int8 index, bool player) {
-  Piece pc = board.get(index);
-  // gets piece's ally and enemy colour
-  Piece comps[4]; getPieces(pc, comps);
-
-  int8 adj[4]; rowOS(index, adj); // get position of indices
-  // adjacent, parallel, and diagonal piece arrays
-  Piece n[4], p[4], d[4];
-
-
-  for (int i = 0; i < 4; i++) {
-    // get adjacent, parallel, and diagonal piece values
-    n[i] = board.get(index + adj[i]);
-    p[i] = board.get(index + prl[i]);
-    d[i] = board.get(index + dg[i]);
-  }
-  for (int i = 0; i < 4; i++) {
-    bool emptyBehind = (n[(i + 2) % 4] == E);
-    double defVal = emptyBehind ? vulnerable : defended;
-
-    // check if there is an enemy next to the piece
-    if (n[i] == comps[2] || n[i] == comps[3]) {
-      return defVal;
-    }
-    // check for possible chain captures
-
-    bool prlAlly = p[i] == comps[0] || p[i] == comps[1];
-    bool dgAlly = d[i] == comps[0] || d[i] == comps[1];
-    
-    // if there is a parallel or diagonal ally piece
-    if (prlAlly && dgAlly) {
-      // the piece is vulnerable to chain capture
-      if (n[i] == E) {return defVal;}
-    }
-    // also check the other side for parallel ally
-    if (prlAlly) {
-      if (n[(i + 1) % 4] == E) {
-        if (n[(i + 3) % 4] == E) {
-          return vulnerable;
-        } else {
-          return defended;
-        }
-      }
-    }
-  }
-  // not affected
-  return 0;
 }
 
 // checks for endgame conditions
@@ -89,25 +46,40 @@ double gameOver(const Board& board) {
   }
   if (!black) {
     // no more black pieces
-    return -10000;
+    return -1;
   } 
   // no more white pieces
-  return 10000;
+  return 1;
 }
 
 // performs a static evaluation on the board
 // according to the given heuristics
 double staticEval(const Board& board, bool player) {
   // check for endgame conditions first
-  double eval = gameOver(board);
-
+  double eval = 0;
   // get board value if no one has lost yet
-  if (!eval) {
-    for (int i = 0; i < bSize; i++) {
-      Piece pc = board.get(i);
-      eval += pieceValue(pc) * pos::values[i];
-    }
+  double numpcs = 0;    
+  for (int i = 0; i < bSize; i++) {
+    Piece pc = board.get(i);
+    if (pc != E) {numpcs++;} // counts number of pieces
   }
+  for (int i = 0; i < bSize; i++) {
+    Piece pc = board.get(i);
+    double value = pieceValue(pc) * positionValue(pc, i);
+    // mid/endgame is when there are less than half of the pieces left
+    if (numpcs < 12) {
+      // bring the kings to the centre
+      if (pc == WK || pc == BK) {
+        value *= pos::values[i];
+      } else {
+        // pawns will try harder to get kings
+        value *= positionValue(pc, i);
+      }
+    } 
+    eval += value;
+    
+  }
+  eval /= numpcs; // normalizes the board value
   
   return eval;
 }

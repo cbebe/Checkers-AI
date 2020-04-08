@@ -23,8 +23,8 @@ namespace menu {
   // const strings
   const char bot[] = "BOT";
   const char player[] = "PLAYER";
-  const char easy[] = "EASY";
-  const char imp[] = "IMPOSSIBLE";
+  const char easy[] = "RANDOM";
+  const char imp[] = "MINIMAX";
 };
 
 // lets player choose some game options
