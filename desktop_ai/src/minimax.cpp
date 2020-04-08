@@ -4,8 +4,9 @@ static long long nodes;
 
 // lets the AI choose a move based on minimax
 Board chooseMove(const Board& board, int difficulty) {
+  using std::cout;
+  using std::endl;
   srand(time(NULL)); // time seed for rand function
-
   nodes = 0; // reset the number of children
 
   // get the possible moves the AI can make
@@ -14,7 +15,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // chance that the AI will make a random move
   // the higher the difficulty the lower the chance
   if (!(rand() % difficulty)) {
-    std::cout << "RANDOM MOVE" << std::endl; 
+    cout << "RANDOM MOVE" << endl; 
     // AI has chosen a random move
     return boardList[rand() % boardList.size()];
   }
@@ -22,22 +23,32 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 10; 
+  int depth = 5; // max working depth is 9 
   Board bestBoard;
+  
+  {
+    using namespace std::chrono;
+    // time the function
+    auto start = high_resolution_clock::now();
+    for (auto bEval : boardList) {
+      // get the evaluation of the move
+      double eval = minimax(bEval, depth, true, -inf, inf);
 
-  for (auto bEval : boardList) {
-    // get the evaluation of the move
-    double eval = minimax(bEval, depth, true, -inf, inf);
-
-    if (eval > maxVal) {
-      // this is the new chosen board      
-      bestBoard = bEval;
-      maxVal = eval;
+      if (eval > maxVal) {
+        // this is the new chosen board      
+        bestBoard = bEval;
+        maxVal = eval;
+      }
     }
+    auto end = high_resolution_clock::now();
+    auto exectime = duration_cast<milliseconds>(end - start);
+    // display execution time
+    cout << "Time taken: " << exectime.count() << endl;
   }
+
   // print board value
-  std::cout << "Board value: " << maxVal << std::endl;
-  std::cout << "Number of children: " << nodes << std::endl;
+  cout << "Board value: " << maxVal << endl;
+  cout << "Number of children: " << nodes << endl;
   
   return bestBoard;
 }

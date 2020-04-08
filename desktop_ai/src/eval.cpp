@@ -47,22 +47,43 @@ double defCheck(const Board& board, int8 index) {
   Piece comps[4]; getPieces(pc, comps);
 
   int8 adj[4]; rowOS(index, adj); // get position of indices
-  Piece n[4]; // neighbour array
+  // adjacent, parallel, and diagonal piece arrays
+  Piece n[4], p[4], d[4];
+
   for (int i = 0; i < 4; i++) {
-    // get neighbour value
+    // get adjacent, parallel, and diagonal piece values
     n[i] = board.get(index + adj[i]);
+    p[i] = board.get(index + prl[i]);
+    d[i] = board.get(index + dg[i]);
   }
   for (int i = 0; i < 4; i++) {
+    bool emptyBehind = (n[(i + 2) % 4] == E);
+    double defVal = emptyBehind ? vulnerable : defended;
+
     // check if there is an enemy next to the piece
     if (n[i] == comps[2] || n[i] == comps[3]) {
-      // check if the tile behind is empty
-      if (n[(i + 2) % 4] == E) {
-        return vulnerable; // piece is vulnerable
-      } else {
-        return defended; // piece is defended
+      return defVal;
+    }
+    // check for possible chain captures
+
+    bool prlAlly = p[i] == comps[0] || p[i] == comps[1];
+    bool dgAlly = d[i] == comps[0] || d[i] == comps[1];
+    
+    // if there is a parallel or diagonal ally piece
+    if (prlAlly && dgAlly) {
+      // the piece is vulnerable to chain capture
+      if (n[i] == E) {return defVal;}
+    }
+    // also check the other side for parallel ally
+    if (prlAlly) {
+      if (n[(i + 1) % 4] == E) {
+        if (n[(i + 3) % 4] == E) {
+          return vulnerable;
+        } else {
+          return defended;
+        }
       }
     }
-    
   }
   // not affected
   return 0;

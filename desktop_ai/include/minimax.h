@@ -4,6 +4,7 @@
 #include "board.h"
 #include "checkalt.h"
 #include "eval.h"
+#include <chrono> // for measuring minimax running time
 #include <algorithm>
 
 // lets the AI choose a move
