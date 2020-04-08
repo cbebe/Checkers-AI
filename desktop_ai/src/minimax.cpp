@@ -23,7 +23,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 5; // max working depth is 9 
+  int depth = 9; // max working depth is 9 
   Board bestBoard;
   
   {
@@ -41,9 +41,9 @@ Board chooseMove(const Board& board, int difficulty) {
       }
     }
     auto end = high_resolution_clock::now();
-    auto exectime = duration_cast<milliseconds>(end - start);
+    auto exectime = duration_cast<microseconds>(end - start);
     // display execution time
-    cout << "Time taken: " << exectime.count() << endl;
+    printf("Execution time: %ld microseconds\n", exectime.count());
   }
 
   // print board value

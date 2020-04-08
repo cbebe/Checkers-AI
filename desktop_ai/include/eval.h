@@ -10,13 +10,13 @@
 const double inf = 10000000;
 
 // consts for heuristics
-const double defended = 5;
+const double defended = 500;
 const double backrow = 4;
-const double vulnerable = -5;
-const double midrow = 2;
+const double vulnerable = -100;
+const double midrow = 20;
 const double midbox = 3;
 const double pawnVal = 4.5;
-const double kingVal = 7.5;
+const double kingVal = 500;
 
 // return piece value
 double pieceValue(Piece pc);
