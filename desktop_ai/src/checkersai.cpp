@@ -33,11 +33,3 @@ int main() {
 
   return 0;
 }
-/*
-// for testing fucntions
-int main() {
-  Board board;
-  Board move = chooseMove(board, 1000);
-  return 0;
-}
-*/

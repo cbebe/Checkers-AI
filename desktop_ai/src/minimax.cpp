@@ -23,7 +23,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 9; // max working depth is 9 
+  int depth = 1; 
   Board bestBoard;
   
   {
@@ -41,9 +41,9 @@ Board chooseMove(const Board& board, int difficulty) {
       }
     }
     auto end = high_resolution_clock::now();
-    auto exectime = duration_cast<microseconds>(end - start);
+    auto exectime = duration_cast<milliseconds>(end - start);
     // display execution time
-    printf("Execution time: %ld microseconds\n", exectime.count());
+    printf("Execution time: %ld ms\n", exectime.count());
   }
 
   // print board value
@@ -55,18 +55,19 @@ Board chooseMove(const Board& board, int difficulty) {
 
 // recursive function to find the min/max value of a move
 double minimax(const Board& board, int depth, bool maxPlayer, double alpha, double beta) {
+  board.display();
   if (depth == 0) {
-    return staticEval(board);
+    return staticEval(board, maxPlayer);
   } else if (gameOver(board)) {
     std::cout << "Someone won" << std::endl;
     // either side's pieces are all captured
-    return staticEval(board); 
+    return staticEval(board, maxPlayer); 
   }
   // get the possible moves that the player can make
   bList bStates = boardStates(board, maxPlayer);
   if (bStates.empty()) {
     std::cout << "Out of moves" << std::endl;
-    return staticEval(board); // game has ended; no more moves
+    return staticEval(board, maxPlayer); // game has ended; no more moves
   }
 
   double compEval = maxPlayer ? -inf : inf;

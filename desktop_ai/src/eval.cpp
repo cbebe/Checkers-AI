@@ -17,31 +17,14 @@ double positionValue(Piece pc, int8 pos) {
   // if the conditions are not met,
   // the piece does not contribute to the decision making
   int posVal = 0; 
-  if (pc != E) {
-    // check if the pieces are defending their back row
-    if (pc == W || pc == WK) {
-      if (pos > 27) {
-        return backrow;
-      }
-    } else {
-      if (pos < 4) {
-        return backrow;
-      }
-    }
-    // if piece is in the middle row
-    if (pos > 11 && pos < 20) {
-      posVal = midrow;
-      // if the piece is in the middle box
-      if (!(((pos - 13) % 4) && ((pos - 14) % 4))) {
-        posVal = midbox;
-      }
-    }
-  }
+
   return posVal;
 }
 
+
+// NOTE: THIS DOES NOT WORK AS INTENDED OMG HELP
 // check for piece vulnerability
-double defCheck(const Board& board, int8 index) {
+double defCheck(const Board& board, int8 index, bool player) {
   Piece pc = board.get(index);
   // gets piece's ally and enemy colour
   Piece comps[4]; getPieces(pc, comps);
@@ -49,6 +32,7 @@ double defCheck(const Board& board, int8 index) {
   int8 adj[4]; rowOS(index, adj); // get position of indices
   // adjacent, parallel, and diagonal piece arrays
   Piece n[4], p[4], d[4];
+
 
   for (int i = 0; i < 4; i++) {
     // get adjacent, parallel, and diagonal piece values
@@ -113,7 +97,7 @@ double gameOver(const Board& board) {
 
 // performs a static evaluation on the board
 // according to the given heuristics
-double staticEval(const Board& board) {
+double staticEval(const Board& board, bool player) {
   // check for endgame conditions first
   double eval = gameOver(board);
 
@@ -121,11 +105,7 @@ double staticEval(const Board& board) {
   if (!eval) {
     for (int i = 0; i < bSize; i++) {
       Piece pc = board.get(i);
-      // get value of position
-      double posVal = positionValue(pc, i);
-      // checks if the piece is defended
-      posVal += defCheck(board, i);
-      eval += pieceValue(pc) * posVal;
+      eval += pieceValue(pc) * pos::values[i];
     }
   }
   

@@ -7,28 +7,43 @@
 #include "board.h"
 
 // pick an arbitrarily large number for "infinity"
-const double inf = 10000000;
+const double inf = 1000000000000;
 
 // consts for heuristics
-const double defended = 500;
-const double backrow = 4;
+const double defended = 5.5;
 const double vulnerable = -100;
-const double midrow = 20;
-const double midbox = 3;
+
 const double pawnVal = 4.5;
-const double kingVal = 500;
+const double kingVal = 7.5;
+
+const double backrow = 1.6;
+const double midrow = 1.1;
+const double midbox = 1.3;
+
+namespace pos {
+  const double b = backrow;
+  const double d = midbox;
+  const double r = midrow;
+
+  const double values[] = {   b,    b,    b,    b,
+                           1,    1,    1,    1,
+                              1,    1,    1,    1,
+                           r,    d,    d,    r,
+                              r,    d,    d,    r,
+                           1,    1,    1,    1,
+                              1,    1,    1,    1,
+                           b,    b,    b,    b};
+
+}
+
 
 // return piece value
 double pieceValue(Piece pc);
-
-// returns the piece's weight 
-// depending on its position on the board
-double positionValue(Piece pc, int8 index);
 
 // checks for endgame conditions
 double gameOver(const Board& board);
 
 // evaluates the board
-double staticEval(const Board& board);
+double staticEval(const Board& board, bool player);
 
 #endif
