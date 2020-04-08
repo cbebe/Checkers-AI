@@ -22,7 +22,7 @@ Board chooseMove(const Board& board, int difficulty) {
   // now the AI will use minimax to find the best move
   
   double maxVal = -inf; // the AI is the maximizing player
-  int depth = 10;
+  int depth = 10; 
   Board bestBoard;
 
   for (auto bEval : boardList) {
@@ -42,23 +42,6 @@ Board chooseMove(const Board& board, int difficulty) {
   return bestBoard;
 }
 
-// checks for endgame conditions
-bool gameOver(const Board& board) {
-  int black = 0, white = 0;
-  // counts the pieces on the board
-  for (int i = 0; i < bSize; i++) {
-    Piece pc = board.get(i);
-    if (pc == B || pc == BK) {black++;}
-    else if (pc == W || pc == WK) {white++;}
-    if (black && white) {
-      return false;
-    }
-  }
-  // return true
-  // if either side's pieces are all captured
-  return true;
-}
-
 // recursive function to find the min/max value of a move
 double minimax(const Board& board, int depth, bool maxPlayer, double alpha, double beta) {
   if (depth == 0) {
@@ -68,8 +51,6 @@ double minimax(const Board& board, int depth, bool maxPlayer, double alpha, doub
     // either side's pieces are all captured
     return staticEval(board); 
   }
-  double eval;
-
   // get the possible moves that the player can make
   bList bStates = boardStates(board, maxPlayer);
   if (bStates.empty()) {
@@ -77,33 +58,23 @@ double minimax(const Board& board, int depth, bool maxPlayer, double alpha, doub
     return staticEval(board); // game has ended; no more moves
   }
 
-  if (maxPlayer) {
-    double maxEval = -inf;
-    // make a tree of board states
-    for (auto child: bStates) {
-      nodes++; // count the number of children
+  double compEval = maxPlayer ? -inf : inf;
 
-      eval = minimax(child, depth - 1, false, alpha, beta);
-      maxEval = std::max(maxEval, eval);
+  for (auto child : bStates) {
+    nodes++; // count the number of children in the tree
+    double eval = minimax(child, depth - 1, !maxPlayer, alpha, beta);
 
-      // prune the other branches
+    // keep track of the best and worst values so far (alpha/beta)
+    if (maxPlayer) {
+      compEval = std::max(compEval, eval);
       alpha = std::max(alpha, eval);
-      if (beta <= alpha) {break;}
-    }
-    return maxEval;
-  } else {
-    double minEval = inf;
-    // make a tree of board states
-    for (auto child: bStates) {
-      nodes++; // count the number of children
-
-      eval = minimax(child, depth - 1, true, alpha, beta);
-      minEval = std::min(minEval, eval);
-
-      // prune the other branches
+    } else {
+      compEval = std::min(compEval, eval);
       beta = std::min(beta, eval);
-      if (beta <= alpha) {break;}
     }
-    return minEval;
+    // prune branches if it would not affect the outcome
+    if (beta <= alpha) {break;}
   }
+  // return the min/max value acquired
+  return compEval;
 }

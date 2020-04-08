@@ -3,6 +3,7 @@
 
 #include <array>
 #include "piece.h"
+#include "offset.h"
 #include "board.h"
 
 // pick an arbitrarily large number for "infinity"
@@ -23,6 +24,9 @@ double pieceValue(Piece pc);
 // returns the piece's weight 
 // depending on its position on the board
 double positionValue(Piece pc, int8 index);
+
+// checks for endgame conditions
+double gameOver(const Board& board);
 
 // evaluates the board
 double staticEval(const Board& board);

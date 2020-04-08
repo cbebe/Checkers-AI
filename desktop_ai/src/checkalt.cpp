@@ -1,20 +1,5 @@
 #include "checkalt.h"
 
-//determines row offset for adjacent tiles
-void rowOS(int8 pos, int8 *os) {
-  using namespace std;
-  if ((pos % 8) / 4) {
-    copy(begin(os2), end(os2), os);
-  } else {
-    copy(begin(os1), end(os1), os);
-  }
-}
-
-// copies the diagonal offsets to offset array
-void diagOS(int8 *os) {
-  std::copy(std::begin(dg), std::end(dg), os);
-}
-
 /* 
 boolP boardCheck:
 General-purpose function for any checks

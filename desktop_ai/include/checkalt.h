@@ -1,9 +1,9 @@
 #ifndef _CHECKALT_H
 #define _CHECKALT_H
 #include <string>
-#include <algorithm> // for copy
 #include <vector>
-#include "board.h"
+#include "board.h" // for board class
+#include "offset.h" // for board offsets
 
 // enum types
 typedef enum move {NOT, MOVE, CAPTURE} move_t; // move type
@@ -15,10 +15,7 @@ typedef struct posPair {int8 p1; int8 p2;} posP; // position pair
 typedef std::vector<posP> moveList; // move pair list
 typedef std::vector<Board> bList; // board list
 
-// const arrays for offsets
-const int8 os1[] = {-4, -3, 4, 5};
-const int8 os2[] = {-5, -4, 3, 4};
-const int8 dg[] = {-9, -7, 7, 9};
+
 const int8 numpcs = 12; // number of pieces per player
 
 // use to get list of moves by a single piece

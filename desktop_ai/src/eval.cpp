@@ -12,6 +12,7 @@ double pieceValue(Piece pc) {
   return pieceVal;
 }
 
+// checks for position value
 double positionValue(Piece pc, int8 pos) {
   // if the conditions are not met,
   // the piece does not contribute to the decision making
@@ -39,18 +40,81 @@ double positionValue(Piece pc, int8 pos) {
   return posVal;
 }
 
+void getPieces(Piece pc, Piece* array) {
+  using namespace std;
+  if (pc == E) {return;} // no piece
+  if (pc == B || pc == BK) {
+    copy(begin(blackSide), end(blackSide), array);
+  } else {
+    copy(begin(whiteSide), end(whiteSide), array);
+  }
+}
+
+// check for piece vulnerability
+double defCheck(const Board& board, int8 index) {
+  Piece pc = board.get(index);
+  // gets piece's ally and enemy colour
+  Piece comps[4]; getPieces(pc, comps);
+
+  int8 adj[4]; rowOS(index, adj); // get position of indices
+  Piece n[4]; // neighbour array
+  for (int i = 0; i < 4; i++) {
+    // get neighbour value
+    n[i] = board.get(index + adj[i]);
+  }
+  for (int i = 0; i < 4; i++) {
+    // check if there is an enemy next to the piece
+    if (n[i] == comps[2] || n[i] == comps[3]) {
+      // check if the tile behind is empty
+      if (n[(i + 2) % 4] == E) {
+        return vulnerable; // piece is vulnerable
+      } else {
+        return defended; // piece is defended
+      }
+    }
+    
+  }
+  // not affected
+  return 0;
+}
+
+// checks for endgame conditions
+// necessary so that the AI would 
+// avoid losing as much as possible
+double gameOver(const Board& board) {
+  int black = 0, white = 0;
+  // counts the pieces on the board
+  for (int i = 0; i < bSize; i++) {
+    Piece pc = board.get(i);
+    if (pc == B || pc == BK) {black++;}
+    else if (pc == W || pc == WK) {white++;}
+    if (black && white) {
+      return 0; // no one has lost yet
+    }
+  }
+  if (!black) {
+    // no more black pieces
+    return -10000;
+  } 
+  // no more white pieces
+  return 10000;
+}
+
 // performs a static evaluation on the board
 // according to the given heuristics
 double staticEval(const Board& board) {
-  double eval = 0;
-  for (int i = 0; i < bSize; i++) {
-    Piece pc = board.get(i);
-    double posVal = positionValue(pc, i);
-    // checks if the piece has not been evaluated yet
-    if (posVal == 0) {
-      posVal = secondCheck(board, i);
+  // check for endgame conditions first
+  double eval = gameOver(board);
+
+  // get board value if no one has lost yet
+  if (!eval) {
+    for (int i = 0; i < bSize; i++) {
+      Piece pc = board.get(i);
+      double posVal = positionValue(pc, i);
+      // checks if the piece is defended
+      posVal += defCheck(board, i);
+      eval += pieceValue(pc) * posVal;
     }
-    eval += pieceValue(pc) * posVal;
   }
   
   return eval;
