@@ -132,7 +132,7 @@ void game(bool start) {
     if (state == NONE) {
       // send board to desktop if game is not over
       comm::send_board();
-      db("Waiting for computer's turn...")
+      db("Waiting for computer's turn...");
       comm::receive_board();
       state = endCheck(PLAYER); // check again
     }
