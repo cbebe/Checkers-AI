@@ -7,6 +7,8 @@ using namespace std;
 // change name to main when running program
 // int checkersAI() {
 int main() {
+  // assume Arduino is in /dev/ttyACM0
+  // if not, pass the port name as a string on the Commlink initializer
   CommLink comms; // start communication with Arduino
   cout << "Preparing communication... ";
   comms.confirm();

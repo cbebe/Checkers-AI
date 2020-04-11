@@ -55,18 +55,20 @@ Included Files:
 
 Accessories:
     * Arduino Mega Board (AMG)
+    * 3.5" TFT LCD touch screen
 
 Wiring Instructions:
-    * None needed
+    * Place the LCD display on the Arduino correctly by matching the pins
+      On each other
 
 Running Instructions:
     * Connect the Arduino to the PC and ensure that
-    the Arduino is using the proper serial port 
-    (/dev/ttyACM0 or -ACM1)
+      the Arduino is using the proper serial port 
+      (/dev/ttyACM0)
     
     * In the root folder, run 'make' to flash the firmware 
-    on the Arduino and compile the AI on the desktop.
-    The executable runs automatically 
+      on the Arduino and compile the AI on the desktop.
+      The executable runs automatically. 
 
 Notes on functions:
 
@@ -180,4 +182,6 @@ Notes on functions:
         - serialport.cpp: Unmodified program from eClass 
         
         * Makefile
-
+Assumptions:
+    The program assumes that the Arduino is connected to /dev/ttyACM0.
+    
