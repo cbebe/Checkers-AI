@@ -1,3 +1,10 @@
+// ---------------
+// comms.h
+// ---------------
+// Interface file for comms.cpp
+//
+
+
 #ifndef _COMMS_H_
 #define _COMMS_H_
 

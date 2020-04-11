@@ -1,3 +1,10 @@
+// ---------------
+// comms.cpp
+// ---------------
+// Contains all functions related to communication with the desktop
+//
+
+
 #include "comms.h"
 
 extern shared_vars shared;

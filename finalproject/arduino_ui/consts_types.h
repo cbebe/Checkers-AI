@@ -1,3 +1,10 @@
+// ---------------
+// consts_types.h
+// ---------------
+// Contains all constants, type definitions, and global variables
+// Also contains declarations of general functions used by the other modules
+//
+
 #ifndef _CONSTS_TYPES_H
 #define _CONSTS_TYPES_H
 

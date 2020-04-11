@@ -1,3 +1,10 @@
+// ---------------
+// game_mechanics.cpp
+// ---------------
+// Interface file for checks.cpp
+//
+
+
 #include "game_mechanics.h"
 
 extern shared_vars shared;

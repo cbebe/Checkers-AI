@@ -1,3 +1,9 @@
+// ---------------
+// checkers.cpp
+// ---------------
+// Main function for the Arduino
+//
+
 #include <Arduino.h>
 #include <MCUFRIEND_kbv.h>
 #include <Adafruit_GFX.h>

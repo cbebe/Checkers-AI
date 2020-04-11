@@ -1,3 +1,9 @@
+// ---------------
+// checks.h
+// ---------------
+// Interface file for checks.cpp
+//
+
 #ifndef _CHECKS_H
 #define _CHECKS_H
 

@@ -1,3 +1,10 @@
+// ---------------
+// draw.cpp
+// ---------------
+// Contains all functions related to printing of the TFT screen
+//
+
+
 #include "draw.h"
 
 extern shared_vars shared;

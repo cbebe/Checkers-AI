@@ -64,9 +64,9 @@ Running Instructions:
     the Arduino is using the proper serial port 
     (/dev/ttyACM0 or -ACM1)
     
-    * In arduino_ui folder, type `make upload` in terminal
-    and in desktop_ai folder, type in `make` followed by
-    the executable, `./checkersai`
+    * In the root folder, run 'make' to flash the firmware 
+    on the Arduino and compile the AI on the desktop.
+    The executable runs automatically 
 
 Notes on functions:
 

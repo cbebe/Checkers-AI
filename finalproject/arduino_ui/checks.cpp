@@ -1,3 +1,9 @@
+// ---------------
+// checks.cpp
+// ---------------
+// Contains all functions that check for moves
+//
+
 #include "checks.h"
 
 extern shared_vars shared;
