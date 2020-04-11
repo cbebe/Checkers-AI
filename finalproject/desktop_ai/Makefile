@@ -1,3 +1,5 @@
+# Makefile for the desktop AI
+
 CC := g++
 # selects all the files that end with .cpp in src/
 SRC := $(wildcard src/*.cpp)

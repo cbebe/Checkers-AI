@@ -1,3 +1,9 @@
+// ---------------
+// move.h
+// ---------------
+// Interface file for move.cpp
+//
+
 #ifndef _MOVE_H
 #define _MOVE_H
 

@@ -1,3 +1,9 @@
+// ---------------
+// touchs.h
+// ---------------
+// Interface file for touchs.cpp
+//
+
 #ifndef _TOUCHS_H
 #define _TOUCHS_H
 

@@ -1,3 +1,9 @@
+// ---------------
+// move.cpp
+// ---------------
+// Contains all functions related to moving the pieces on the board
+//
+
 #include "move.h"
 
 extern shared_vars shared;

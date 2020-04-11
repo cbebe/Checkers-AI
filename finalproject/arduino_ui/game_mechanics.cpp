@@ -1,7 +1,7 @@
 // ---------------
 // game_mechanics.cpp
 // ---------------
-// Interface file for checks.cpp
+// Contains all functions related to game mechanics
 //
 
 

@@ -1,3 +1,9 @@
+// ---------------
+// game_states.h
+// ---------------
+// Interface file for game_states.cpp
+//
+
 #ifndef _GAME_STATES_H
 #define _GAME_STATES_H
 

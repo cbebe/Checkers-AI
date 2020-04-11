@@ -1,3 +1,9 @@
+// ---------------
+// menu.cpp
+// ---------------
+// Contains all functions related to the menu screen
+//
+
 #include "menu.h"
 
 extern shared_vars shared;

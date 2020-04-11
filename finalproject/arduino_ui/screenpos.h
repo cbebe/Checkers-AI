@@ -1,3 +1,10 @@
+// ---------------
+// screenpos.h
+// ---------------
+// Definition of screenPos struct
+//
+
+
 #ifndef _SCREENPOS_H
 #define _SCREENPOS_H
 

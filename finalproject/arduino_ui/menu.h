@@ -1,3 +1,9 @@
+// ---------------
+// menu.h
+// ---------------
+// Interface file for menu.cpp
+//
+
 #ifndef _MENU_H_
 #define _MENU_H_
 

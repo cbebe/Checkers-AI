@@ -1,3 +1,9 @@
+// ---------------
+// touchs.cpp
+// ---------------
+// Contains all functions related to the touch screen
+//
+
 #include "touchs.h"
 using namespace touch;
 

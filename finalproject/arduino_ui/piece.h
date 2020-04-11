@@ -1,3 +1,9 @@
+// ---------------
+// piece.h
+// ---------------
+// Interface file for piece.cpp
+//
+
 #ifndef __PIECE_H
 #define __PIECE_H
 

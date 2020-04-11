@@ -1,3 +1,9 @@
+// ---------------
+// game_mechanics.h
+// ---------------
+// Interface file for game_mechanics.cpp
+//
+
 #ifndef _GAME_MECHANICS_H
 #define _GAME_MECHANICS_H
 

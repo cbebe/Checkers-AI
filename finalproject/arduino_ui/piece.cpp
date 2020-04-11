@@ -1,3 +1,9 @@
+// ---------------
+// piece.cpp
+// ---------------
+// Contains all functions related to pieces on the board
+//
+
 #include "piece.h"
 
 extern shared_vars shared; 
@@ -18,8 +24,7 @@ int8_t nspiece::touch() {
   if ((tp.y > off_y + b_width || tp.y < off_y) || 
       (tp.x > off_x + b_width || tp.x < off_x)) {return -2;}
 
-  /* NOTE: The math here might be a bit hard to understand
-  so just imagine the 8x8 board divided into 16 regions
+  /* NOTE: The 8x8 board is divided into 16 regions
   and those 16 regions each have a 2x2 matrix.
   The first two operations (fsRow and fsCol) determine which
   part of a matrix was touched. The second two then determine 

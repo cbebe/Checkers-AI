@@ -1,3 +1,9 @@
+// ---------------
+// game_states.cpp
+// ---------------
+// Contains all functions related to game states
+//
+
 #include "game_states.h"
 
 extern shared_vars shared;
