@@ -16,3 +16,4 @@ Rules
   * Kings may combine jumps in several directions, forward and backward, on the same turn. Single pieces may shift direction 
   diagonally during a multiple capture turn, but must always jump forward (toward the opponent).
 
+Reference: https://www.thesprucecrafts.com/play-checkers-using-standard-rules-409287
