@@ -186,4 +186,6 @@ Notes on functions:
         * Makefile
 Assumptions:
     The program assumes that the Arduino is connected to /dev/ttyACM0.
+    The game rules assume no backward jumps for non-pawn pieces unless doing multiple jumps.
+    Every piece also must jump when it is possible to do so.
     
