@@ -10,7 +10,7 @@
 #include "consts_types.h"
 #include "game_mechanics.h"
 #include "menu.h"
-#include "comms.h"
+#include "Comms.h"
 
 void game(bool start); // starts the game
 

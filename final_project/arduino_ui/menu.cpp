@@ -97,6 +97,6 @@ bool menuScreen()
   int difficulty;
   processTS(start, difficulty); // lets player change the options
   // send options to Serial
-  comm::start_game(start, difficulty);
+  shared.comm.start_game(start, difficulty);
   return start;
 }

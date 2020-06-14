@@ -1,42 +1,16 @@
 // ---------------
-// comms.cpp
+// Comms.cpp
 // ---------------
-// Contains all functions related to communication with the desktop
+// Class for communicating with the desktop
 //
 
-#include "comms.h"
+#include "Comms.h"
 
 extern shared_vars shared;
 
-// reads line from serial until newline char is received
-// does not include newline char in string
-bool read_line(char *buff, uint32_t timeout)
-{
-
-  uint32_t start = millis(), current = 0;
-  int8_t len = 0;
-  while (current < timeout)
-  {
-    if (Serial.available())
-    {
-      char c = Serial.read();
-      if (c == '\n' || c == '\r')
-        return true;
-      else
-      {
-        buff[len++] = c;
-        buff[len] = 0; // null terminator
-      }
-    }
-    current = millis() - start;
-  }
-
-  return false;
-}
-
 // sets up communication with desktop
 // returns true if successful
-bool comm::setup()
+bool Comms::setup()
 {
   char buff[3];
   Serial.println("A");
@@ -46,8 +20,24 @@ bool comm::setup()
   return false;
 }
 
+// starts game with AI, sending the difficulty
+// and whether the AI starts first
+void Comms::start_game(bool start, int difficulty)
+{
+  char startMsg[10];
+  char turn;
+  // start is true when AI goes first
+  turn = start ? 'F' : 'S';
+
+  // formats the string according to the protocol
+  sprintf(startMsg, "S%c%d", turn, difficulty);
+
+  // send the starting message to Serial
+  Serial.println(startMsg);
+}
+
 // receives board state from Serial
-void comm::receive_board()
+void Comms::receive_board()
 {
   char buff[c::b_size + 2];
   if (read_line(buff, 10000))
@@ -69,7 +59,7 @@ void comm::receive_board()
 }
 
 // sends board state
-void comm::send_board()
+void Comms::send_board()
 {
   char b[c::b_size];
   for (int8_t i = 0; i < c::b_size; i++)
@@ -78,24 +68,8 @@ void comm::send_board()
   Serial.println(b); // send board to serial
 }
 
-// starts game with AI, sending the difficulty
-// and whether the AI starts first
-void comm::start_game(bool start, int difficulty)
-{
-  char startMsg[10];
-  char turn;
-  // start is true when AI goes first
-  turn = start ? 'F' : 'S';
-
-  // formats the string according to the protocol
-  sprintf(startMsg, "S%c%d", turn, difficulty);
-
-  // send the starting message to Serial
-  Serial.println(startMsg);
-}
-
 // ends game
-void comm::end_game()
+void Comms::end_game()
 {
   Serial.println("E"); // end game flag to restart ai
 }

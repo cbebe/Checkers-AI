@@ -7,11 +7,11 @@
 #ifndef _COMMS_H_
 #define _COMMS_H_
 
-#include "consts_types.h"
 #include "move.h"
 
-namespace comm
+class Comms
 {
+public:
   // sets up communication with the desktop
   bool setup();
   // starts the game with the AI
@@ -22,6 +22,9 @@ namespace comm
   void send_board();
   // ends the game with the AI
   void end_game();
-} // namespace comm
+
+private:
+  bool readline(char *buff, uint32_t timeout);
+};
 
 #endif

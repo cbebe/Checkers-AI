@@ -12,6 +12,7 @@
 #include <MCUFRIEND_kbv.h>
 #include <SPI.h>
 #include <SD.h>
+#include "Comms.h"
 
 #include "screenpos.h"
 
@@ -22,12 +23,14 @@ typedef enum win
   PLAYERW,
   DRAW
 } Win;
+
 typedef enum selected
 {
   NO_PIECE,
   PIECE,
   DONE
 } Selected;
+
 typedef enum piece_t
 {
   EMPTY,
@@ -37,6 +40,7 @@ typedef enum piece_t
   BK,
   OUT
 } Piece;
+
 // moves that can be made by a piece
 typedef enum move
 {
@@ -79,10 +83,10 @@ namespace c
 // struct that stores all shared variables
 struct shared_vars
 {
-  MCUFRIEND_kbv *tft; // the tft display
-  // array to store all board positions
-  Piece board[c::b_size];
-  int8_t currentPc; // current selected piece
+  MCUFRIEND_kbv *tft;     // the tft display
+  Piece board[c::b_size]; // array to store all board positions
+  int8_t currentPc;       // current selected piece
+  Comms *comm;            // desktop communication
 };
 
 // returns the tile value of a board position

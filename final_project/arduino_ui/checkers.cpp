@@ -16,6 +16,7 @@
 shared_vars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
+Comms comm;
 
 // for good ol' printf debugging
 void db(const char *msg)
@@ -72,7 +73,8 @@ void setup()
       ; // Just wait, stuff exploded.
 
   db("Setting up Serial Port with desktop...");
-  while (!comm::setup())
+  shared.comm = comm;
+  while (!comm.setup())
     ;
   db("Done!");
   delay(500);
