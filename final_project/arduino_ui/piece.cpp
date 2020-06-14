@@ -18,9 +18,9 @@ int8_t nspiece::touch()
   // namespace only used when not using would
   // lead to lesser readability
   using namespace c;
-  screenPos tp = touch::process();
+  screenPos tp = Touch.process();
   // if touch screen was untouched
-  if (tp.x == touch::untch)
+  if (tp.x == Touch.untouched)
   {
     return -1;
   }

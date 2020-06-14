@@ -35,7 +35,7 @@ void processTS(bool &turn, int &difficulty)
   bool done = false;
   while (!done)
   {
-    screenPos t = touch::process();
+    screenPos t = Touch.process();
     // select the difficulty
     if (button(t, dBtn, {box, box}))
     {
@@ -45,7 +45,7 @@ void processTS(bool &turn, int &difficulty)
       else
         printText(difftxt, imp);
 
-      touch::hold();
+      Touch.hold();
     }
     // select who moves first
     if (button(t, fBtn, {box, box}))
@@ -56,14 +56,14 @@ void processTS(bool &turn, int &difficulty)
       else
         printText(firsttxt, player);
 
-      touch::hold();
+      Touch.hold();
     }
 
     // done selecting
     if (button(t, sBtn, sBtnD))
     {
       done = true;
-      touch::hold();
+      Touch.hold();
     }
   }
   // lmao

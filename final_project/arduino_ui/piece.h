@@ -11,7 +11,7 @@
 #include <MCUFRIEND_kbv.h>
 #include "consts_types.h"
 
-#include "touchs.h"
+#include "Touch.h"
 #include "draw.h"
 #include "checks.h"
 
