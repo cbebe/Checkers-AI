@@ -1,21 +1,27 @@
-# To do
+# Arduino Checkers with AI
 
-## Communication with Arduino
+An Arduino Checkers game with an opponent Minimax AI controlled by a Linux desktop
 
-- You can do this part once you figure out how to use serial communication between the desktop and Arduino
+## How it Works
 
-## AI decision making
+1. The Arduino displays an interactive game board in which the player can use make moves.
+2. When a move is made, the Arduino sends the board to the desktop through the Serial port.
+3. The desktop evaluates the best move to make using the Minimax algorithm and the provided heuristics.
+4. The desktop sends the new board to the Arduino using the Serial port.
+5. The Arduino displays the changes on the screen and prompts the user for a move.
+6. Repeat until the game ends with one side winning or a draw.
 
-- We kinda need to find a better way for our AI to decide on which moves to make
+## Challenges
 
-- NVM we are sticking with minimax
+- Writing the game engine from scratch using previous checkers knowledge
+- Creating the board heuristics that would lead to a challenging opponent AI (failed :sad)
 
-## Heuristics
+## Future Plans (?)
 
-- Pawn: 5 , King: 8
-- Back row: 4, Middle Box: 3
-- Middle two rows: 1, Vulnerable: -3, Defended: 3
+- Transform the Arduino code from using namespaces to classes
+- Create a non-Linux setup so the game can be played on Windows as well
+- Consider other options for the AI (better heuristics, machine learning?)
 
-## Tree searching
+## Created By
 
-[Minimax and Monte Carlo Tree Search (MCTS)](https://towardsdatascience.com/game-ais-with-minimax-and-monte-carlo-tree-search-af2a177361b0)
+Charles Ancheta and Poulomi Ganguly as the Final Project for CMPUT 275
