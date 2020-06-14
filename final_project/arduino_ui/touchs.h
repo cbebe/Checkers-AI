@@ -15,7 +15,8 @@
 #include "screenpos.h"
 
 // wrap const values in namespace
-namespace touch {
+namespace touch
+{
   // touch screen dimensions
   const uint16_t tft_height = 320;
   const uint16_t tft_width = 480;
@@ -35,13 +36,12 @@ namespace touch {
   // thresholds to determine if there was a touch
   const uint16_t minpr = 10;
   const uint16_t maxpr = 1000;
-  
+
   const int16_t untch = -100; // assigned if not touched
-  
+
   screenPos process();
   void wait(); // waits for user to touch the screen;
   void hold(); // freeze the Arduino when screen is touched
-};
-
+};             // namespace touch
 
 #endif

@@ -16,11 +16,12 @@
 #include "checks.h"
 
 // namespace for piece-related functions
-namespace nspiece {
+namespace nspiece
+{
   // returns the position of the touched tile
   int8_t touch();
   // remove a piece from the board
   void remove(int8_t piecePos);
-}
+} // namespace nspiece
 
 #endif

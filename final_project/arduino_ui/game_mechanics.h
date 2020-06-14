@@ -11,8 +11,8 @@
 #include "move.h"
 
 // lets player choose a move
-void choose_move(selected& pieceSel, move_st& moves, move type = MOVE, 
-                int8_t *capture = NULL, int8_t capp = 0);
+void choose_move(selected &pieceSel, move_st &moves, move type = MOVE,
+                 int8_t *capture = NULL, int8_t capp = 0);
 
 // implements must capture rule
 // returns true if player had to capture
