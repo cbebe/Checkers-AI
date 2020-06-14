@@ -22,6 +22,6 @@ An Arduino Checkers game with an opponent Minimax AI controlled by a Linux deskt
 - Create a non-Linux setup so the game can be played on Windows as well
 - Consider other options for the AI (better heuristics, machine learning?)
 
-## Created By
+## Authors
 
-Charles Ancheta and Poulomi Ganguly as the Final Project for CMPUT 275
+Created by [Charles Ancheta](https://github.com/charlesancheta) and [Poulomi Ganguly](https://github.com/poulomi-g) as the Final Project for CMPUT 275
