@@ -1,5 +1,5 @@
 # build files
-build-mega2560/
-obj/
+build*
+obj
 # config
-/.vscode/
+.vscode

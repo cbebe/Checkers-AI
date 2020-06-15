@@ -30,12 +30,13 @@ bool button(screenPos t, screenPos b1, screenPos b2)
 // lets player choose some options on the touch screen
 void processTS(bool &turn, int &difficulty)
 {
+  Touch touch = *shared.touch;
   turn = true;      // true means bot is first
   bool diff = true; // true means easy
   bool done = false;
   while (!done)
   {
-    screenPos t = Touch.process();
+    screenPos t = touch.process();
     // select the difficulty
     if (button(t, dBtn, {box, box}))
     {
@@ -45,7 +46,7 @@ void processTS(bool &turn, int &difficulty)
       else
         printText(difftxt, imp);
 
-      Touch.hold();
+      touch.hold();
     }
     // select who moves first
     if (button(t, fBtn, {box, box}))
@@ -56,14 +57,14 @@ void processTS(bool &turn, int &difficulty)
       else
         printText(firsttxt, player);
 
-      Touch.hold();
+      touch.hold();
     }
 
     // done selecting
     if (button(t, sBtn, sBtnD))
     {
       done = true;
-      Touch.hold();
+      touch.hold();
     }
   }
   // lmao
@@ -97,6 +98,6 @@ bool menuScreen()
   int difficulty;
   processTS(start, difficulty); // lets player change the options
   // send options to Serial
-  shared.comm.start_game(start, difficulty);
+  shared.comm->start_game(start, difficulty);
   return start;
 }

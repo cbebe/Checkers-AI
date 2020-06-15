@@ -12,9 +12,9 @@
 #include <MCUFRIEND_kbv.h>
 #include <SPI.h>
 #include <SD.h>
-#include "Comms.h"
 
 #include "screenpos.h"
+#include "Touch.h"
 
 typedef enum win
 {
@@ -80,6 +80,8 @@ namespace c
 
 }; // namespace c
 
+#include "Comms.h"
+
 // struct that stores all shared variables
 struct shared_vars
 {
@@ -87,6 +89,7 @@ struct shared_vars
   Piece board[c::b_size]; // array to store all board positions
   int8_t currentPc;       // current selected piece
   Comms *comm;            // desktop communication
+  Touch *touch;           // touchscreen
 };
 
 // returns the tile value of a board position

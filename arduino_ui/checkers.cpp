@@ -80,17 +80,10 @@ void setup()
   delay(500);
 }
 
-int main()
+void loop()
 {
-  // set up Arduino
-  setup();
-
-  while (true)
-  {
-    // menu screen to let player choose some options
-    bool start = menuScreen();
-    gameInit();  // initialize board
-    game(start); // start game
-  }
-  return 0;
+  // menu screen to let player choose some options
+  bool start = menuScreen();
+  gameInit();  // initialize board
+  game(start); // start game
 }

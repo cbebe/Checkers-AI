@@ -8,6 +8,35 @@
 
 extern shared_vars shared;
 
+// reads line from serial until newline char is received
+// does not include newline char in string
+bool read_line(char *buff, uint32_t timeout)
+{
+
+  uint32_t start = millis(), current = 0;
+  int8_t len = 0;
+  while (current < timeout)
+  {
+    if (Serial.available())
+    {
+      char c = Serial.read();
+      if (c == '\n' || c == '\r')
+      {
+        return true;
+      }
+      else
+      {
+        buff[len] = c;
+        len++;
+        buff[len] = 0; // null terminator
+      }
+    }
+    current = millis() - start;
+  }
+
+  return false;
+}
+
 // sets up communication with desktop
 // returns true if successful
 bool Comms::setup()

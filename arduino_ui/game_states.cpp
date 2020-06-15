@@ -138,7 +138,7 @@ void game(bool start)
 
   // if the bot is going first
   if (start)
-    shared.comm.receive_board();
+    shared.comm->receive_board();
 
   while (state == NONE)
   {
@@ -148,14 +148,14 @@ void game(bool start)
     if (state == NONE)
     {
       // send board to desktop if game is not over
-      shared.comm.send_board();
+      shared.comm->send_board();
       db("Waiting for computer's turn...");
-      shared.comm.receive_board();
+      shared.comm->receive_board();
       state = endCheck(PLAYER); // check again
     }
   }
   game_result(state);
-  shared.comm.end_game();
+  shared.comm->end_game();
   delay(1000);
   // wait for player to touch screen
   touch::wait();

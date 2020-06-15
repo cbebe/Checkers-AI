@@ -6,8 +6,6 @@
 
 #include "Touch.h"
 
-TouchScreen ts = TouchScreen(xp, yp, xm, ym, 300);
-
 // touch screen pins, obtained from the documentation
 const uint8_t yp = A3;
 const uint8_t xm = A2;
@@ -23,6 +21,8 @@ const uint16_t ts_maxy = 920;
 // thresholds to determine if there was a touch
 const uint16_t min_pressure = 10;
 const uint16_t max_pressure = 1000;
+
+TouchScreen ts = TouchScreen(xp, yp, xm, ym, 300);
 
 // Processes touch screen input
 // Returns the coordinates of the touched point
