@@ -24,4 +24,4 @@ An Arduino Checkers game with an opponent Minimax AI controlled by a Linux deskt
 
 ## Authors
 
-Created by [Charles Ancheta](https://github.com/charlesancheta) and [Poulomi Ganguly](https://github.com/poulomi-g) as the Final Project for CMPUT 275
+Created by [Charles Ancheta](https://github.com/cbebe) and [Poulomi Ganguly](https://github.com/poulomi-g) as the Final Project for CMPUT 275
