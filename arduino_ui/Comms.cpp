@@ -6,8 +6,6 @@
 
 #include "Comms.h"
 
-extern shared_vars shared;
-
 // reads line from serial until newline char is received
 // does not include newline char in string
 bool read_line(char *buff, uint32_t timeout)
@@ -66,33 +64,17 @@ void Comms::start_game(bool start, int difficulty)
 }
 
 // receives board state from Serial
-void Comms::receive_board()
+void Comms::receive_board(char *buffer)
 {
-  char buff[c::b_size + 2];
-  if (read_line(buff, 10000))
-  {
-    // loop over the board char array to copy it
-    for (int8_t i = 0; i < c::b_size; i++)
-    {
-      // casting char to enum piece_t
-      Piece comp = (Piece)(buff[i] - '0');
-      // change the board if there are differences
-      if (comp != board(i))
-      {
-        draw::clear(i); // clears tile
-        shared.board[i] = comp;
-        draw::piece(i); // replaces with new piece
-      }
-    }
-  }
+  read_line(buffer, 10000);
 }
 
 // sends board state
-void Comms::send_board()
+void Comms::send_board(Piece *board)
 {
   char b[c::b_size];
   for (int8_t i = 0; i < c::b_size; i++)
-    b[i] = (char)shared.board[i] + '0'; // casting enum piece_t to char
+    b[i] = (char)board[i] + '0'; // casting enum piece_t to char
 
   Serial.println(b); // send board to serial
 }

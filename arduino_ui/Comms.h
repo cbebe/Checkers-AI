@@ -7,7 +7,7 @@
 #ifndef _COMMS_H_
 #define _COMMS_H_
 
-#include "move.h"
+#include "consts_types.h"
 
 class Comms
 {
@@ -17,9 +17,9 @@ public:
   // starts the game with the AI
   void start_game(bool start, int difficulty);
   // receive board from Serial
-  void receive_board();
+  void receive_board(char *buffer);
   // send board to Serial
-  void send_board();
+  void send_board(Piece *board);
   // ends the game with the AI
   void end_game();
 

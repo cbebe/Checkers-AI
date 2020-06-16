@@ -1,9 +1,8 @@
 #include "consts_types.h"
 #include <MCUFRIEND_kbv.h>
 #include <Adafruit_GFX.h>
-#include <SPI.h>
-#include <SD.h>
 
+#include "shared.h"
 #include "game_states.h"
 
 // shared variables
@@ -62,11 +61,6 @@ void setup()
 
   Serial.begin(9600);
   Serial.flush();
-
-  // initialize SD card
-  if (!SD.begin(c::sd_cs))
-    while (1)
-      ; // Just wait, stuff exploded.
 
   db("Setting up Serial Port with desktop...");
   shared.comm = &comm;

@@ -25,6 +25,7 @@ namespace draw
   void mark(int8_t pos);
   // clear the tile of marks/pieces
   void clear(int8_t pos);
+  void refresh_board(char *buffer);
 } // namespace draw
 
 #endif

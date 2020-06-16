@@ -132,13 +132,20 @@ void game_result(Win state)
     db("DRAW! TOUCH TO PLAY AGAIN.");
 }
 
+void get_board_from_bot()
+{
+  char buff[c::b_size + 2];
+  shared.comm->receive_board(buff);
+  draw::refresh_board(buff);
+}
+
 void game(bool start)
 {
   Win state = NONE;
 
   // if the bot is going first
   if (start)
-    shared.comm->receive_board();
+    get_board_from_bot();
 
   while (state == NONE)
   {
@@ -148,9 +155,9 @@ void game(bool start)
     if (state == NONE)
     {
       // send board to desktop if game is not over
-      shared.comm->send_board();
+      shared.comm->send_board(shared.board);
       db("Waiting for computer's turn...");
-      shared.comm->receive_board();
+      get_board_from_bot();
       state = endCheck(PLAYER); // check again
     }
   }
@@ -158,5 +165,5 @@ void game(bool start)
   shared.comm->end_game();
   delay(1000);
   // wait for player to touch screen
-  touch::wait();
+  shared.touch->wait();
 }

@@ -5,6 +5,7 @@
 //
 
 #include "draw.h"
+#include "shared.h"
 
 extern shared_vars shared;
 
@@ -105,4 +106,21 @@ void draw::mark(int8_t pos)
   screenPos dp = draw::position(pos);
   shared.tft->drawCircle(dp.x, dp.y, c::pc_rad / 2, TFT_RED);
   shared.tft->drawCircle(dp.x, dp.y, c::pc_rad / 2 + 1, TFT_RED);
+}
+
+void draw::refresh_board(char *buffer)
+{
+  // loop over the board char array to copy it
+  for (int8_t i = 0; i < c::b_size; i++)
+  {
+    // casting char to enum piece_t
+    Piece comp = (Piece)(buffer[i] - '0');
+    // change the board if there are differences
+    if (comp != board(i))
+    {
+      draw::clear(i); // clears tile
+      shared.board[i] = comp;
+      draw::piece(i); // replaces with new piece
+    }
+  }
 }

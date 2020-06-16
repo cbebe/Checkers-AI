@@ -8,6 +8,7 @@
 #define _CHECKS_H
 
 #include "consts_types.h"
+#include "shared.h"
 
 // these functions alter the move struct/array
 namespace check

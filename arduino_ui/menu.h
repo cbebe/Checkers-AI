@@ -8,6 +8,7 @@
 #define _MENU_H_
 
 #include "consts_types.h"
+#include "shared.h"
 #include "Comms.h"
 
 // consts for the menu screen
