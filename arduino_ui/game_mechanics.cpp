@@ -7,7 +7,6 @@
 #include "game_mechanics.h"
 
 extern shared_vars shared;
-Draw draw;
 
 /* 
 int8_t checkMustCapture(int8_t *capture):
@@ -17,6 +16,7 @@ returns the number of pieces that can capture
 */
 int8_t checkMustCapture(int8_t *captureArray)
 {
+  Check check;
   int8_t numberOfCapturingPieces = 0; // number of pieces that can capture
   for (int i = 0; i < c::b_size; i++)
   {
@@ -24,9 +24,9 @@ int8_t checkMustCapture(int8_t *captureArray)
     {
       move_st moves = c::empty_m;
       // check which pieces can capture
-      check::capture(i, moves);
-      check::backwards(i, moves);
-      if (has::captures(moves))
+      check.checkCapture(i, moves);
+      check.checkBackwards(i, moves);
+      if (check.hasCaptures(moves))
         captureArray[numberOfCapturingPieces++] = i;
     }
   }
@@ -36,6 +36,7 @@ int8_t checkMustCapture(int8_t *captureArray)
 // show/hide which pieces can capture
 void show_cap(int8_t *captureArray, int8_t numberOfCapturingPieces, bool show)
 {
+  Draw draw;
   for (int i = 0; i < numberOfCapturingPieces; i++)
     if (show)
       draw.highlight(captureArray[i], true); // show that the piece can capture
@@ -52,6 +53,7 @@ void attempt_move(Selected &pieceSel, int8_t newPos,
                   move_st &moves, move type,
                   int8_t *captureArray, int8_t numberOfCapturingPieces)
 {
+  Draw draw;
   // do nothing if no piece was selected
   if (pieceSel == PIECE)
   {
@@ -102,6 +104,7 @@ void choose_move(Selected &pieceSel, move_st &moves,
                  move type, int8_t *captureArray,
                  int8_t numberOfCapturingPieces)
 {
+  Draw draw;
   int8_t pos = nspiece::touch();
   // loop again if nothing was touched
   if (pos < 0)

@@ -21,7 +21,6 @@ void gameInit()
   tft->fillRect(off_x, off_y, b_width, b_width, b_dark);
   // print the light tiles
   for (int8_t i = 0; i < 8; i += 2)
-  {
     for (int8_t j = 0; j < 8; j += 2)
     {
       tft->fillRect(off_x + (i * b_sq),
@@ -31,7 +30,6 @@ void gameInit()
                     off_y + ((j + 1) * b_sq),
                     b_sq, b_sq, b_light);
     }
-  }
   // initialize empty spaces on board
   for (int8_t i = num_pcs; i < 20; i++)
     shared.board[i] = EMPTY;
@@ -47,8 +45,9 @@ void gameInit()
     shared.board[i + 20] = PLAYER;
 
     // draw pieces on board
-    draw::piece(i);
-    draw::piece(i + 20);
+    Draw draw;
+    draw.piece(i);
+    draw.piece(i + 20);
   }
 }
 
@@ -87,9 +86,9 @@ Win checkPieces()
   }
 
   if (bot == 0)
-    return PLAYERW;
+    return PLAYER_WIN;
   else if (player == 0)
-    return BOTW;
+    return BOT_WIN;
   return NONE; // continue game
 }
 
@@ -125,9 +124,9 @@ Win endCheck(Piece side)
 // prints the result of the game on the screen
 void game_result(Win state)
 {
-  if (state == PLAYERW)
+  if (state == PLAYER_WIN)
     db("PLAYER WON! TOUCH TO PLAY AGAIN.");
-  else if (state == BOTW)
+  else if (state == BOT_WIN)
     db("BOT WON! TOUCH TO PLAY AGAIN.");
   else if (state == DRAW)
     db("DRAW! TOUCH TO PLAY AGAIN.");
@@ -135,9 +134,10 @@ void game_result(Win state)
 
 void get_board_from_bot()
 {
+  Draw draw;
   char buff[c::b_size + 2];
   comm.receive_board(buff);
-  draw::refresh_board(buff);
+  draw.refresh_board(buff);
 }
 
 void game(bool start)

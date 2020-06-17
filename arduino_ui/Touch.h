@@ -14,14 +14,14 @@
 
 #include "screenpos.h"
 
+// touch screen dimensions
+#define TFT_HEIGHT 320
+#define TFT_WIDTH 480
+#define UNTOUCHED -100 // assigned if not touched
+
 class Touch
 {
 public:
-  // touch screen dimensions
-  const uint16_t tft_height = 320;
-  const uint16_t tft_width = 480;
-  const int16_t untouched = -100; // assigned if not touched
-
   screenPos process();
   void wait(); // waits for user to touch the screen;
   void hold(); // freeze the Arduino when screen is touched

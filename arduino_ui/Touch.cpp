@@ -36,25 +36,25 @@ screenPos Touch::process()
   if (touch.z < min_pressure || touch.z > max_pressure)
   {
     // return an arbitrarily large negative number
-    tp.x = untouched;
-    tp.y = untouched;
+    tp.x = UNTOUCHED;
+    tp.y = UNTOUCHED;
     return tp;
   }
-  tp.x = map(touch.y, ts_minx, ts_maxx, tft_width - 1, 0);
-  tp.y = map(touch.x, ts_miny, ts_maxy, tft_height - 1, 0);
+  tp.x = map(touch.y, ts_minx, ts_maxx, TFT_WIDTH - 1, 0);
+  tp.y = map(touch.x, ts_miny, ts_maxy, TFT_HEIGHT - 1, 0);
   return tp;
 }
 
 // waits for user to touch the screen
 void Touch::wait()
 {
-  while (process().x == untouched)
+  while (process().x == UNTOUCHED)
     ;
 }
 
 // hold the Arduino until screen is not touched
 void Touch::hold()
 {
-  while (process().x != untouched)
+  while (process().x != UNTOUCHED)
     ;
 }

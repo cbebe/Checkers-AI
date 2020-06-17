@@ -22,6 +22,8 @@ void choose_move(selected &pieceSel,
 bool must_capture();
 
 // show/hide which pieces can capture
-void show_cap(int8_t *captureArray, int8_t numberOfCapturingPieces, bool show = true);
+void show_cap(int8_t *captureArray,
+              int8_t numberOfCapturingPieces,
+              bool show = true);
 
 #endif

@@ -16,8 +16,8 @@
 typedef enum win
 {
   NONE,
-  BOTW,
-  PLAYERW,
+  BOT_WIN,
+  PLAYER_WIN,
   DRAW
 } Win;
 

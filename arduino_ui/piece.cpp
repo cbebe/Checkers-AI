@@ -21,7 +21,7 @@ int8_t nspiece::touch()
   using namespace c;
   screenPos tp = touch.process();
   // if touch screen was untouched
-  if (tp.x == touch.untouched)
+  if (tp.x == UNTOUCHED)
     return -1;
   // if touch screen was out of bounds
   if ((tp.y > off_y + b_width || tp.y < off_y) ||

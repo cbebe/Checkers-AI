@@ -7,7 +7,6 @@
 #include "move.h"
 
 extern shared_vars shared;
-Draw draw;
 Check check;
 
 // captures a piece
@@ -31,6 +30,7 @@ void nsmove::capture(int8_t oldPos, int8_t newPos)
 
 void nsmove::chain(int8_t pos)
 {
+  Draw draw;
   move_st moves = c::empty_m;
   check.checkCapture(pos, moves);
   // do nothing if there are no moves
@@ -71,6 +71,7 @@ move nsmove::legal(int8_t pos, int8_t newPos, const move_st &moves)
 // moves a piece from one position to another
 void nsmove::piece(int8_t oldPos, int8_t newPos)
 {
+  Draw draw;
   Piece p = board(oldPos);
   // now tile is empty
   draw.clear(oldPos);
@@ -92,6 +93,7 @@ void nsmove::piece(int8_t oldPos, int8_t newPos)
 // show valid moves on the screen
 void nsmove::show(int8_t pos, const move_st &moves)
 {
+  Draw draw;
   // adjacent tile offsets vary depending on row
   int8_t os[4];
   tileOS(pos, os);
