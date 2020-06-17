@@ -8,6 +8,7 @@
 #define _MOVE_H
 
 #include "piece.h"
+#include "Check.h"
 
 // namespace for move-related functions
 namespace nsmove

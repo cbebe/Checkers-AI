@@ -9,7 +9,6 @@
 shared_vars shared;
 // display and touch screen init
 MCUFRIEND_kbv tft;
-Comms comm;
 Touch touch;
 
 // for good ol' printf debugging
@@ -54,7 +53,6 @@ void setup()
 
   // initialize display
   shared.tft = &tft;
-  shared.touch = &touch;
   uint16_t ID = tft.readID();
   tft.begin(ID);
   tft.setRotation(1);
@@ -63,7 +61,7 @@ void setup()
   Serial.flush();
 
   db("Setting up Serial Port with desktop...");
-  shared.comm = &comm;
+  Comms comm;
   while (!comm.setup())
     ;
   db("Done!");

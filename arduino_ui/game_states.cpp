@@ -7,6 +7,7 @@
 #include "game_states.h"
 
 extern shared_vars shared;
+Comms comm;
 
 // initialize game
 void gameInit()
@@ -135,7 +136,7 @@ void game_result(Win state)
 void get_board_from_bot()
 {
   char buff[c::b_size + 2];
-  shared.comm->receive_board(buff);
+  comm.receive_board(buff);
   draw::refresh_board(buff);
 }
 
@@ -155,15 +156,16 @@ void game(bool start)
     if (state == NONE)
     {
       // send board to desktop if game is not over
-      shared.comm->send_board(shared.board);
+      comm.send_board(shared.board);
       db("Waiting for computer's turn...");
       get_board_from_bot();
       state = endCheck(PLAYER); // check again
     }
   }
   game_result(state);
-  shared.comm->end_game();
+  comm.end_game();
   delay(1000);
   // wait for player to touch screen
-  shared.touch->wait();
+  Touch touch;
+  touch.wait();
 }

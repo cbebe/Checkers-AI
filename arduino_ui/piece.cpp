@@ -15,21 +15,18 @@ or a light tile was touched in the board
 Returns -2 if touch was out of bounds of the board */
 int8_t nspiece::touch()
 {
+  Touch touch;
   // namespace only used when not using would
   // lead to lesser readability
   using namespace c;
-  screenPos tp = shared.touch->process();
+  screenPos tp = touch.process();
   // if touch screen was untouched
-  if (tp.x == shared.touch->untouched)
-  {
+  if (tp.x == touch.untouched)
     return -1;
-  }
   // if touch screen was out of bounds
   if ((tp.y > off_y + b_width || tp.y < off_y) ||
       (tp.x > off_x + b_width || tp.x < off_x))
-  {
     return -2;
-  }
 
   /* NOTE: The 8x8 board is divided into 16 regions
   and those 16 regions each have a 2x2 matrix.
@@ -51,25 +48,23 @@ int8_t nspiece::touch()
   /* calculation for 4x4 matrix */
 
   // determines which region of the board was touched
-  int8_t regY = tp.y / (b_sq * 2);
-  int8_t regX = tp.x / (b_sq * 2);
+  int8_t regionY = tp.y / (b_sq * 2);
+  int8_t regionX = tp.x / (b_sq * 2);
 
   // multiplication is logically the same as AND
   // addition is logically the same as OR
   // checks if a light tile was touched
-  if ((fs_row * fs_col) == 1 ||
-      (fs_row + fs_col) == 0)
-  {
+  if ((fs_row * fs_col) == 1 || (fs_row + fs_col) == 0)
     return -1;
-  }
 
-  return regX + (8 * regY) + (4 * fs_row);
+  return regionX + (8 * regionY) + (4 * fs_row);
 }
 
 // remove a piece from the board
 void nspiece::remove(int8_t piecePos)
 {
+  Draw draw;
   // piece is captured
-  draw::clear(piecePos);
+  draw.clear(piecePos);
   shared.board[piecePos] = EMPTY;
 }

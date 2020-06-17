@@ -7,6 +7,7 @@
 #include "game_mechanics.h"
 
 extern shared_vars shared;
+Draw draw;
 
 /* 
 int8_t checkMustCapture(int8_t *capture):
@@ -14,9 +15,9 @@ Moves the positions of the pieces that
 can capture in the capture array and
 returns the number of pieces that can capture
 */
-int8_t checkMustCapture(int8_t *capture)
+int8_t checkMustCapture(int8_t *captureArray)
 {
-  int8_t capp = 0; // number of pieces that can capture
+  int8_t numberOfCapturingPieces = 0; // number of pieces that can capture
   for (int i = 0; i < c::b_size; i++)
   {
     if (board(i) == PLAYER || board(i) == PK)
@@ -26,23 +27,20 @@ int8_t checkMustCapture(int8_t *capture)
       check::capture(i, moves);
       check::backwards(i, moves);
       if (has::captures(moves))
-        capture[capp++] = i;
+        captureArray[numberOfCapturingPieces++] = i;
     }
   }
-  return capp;
+  return numberOfCapturingPieces;
 }
 
 // show/hide which pieces can capture
-void show_cap(int8_t *capture, int8_t capp, bool show)
+void show_cap(int8_t *captureArray, int8_t numberOfCapturingPieces, bool show)
 {
-
-  for (int i = 0; i < capp; i++)
-  {
+  for (int i = 0; i < numberOfCapturingPieces; i++)
     if (show)
-      draw::highlight(capture[i], true); // show that the piece can capture
+      draw.highlight(captureArray[i], true); // show that the piece can capture
     else
-      draw::piece(capture[i]); // redraw the piece to remove highlight
-  }
+      draw.piece(captureArray[i]); // redraw the piece to remove highlight
 }
 
 /* 
@@ -52,7 +50,7 @@ void show_cap(int8_t *capture, int8_t capp, bool show)
 */
 void attempt_move(Selected &pieceSel, int8_t newPos,
                   move_st &moves, move type,
-                  int8_t *capture, int8_t capp)
+                  int8_t *captureArray, int8_t numberOfCapturingPieces)
 {
   // do nothing if no piece was selected
   if (pieceSel == PIECE)
@@ -61,13 +59,13 @@ void attempt_move(Selected &pieceSel, int8_t newPos,
     move legal = nsmove::legal(shared.currentPc, newPos, moves);
     if (legal == type)
     {
-      draw::unhighlight(shared.currentPc); // remove move marks
+      draw.unhighlight(shared.currentPc); // remove move marks
       if (type == MOVE)
         nsmove::piece(shared.currentPc, newPos); // move piece
       else
       {
         // unhighlight the pieces that could capture
-        show_cap(capture, capp, false);
+        show_cap(captureArray, numberOfCapturingPieces, false);
         nsmove::capture(shared.currentPc, newPos);
       }
       shared.currentPc = -1; // now no piece is selected
@@ -80,29 +78,29 @@ void attempt_move(Selected &pieceSel, int8_t newPos,
 // returns true if the player had to capture
 bool must_capture()
 {
-  int8_t capture[c::num_pcs];
-  // number of pieces that can capture
-  // with capture array listing the positions
-  int8_t capp = checkMustCapture(capture);
+  // check if the player must capture
+  int8_t captureArray[c::num_pcs];
+  int8_t numberOfCapturingPieces = checkMustCapture(captureArray);
 
   // if there are no captures, move on to just moves
-  if (capp == 0)
+  if (numberOfCapturingPieces == 0)
     return false;
   // else, make the player capture
   Selected pieceSel = NO_PIECE;
   move_st moves;
-  show_cap(capture, capp); // show which pieces can capture
+  show_cap(captureArray, numberOfCapturingPieces); // show which pieces can capture
 
   // waits until a valid capture is made
   while (pieceSel != DONE)
-    choose_move(pieceSel, moves, CAPTURE, capture, capp);
+    choose_move(pieceSel, moves, CAPTURE, captureArray, numberOfCapturingPieces);
 
   return true;
 }
 
 // lets player choose a piece to move
 void choose_move(Selected &pieceSel, move_st &moves,
-                 move type, int8_t *capture, int8_t capp)
+                 move type, int8_t *captureArray,
+                 int8_t numberOfCapturingPieces)
 {
   int8_t pos = nspiece::touch();
   // loop again if nothing was touched
@@ -114,13 +112,13 @@ void choose_move(Selected &pieceSel, move_st &moves,
   {
     if (nsmove::can_move(pos, moves, type))
     {
-      draw::highlight(pos); // highlight a piece
+      draw.highlight(pos); // highlight a piece
       // do nothing if same piece was selected
       if (pos == shared.currentPc)
         return;
 
       // unhighlights old piece and its moves
-      draw::unhighlight(shared.currentPc);
+      draw.unhighlight(shared.currentPc);
       shared.currentPc = pos;
       nsmove::show(pos, moves); // show moves on board
       pieceSel = PIECE;         // now a piece is selected
@@ -128,5 +126,5 @@ void choose_move(Selected &pieceSel, move_st &moves,
   }
   // now check if the move is valid
   else if (board(pos) == EMPTY)
-    attempt_move(pieceSel, pos, moves, type, capture, capp);
+    attempt_move(pieceSel, pos, moves, type, captureArray, numberOfCapturingPieces);
 }

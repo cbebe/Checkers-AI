@@ -7,14 +7,10 @@
 #ifndef __PIECE_H
 #define __PIECE_H
 
-#include <Arduino.h>
-#include <MCUFRIEND_kbv.h>
 #include "consts_types.h"
 #include "shared.h"
-
 #include "Touch.h"
-#include "draw.h"
-#include "checks.h"
+#include "Draw.h"
 
 // namespace for piece-related functions
 namespace nspiece

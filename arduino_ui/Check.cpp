@@ -4,12 +4,12 @@
 // Contains all functions that check for moves
 //
 
-#include "checks.h"
+#include "Check.h"
 
 extern shared_vars shared;
 
 // removing backward moves or captures
-void check::backwards(int8_t pos, move_st &moves)
+void Check::checkBackwards(int8_t pos, move_st &moves)
 {
   Piece p = board(pos);
   // non-king pieces cannot move backwards
@@ -28,7 +28,7 @@ void check::backwards(int8_t pos, move_st &moves)
 }
 
 // checks if the piece is on the edges of the board
-void edge(int8_t p, move_st &moves)
+void Check::edge(int8_t p, move_st &moves)
 {
   // do nothing if captured
   if (p < 0 || p > 31)
@@ -57,7 +57,7 @@ void edge(int8_t p, move_st &moves)
 }
 
 // checks for enemy pieces to capture
-void check::capture(int8_t pos, move_st &moves)
+void Check::checkCapture(int8_t pos, move_st &moves)
 {
   // do nothing if out of bounds
   if (pos < 0 || pos > 31)
@@ -68,7 +68,7 @@ void check::capture(int8_t pos, move_st &moves)
   tileOS(pos, os);
   // change the enemy depending on the piece's side
   Piece enemy = (board(pos) == BOT || board(pos) == BK) ? PLAYER : BOT;
-  Piece enemyk = (enemy == BOT) ? BK : PK;
+  Piece enemyKing = (enemy == BOT) ? BK : PK;
 
   /* checks for adjacent enemy pieces
   and empty tiles behind those pieces
@@ -82,8 +82,7 @@ void check::capture(int8_t pos, move_st &moves)
   for (int i = 0; i < 4; i++)
   {
     Piece t = board(pos + os[i]); // target
-    if ((t == enemy || t == enemyk) &&
-        board(pos + c::dg[i]) == EMPTY)
+    if ((t == enemy || t == enemyKing) && board(pos + c::dg[i]) == EMPTY)
     {
       moves.m[i] = CAPTURE;
       // disable right moves if piece is on the right
@@ -99,20 +98,18 @@ void check::capture(int8_t pos, move_st &moves)
 
 // checks if there are empty tiles next
 // to the piece on the board
-void empty(int8_t p, move_st &moves)
+void Check::empty(int8_t p, move_st &moves)
 {
   // adjacent tile offsets are different depending on row
   int8_t os[4];
   tileOS(p, os);
   for (int i = 0; i < 4; i++)
-  {
     if (board(p + os[i]) == EMPTY)
       moves.m[i] = MOVE;
-  }
 }
 
 // checks for moves that can be made by the piece
-void check::move(int8_t pos, move_st &moves)
+void Check::checkMove(int8_t pos, move_st &moves)
 {
   // do nothing if out of bounds
   if (pos >= 0 && pos < 32)
@@ -124,7 +121,7 @@ void check::move(int8_t pos, move_st &moves)
 }
 
 // check if there are valid captures
-bool has::captures(const move_st &moves)
+bool Check::hasCaptures(const move_st &moves)
 {
   for (int i = 0; i < 4; i++)
     if (moves.m[i] == CAPTURE)
@@ -134,7 +131,7 @@ bool has::captures(const move_st &moves)
 }
 
 // check if there are valid moves
-bool has::moves(const move_st &moves)
+bool Check::hasMoves(const move_st &moves)
 {
   for (int i = 0; i < 4; i++)
     if (moves.m[i] == MOVE)

@@ -4,17 +4,16 @@
 // Contains all functions related to printing of the TFT screen
 //
 
-#include "draw.h"
-#include "shared.h"
+#include "Draw.h"
 
 extern shared_vars shared;
 
 // clears the tile of a piece or move
-void draw::clear(int8_t tile)
+void Draw::clear(int8_t tile)
 {
   if (tile >= 0 && tile <= 31)
   {
-    screenPos dp = draw::position(tile);
+    screenPos dp = position(tile);
     // dp initially points to the centre of the square
     dp.x -= c::b_sq / 2;
     dp.y -= c::b_sq / 2;
@@ -23,7 +22,7 @@ void draw::clear(int8_t tile)
 }
 
 // draw piece on board
-void draw::piece(int8_t pos)
+void Draw::piece(int8_t pos)
 {
   // does not draw if piece is not in the board
   if (pos < 0 || pos > 31)
@@ -33,7 +32,7 @@ void draw::piece(int8_t pos)
     return; // no piece, return
 
   // find piece's position on screen
-  screenPos dp = draw::position(pos);
+  screenPos dp = position(pos);
   // colour scheme
   uint16_t colour[] = {TFT_WHITE, TFT_BLACK};
   // change colour for bots
@@ -52,7 +51,7 @@ void draw::piece(int8_t pos)
 
 // determines cursor position on the screen
 // given a piece's position on the board
-screenPos draw::position(int8_t pos)
+screenPos Draw::position(int8_t pos)
 {
   int8_t group = pos / 8;      // position from 0 to 3
   int8_t ForS = (pos % 8) / 4; // first or second row of group
@@ -65,12 +64,12 @@ screenPos draw::position(int8_t pos)
 }
 
 // highlight piece for moving/capturing
-void draw::highlight(int8_t pos, bool cap)
+void Draw::highlight(int8_t pos, bool cap)
 {
   // does not highlight if piece is out of bounds
   if (pos >= 0 && pos < 32)
   {
-    screenPos dp = draw::position(pos);
+    screenPos dp = position(pos);
 
     int16_t colour = cap ? TFT_RED : TFT_YELLOW;
     // yellow ring on highlighted piece if moving
@@ -81,34 +80,34 @@ void draw::highlight(int8_t pos, bool cap)
 }
 
 // unhighlights selected piece
-void draw::unhighlight(int8_t pos)
+void Draw::unhighlight(int8_t pos)
 {
   if (pos < 0 || pos > 31)
     return;
 
-  draw::piece(pos); // redraws piece to remove highlight
+  piece(pos); // redraws piece to remove highlight
   int8_t os[4];
   tileOS(pos, os); // adjusts adjacent tile offsets
   // clears the moves
   for (int i = 0; i < 4; i++)
   {
     if (board(pos + os[i]) == EMPTY)
-      draw::clear(pos + os[i]);
+      clear(pos + os[i]);
     // clear capture moves
     if (board(pos + c::dg[i]) == EMPTY)
-      draw::clear(pos + c::dg[i]);
+      clear(pos + c::dg[i]);
   }
 }
 
 // marks the moves on the board
-void draw::mark(int8_t pos)
+void Draw::mark(int8_t pos)
 {
-  screenPos dp = draw::position(pos);
+  screenPos dp = position(pos);
   shared.tft->drawCircle(dp.x, dp.y, c::pc_rad / 2, TFT_RED);
   shared.tft->drawCircle(dp.x, dp.y, c::pc_rad / 2 + 1, TFT_RED);
 }
 
-void draw::refresh_board(char *buffer)
+void Draw::refresh_board(char *buffer)
 {
   // loop over the board char array to copy it
   for (int8_t i = 0; i < c::b_size; i++)
@@ -118,9 +117,9 @@ void draw::refresh_board(char *buffer)
     // change the board if there are differences
     if (comp != board(i))
     {
-      draw::clear(i); // clears tile
+      clear(i); // clears tile
       shared.board[i] = comp;
-      draw::piece(i); // replaces with new piece
+      piece(i); // replaces with new piece
     }
   }
 }

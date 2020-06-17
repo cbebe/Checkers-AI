@@ -8,11 +8,11 @@
 #define _DRAW_H
 
 #include "consts_types.h"
+#include "shared.h"
 
-// this namespace is for functions that
-// only concerns with drawing on the screen
-namespace draw
+class Draw
 {
+public:
   // gives the screen position of the centre of the chosen tile
   screenPos position(int8_t pos);
   // draws the piece on the board

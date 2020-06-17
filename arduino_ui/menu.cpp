@@ -5,9 +5,28 @@
 //
 
 #include "menu.h"
+using namespace c;
 
 extern shared_vars shared;
-using namespace menu;
+
+const int16_t box = 15;
+// difficulty
+const screenPos diff = {off_x + b_sq, off_y + b_sq};
+const screenPos dBtn = {diff.x - (2 * b_sq) / 3, diff.y};
+const screenPos difftxt = {diff.x + 20, diff.y + 20};
+// first move
+const screenPos first = {off_x + b_sq, off_y + b_sq * 4};
+const screenPos fBtn = {first.x - (2 * b_sq) / 3, first.y};
+const screenPos firsttxt = {first.x + 20, first.y + 20};
+// start button
+const screenPos sBtn = {off_x + b_sq * 3, off_y + b_width - b_sq};
+const screenPos sBtnD = {65, 20};
+
+// const strings
+const char bot[] = "BOT";
+const char player[] = "PLAYER";
+const char easy[] = "RANDOM";
+const char imp[] = "MINIMAX";
 
 // prints text given the position
 void printText(screenPos pos, const char *text)
@@ -30,7 +49,7 @@ bool button(screenPos t, screenPos b1, screenPos b2)
 // lets player choose some options on the touch screen
 void processTS(bool &turn, int &difficulty)
 {
-  Touch touch = *shared.touch;
+  Touch touch;
   turn = true;      // true means bot is first
   bool diff = true; // true means easy
   bool done = false;
@@ -77,7 +96,7 @@ bool menuScreen()
   // get tft screen
   MCUFRIEND_kbv tft = *shared.tft;
   tft.fillScreen(TFT_BLACK);
-  tft.fillRect(c::off_x, c::off_y, c::b_width, c::b_width, TFT_WHITE);
+  tft.fillRect(off_x, off_y, b_width, b_width, TFT_WHITE);
   tft.setTextSize(2);
 
   // Display the Menu
@@ -98,6 +117,7 @@ bool menuScreen()
   int difficulty;
   processTS(start, difficulty); // lets player change the options
   // send options to Serial
-  shared.comm->start_game(start, difficulty);
+  Comms comm;
+  comm.start_game(start, difficulty);
   return start;
 }

@@ -19,9 +19,7 @@ bool read_line(char *buff, uint32_t timeout)
     {
       char c = Serial.read();
       if (c == '\n' || c == '\r')
-      {
         return true;
-      }
       else
       {
         buff[len] = c;
@@ -41,9 +39,8 @@ bool Comms::setup()
 {
   char buff[3];
   Serial.println("A");
-  if (read_line(buff, 1000))
-    if (buff[0] == 'A')
-      return true; // desktop acknowledged
+  if (read_line(buff, 1000) && buff[0] == 'A')
+    return true; // desktop acknowledged
   return false;
 }
 

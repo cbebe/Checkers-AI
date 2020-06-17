@@ -7,6 +7,8 @@
 #include "move.h"
 
 extern shared_vars shared;
+Draw draw;
+Check check;
 
 // captures a piece
 void nsmove::capture(int8_t oldPos, int8_t newPos)
@@ -30,20 +32,20 @@ void nsmove::capture(int8_t oldPos, int8_t newPos)
 void nsmove::chain(int8_t pos)
 {
   move_st moves = c::empty_m;
-  check::capture(pos, moves);
+  check.checkCapture(pos, moves);
   // do nothing if there are no moves
-  if (!has::captures(moves))
+  if (!check.hasCaptures(moves))
     return;
 
   // highlight possible moves
-  draw::highlight(pos);
+  draw.highlight(pos);
   nsmove::show(pos, moves);
   int8_t newPos = nspiece::touch();
   // waits for the player to make a legal move
   while (!nsmove::legal(pos, newPos, moves))
     newPos = nspiece::touch();
 
-  draw::unhighlight(pos);
+  draw.unhighlight(pos);
   // recursively calls capture piece until
   // there are no valid captures
   nsmove::capture(pos, newPos);
@@ -71,7 +73,7 @@ void nsmove::piece(int8_t oldPos, int8_t newPos)
 {
   Piece p = board(oldPos);
   // now tile is empty
-  draw::clear(oldPos);
+  draw.clear(oldPos);
   shared.board[oldPos] = EMPTY;
 
   // checks for promotion if piece is not king yet
@@ -84,13 +86,12 @@ void nsmove::piece(int8_t oldPos, int8_t newPos)
   // piece in new position
   shared.board[newPos] = p;
   // draw piece in new position
-  draw::piece(newPos);
+  draw.piece(newPos);
 }
 
 // show valid moves on the screen
 void nsmove::show(int8_t pos, const move_st &moves)
 {
-  using draw::mark;
   // adjacent tile offsets vary depending on row
   int8_t os[4];
   tileOS(pos, os);
@@ -99,10 +100,10 @@ void nsmove::show(int8_t pos, const move_st &moves)
   {
     // piece moves
     if (moves.m[i] == MOVE)
-      mark(pos + os[i]);
+      draw.mark(pos + os[i]);
     // piece captures
     if (moves.m[i] == CAPTURE)
-      mark(pos + c::dg[i]);
+      draw.mark(pos + c::dg[i]);
   }
 }
 
@@ -113,17 +114,17 @@ bool nsmove::can_move(int8_t pos, move_st &moves, move type)
   move_st temp = moves; // keep previous moveset
   moves = c::empty_m;   // empty moveset
   if (type == MOVE)
-    check::move(pos, moves); // checks for valid moves
+    check.checkMove(pos, moves); // checks for valid moves
   else if (type == CAPTURE)
-    check::capture(pos, moves); // checks for valid captures
+    check.checkCapture(pos, moves); // checks for valid captures
   else if (type == NOT)
   {
     // if checking for both
-    check::move(pos, moves);
-    check::capture(pos, moves);
+    check.checkMove(pos, moves);
+    check.checkCapture(pos, moves);
   }
-  check::backwards(pos, moves); // backwards check
-  if (has::moves(moves) || has::captures(moves))
+  check.checkBackwards(pos, moves);
+  if (check.hasMoves(moves) || check.hasCaptures(moves))
     return true;
 
   moves = temp; // revert to previous moveset

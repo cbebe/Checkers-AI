@@ -28,7 +28,7 @@ typedef enum selected
   DONE
 } Selected;
 
-typedef enum piece_t
+typedef enum piece_type
 {
   EMPTY,
   PLAYER,
