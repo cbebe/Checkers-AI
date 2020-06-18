@@ -48,9 +48,6 @@ void tileOS(int8_t p, int8_t *os)
 
 void setup()
 {
-  // initialize Arduino
-  init();
-
   // initialize display
   shared.tft = &tft;
   uint16_t ID = tft.readID();

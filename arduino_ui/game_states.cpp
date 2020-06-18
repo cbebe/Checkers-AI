@@ -101,7 +101,7 @@ bool noMoves(Piece side)
   {
     if (board(i) == side || board(i) == sidek)
     {
-      move_st moves = c::empty_m;
+      move_st moves = c::empty_moveset;
       // check for valid moves or captures
       if (nsmove::can_move(i, moves, NOT))
         return false;

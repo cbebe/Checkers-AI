@@ -8,7 +8,7 @@
 
 // reads line from serial until newline char is received
 // does not include newline char in string
-bool read_line(char *buff, uint32_t timeout)
+bool Comms::read_line(char *buff, uint32_t timeout)
 {
 
   uint32_t start = millis(), current = 0;
@@ -39,9 +39,7 @@ bool Comms::setup()
 {
   char buff[3];
   Serial.println("A");
-  if (read_line(buff, 1000) && buff[0] == 'A')
-    return true; // desktop acknowledged
-  return false;
+  return (read_line(buff, 1000) && buff[0] == 'A');
 }
 
 // starts game with AI, sending the difficulty

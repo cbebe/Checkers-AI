@@ -24,7 +24,7 @@ public:
   void end_game();
 
 private:
-  bool readline(char *buff, uint32_t timeout);
+  bool read_line(char *buff, uint32_t timeout);
 };
 
 #endif

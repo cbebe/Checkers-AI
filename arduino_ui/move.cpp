@@ -31,7 +31,7 @@ void nsmove::capture(int8_t oldPos, int8_t newPos)
 void nsmove::chain(int8_t pos)
 {
   Draw draw;
-  move_st moves = c::empty_m;
+  move_st moves = c::empty_moveset;
   check.checkCapture(pos, moves);
   // do nothing if there are no moves
   if (!check.hasCaptures(moves))
@@ -99,14 +99,10 @@ void nsmove::show(int8_t pos, const move_st &moves)
   tileOS(pos, os);
 
   for (int i = 0; i < 4; i++)
-  {
-    // piece moves
     if (moves.m[i] == MOVE)
-      draw.mark(pos + os[i]);
-    // piece captures
-    if (moves.m[i] == CAPTURE)
-      draw.mark(pos + c::dg[i]);
-  }
+      draw.mark(pos + os[i]); // piece moves
+    else if (moves.m[i] == CAPTURE)
+      draw.mark(pos + c::dg[i]); // piece captures
 }
 
 // shows the player where to move the piece
@@ -114,7 +110,7 @@ void nsmove::show(int8_t pos, const move_st &moves)
 bool nsmove::can_move(int8_t pos, move_st &moves, move type)
 {
   move_st temp = moves; // keep previous moveset
-  moves = c::empty_m;   // empty moveset
+  moves = c::empty_moveset;
   if (type == MOVE)
     check.checkMove(pos, moves); // checks for valid moves
   else if (type == CAPTURE)

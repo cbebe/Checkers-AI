@@ -22,7 +22,7 @@ int8_t checkMustCapture(int8_t *captureArray)
   {
     if (board(i) == PLAYER || board(i) == PK)
     {
-      move_st moves = c::empty_m;
+      move_st moves = c::empty_moveset;
       // check which pieces can capture
       check.checkCapture(i, moves);
       check.checkBackwards(i, moves);

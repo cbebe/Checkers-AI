@@ -73,7 +73,7 @@ namespace c
   // diagonal moves are constant
   const int8_t dg[] = {-9, -7, 7, 9};
   // empty move array
-  const move_st empty_m = {{NOT, NOT, NOT, NOT}};
+  const move_st empty_moveset = {{NOT, NOT, NOT, NOT}};
 
 }; // namespace c
 
