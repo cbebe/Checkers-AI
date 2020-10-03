@@ -2,18 +2,15 @@
 #define _PIECE_H_
 
 #include <algorithm> // for copy
-#include <vector>    // for begin and end
+#include <vector> // for begin and end
 
 // piece definitions
 typedef signed char int8;
 const int8 bSize = 32; // board size
-typedef enum pc
-{
+typedef enum pc {
   E, // empty
-  W,
-  B, // white and black
-  WK,
-  BK, // white and black kings
+  W,B, // white and black
+  WK,BK, // white and black kings
   OUT // out of bounds
 } Piece;
 
@@ -23,6 +20,6 @@ const Piece blackSide[] = {B, BK, W, WK};
 const Piece whiteSide[] = {W, WK, B, BK};
 
 // get piece types for ally and enemies
-void getPieces(Piece pc, Piece *array);
+void getPieces(Piece pc, Piece* array);
 
 #endif

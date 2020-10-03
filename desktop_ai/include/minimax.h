@@ -8,10 +8,10 @@
 #include <algorithm>
 
 // lets the AI choose a move
-Board chooseMove(const Board &board, int difficulty = 1);
+Board chooseMove(const Board& board, int difficulty = 1);
 
 // minimax function for decision-making
-double minimax(const Board &board, int depth, bool maxPlayer,
-               double alpha, double beta);
+double minimax(const Board& board, int depth, bool maxPlayer,
+            double alpha, double beta);
 
 #endif

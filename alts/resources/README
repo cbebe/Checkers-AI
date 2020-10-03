@@ -1,0 +1,191 @@
+Google Drive link for Demo: https://drive.google.com/open?id=1z0KCGu_1uaY11u4nnwP4wXt8GMxUECBC
+
+-------------------------------------------
+Name: Charles Ancheta and Poulomi Ganguly
+CMPUT 275 Final Project Winter 2020
+Checkers AI
+-------------------------------------------
+
+
+Included Files: 
+
+* arduino_ui
+    1. checkers.cpp
+    2. checks.cpp
+    3. checks.h 
+    4. comms.cpp 
+    5. comms.h 
+    6. const_types.h 
+    7. draw.cpp 
+    8. game_mechanics.cpp 
+    9. game_states.cpp 
+    10. game_states.h 
+    11. menu.cpp
+    12. menu.h 
+    13. move.cpp 
+    14. move.h 
+    15. piece.cpp 
+    16. piece.h 
+    17. screenpos.h 
+    18. touchs.cpp 
+    19. touchs.h
+    20. Makefile
+
+* desktop_ai
+    * include (header files):
+        1. board.h 
+        2. checkalt.h 
+        3. commlink.h 
+        4. eval.h 
+        5. minimax.h 
+        6. offset.h 
+        7. piece.h 
+        8. serialport.h 
+    
+    * src (.cpp files):
+        1. board.cpp
+        2. checkalt.cpp 
+        3. commlink.cpp
+        4. eval.cpp
+        5. minimax.cpp
+        6. offset.cpp
+        7. piece.cpp
+        8. serialport.cpp 
+        9. checkersai.cpp
+    
+    * Makefile
+
+Accessories:
+    * Arduino Mega Board (AMG)
+    * 3.5" TFT LCD touch screen
+
+Wiring Instructions:
+    * Place the LCD display on the Arduino correctly by matching the pins
+      On each other
+
+Running Instructions:
+    * Connect the Arduino to the PC and ensure that
+      the Arduino is using the proper serial port 
+      (/dev/ttyACM0)
+    
+    * In the root folder, run 'make' to flash the firmware 
+      on the Arduino and compile the AI on the desktop.
+      The executable runs automatically. 
+
+Notes on functions:
+
+    * arduino_ui
+        - checkers.cpp
+            - void setup(): Initializes the Arduino and display
+            - void tileOS(): Adjusts tile offsets depending on row
+            - Piece board(): Returns the piece type at a given location
+            - void db(): Prints message to bottom of tft
+        - checks.cpp
+            - void check::backwards(): Ignores backward moves from
+            consideration
+            - void edge(): Checks if piece is on the edge of board
+            - void check::capture(): Checks if an enemy piece can be
+            captured
+            - void empty(): Checks if there are empty tiles present
+            next to given piece
+            - void check::move(): Checks if the move is possible
+            - void has::captures(): Check if capture is valid
+            - void has::moves(): Check if move is valid
+        - comms.cpp
+            - bool read_line(): reads line from Serial till newline
+            - bool comm::setup(): Sets up communication w/ desktop
+            - void comm::receive_board(): Receives board state from
+            Serial
+            - void comm::send_board(): Sends board state to Serial
+            - void comm::start_game(): Starts the game, sends difficulty
+            and whether bot makes first move
+        - draw.cpp 
+            - void draw::clear(): Clears the tile at given position
+            - void draw::piece(): Draws a given piece on the board
+            - screenPos draw::position(): Given a piece's position
+            determines the cursor position
+            - void draw::highlight(): Highlights piece for moving or
+            capturing
+            - void draw::unhighlight(): Removes highlight from piece
+            - void draw::mark(): Marks the moves on the board
+        - game_mechanics.cpp
+            - int8_t checkMustCapture(): Moves positions of the pieces
+            that can capture in the capture array and returns the number
+            of pieces that can be captured.
+            - void show_cap(): Show or hide which pieces can be captured
+            - void attempt_move(): Checks if a move is valid
+            - bool must_capture(): Returns true if the player had to 
+            capture 
+            - void choose_move(): Lets player choose a piece to move 
+        - game_states.cpp 
+            - void gameInit(): initializes the game
+            - void doTurn(): State when its player's turn 
+            - Win checkPieces(): Check if all pieces have been captured
+            - bool noMoves(): Checks if pieces can be moved
+            - Win endCheck(): Check if end of game has been reached.
+            - void game_result(): Prints who won the game
+        - menu.cpp: Contains the functions for setting up menu screen
+        - move.cpp
+            - void nsmove::capture(): Captures a piece
+            - void nsmove::chain(): Captures multiple pieces in chain
+            - move nsmove::legal(): Checks if given move is legal
+            - void nsmove::piece(): Moves a piece from old osition to new
+            - void nsmove::show(): Shows valid move on screen 
+            - bool nsmove::can_move(): Shows the player where the piece
+            can be moved 
+        - piece.cpp:
+            - int8_t nspiece::touch(): Determines screen constraints for 
+            where the board was touched.
+            - void nspiece::remove(): Removes piece from the board
+        - touchs.cpp: Contains the functions to process screen input 
+
+    * desktop_ai
+        - board.cpp: Contains the functions to manipulate the board pieces
+        and display them on Serial
+            - Piece Board::get(): Gets the value of piece in a given
+            position
+            - bool Board::move(): Moves piece from one position to another
+            - void Board::remove(): Removes piece from board 
+            - void Board::display(): Displays board on Serial 
+            - string Board::stateString(): returns string representation of
+            board
+        - checkalt.cpp
+            - posP boardCheck(): Checks if neighbouring tiles are empty 
+            or have enemies
+            - moveList captureBothDirs(): Returns the directions for king
+            pieces and chained captures
+            - moveList get::moves(): Retyrns the list of moves that can be 
+            made by a position
+            - moveList get::captures() Return a list of the captures that 
+            a single piece can make 
+            - int8 pieceToRemove():
+            - void checkForChain(): Recursive function to check for capture
+            chains
+            - Board parseMove(): Moves the pieces on the board according to
+            given move and position
+            - bList boardStates(): Returns a list of boards for every possible
+            move.
+        - checkersai.cpp: Main function for the AI 
+        - commlink.cpp: Contains the functions to establish connection with 
+        the Arduino 
+        - eval.cpp
+            - double pieceValue(): Returns weight of a piece
+            - double positionValue(): Returns weight of a position
+            - double gameOver(): Checks for end of game condition
+            - double staticEval(): Performs a static evaluation of the
+            board based on given heuristics
+        - minimax.cpp
+            - Board chooseMove(): Lets the bot choose a move based on given
+            board and difficulty 
+            - double minimax(): Recursively finds the min/max value of a move
+        - offset.cpp: Functions for determining row and diagonal offset
+        - piece.cpp: Function for getting the array of pieces depending on
+        piece type
+        - serialport.cpp: Unmodified program from eClass 
+        
+        * Makefile
+Assumptions:
+    The program assumes that the Arduino is connected to /dev/ttyACM0.
+    The game rules assume no backward jumps for non-pawn pieces unless doing multiple jumps.
+    Every piece also must jump when it is possible to do so.
+    

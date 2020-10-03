@@ -6,21 +6,18 @@ using namespace std;
 // main function for AI
 // change name to main when running program
 // int checkersAI() {
-int main()
-{
+int main() {
   // assume Arduino is in /dev/ttyACM0
   // if not, pass the port name as a string on the Commlink initializer
   CommLink comms; // start communication with Arduino
   cout << "Preparing communication... ";
   comms.confirm();
   cout << "Done!\n";
-
-  while (true)
-  {
+  
+  while (true) {
     int difficulty;
     // send a random move if the bot is playing first
-    if (comms.startGame(difficulty))
-    {
+    if (comms.startGame(difficulty)) {
       Board newGame = Board(newBoard);
       // send a move to the Arduino
       comms.sendBoardState(chooseMove(newGame, 1));
@@ -31,8 +28,7 @@ int main()
 
     Board board;
     // now this will loop until the end of the game
-    while (comms.getBoardState(board))
-    {
+    while (comms.getBoardState(board)) {
       comms.sendBoardState(chooseMove(board, difficulty));
       board.display();
     }
